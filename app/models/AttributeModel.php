@@ -31,7 +31,7 @@ class AttributeModel
         $f      = $this->buildFilter($type, $keyword);
         $offset = ($page - 1) * $perPage;
 
-        $sql = "SELECT attribute_id, attribute_name, create_at
+        $sql = "SELECT attribute_id, attribute_name, attribute_icon, attribute_desc, create_at
                 FROM tbl_attribute
                 WHERE {$f['sql']}
                 ORDER BY attribute_id DESC
@@ -56,7 +56,7 @@ class AttributeModel
 
     public function getById(int $id, string $type): ?array
     {
-        $sql = "SELECT attribute_id, attribute_name, attribute_type
+        $sql = "SELECT attribute_id, attribute_name, attribute_icon, attribute_desc, attribute_type
                 FROM tbl_attribute
                 WHERE attribute_id = :id AND attribute_type = :type AND active_status = '1'
                 LIMIT 1";
@@ -77,21 +77,33 @@ class AttributeModel
         return (int) $stmt->fetchColumn() > 0;
     }
 
-    public function create(string $type, string $name, int $createUserId): int
+    public function create(string $type, string $name, int $createUserId, ?string $icon = null, ?string $desc = null): int
     {
-        $sql = "INSERT INTO tbl_attribute (attribute_name, active_status, create_user_id, create_at, attribute_type)
-                VALUES (:name, '1', :uid, NOW(), :type)";
+        $sql = "INSERT INTO tbl_attribute (attribute_name, attribute_icon, attribute_desc, active_status, create_user_id, create_at, attribute_type)
+                VALUES (:name, :icon, :desc, '1', :uid, NOW(), :type)";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':name' => $name, ':uid' => $createUserId, ':type' => $type]);
+        $stmt->execute([
+            ':name' => $name,
+            ':icon' => ($icon !== null && $icon !== '') ? $icon : null,
+            ':desc' => ($desc !== null && $desc !== '') ? $desc : null,
+            ':uid'  => $createUserId,
+            ':type' => $type,
+        ]);
         return (int) $this->db->lastInsertId();
     }
 
-    public function update(int $id, string $type, string $name): bool
+    public function update(int $id, string $type, string $name, ?string $icon = null, ?string $desc = null): bool
     {
-        $sql = "UPDATE tbl_attribute SET attribute_name = :name
+        $sql = "UPDATE tbl_attribute SET attribute_name = :name, attribute_icon = :icon, attribute_desc = :desc
                 WHERE attribute_id = :id AND attribute_type = :type AND active_status = '1'";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([':name' => $name, ':id' => $id, ':type' => $type]);
+        return $stmt->execute([
+            ':name' => $name,
+            ':icon' => ($icon !== null && $icon !== '') ? $icon : null,
+            ':desc' => ($desc !== null && $desc !== '') ? $desc : null,
+            ':id'   => $id,
+            ':type' => $type,
+        ]);
     }
 
     public function softDelete(int $id, string $type): bool

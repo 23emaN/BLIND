@@ -7,6 +7,7 @@
     $itemLabel  = $data['item_label'] ?? 'รายการ';
     // base path ของ endpoint (ส่งมาจาก controller: skill / interest)
     $route      = $data['route'] ?? 'skill';
+    $hasMeta    = !empty($data['has_meta']);   // หมวดหมู่กิจกรรม = จัดการ icon + คำอธิบาย
 ?>
 
 <div class="container-fluid">
@@ -63,10 +64,21 @@
             <div class="modal-body">
                 <form id="itemForm" autocomplete="off">
                     <input type="hidden" name="attribute_id" id="attribute_id" value="">
-                    <div class="mb-2">
+                    <div class="mb-<?php echo $hasMeta ? '3' : '2'; ?>">
                         <label class="form-label" for="f_name">ชื่อ<?php echo htmlspecialchars($itemLabel); ?> <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="attribute_name" id="f_name" maxlength="255" autocomplete="off">
                     </div>
+                    <?php if ($hasMeta): ?>
+                        <div class="mb-3">
+                            <label class="form-label" for="f_icon">ไอคอน (Material Symbol ของหน้าบ้าน)</label>
+                            <input type="text" class="form-control" name="attribute_icon" id="f_icon" maxlength="50" placeholder="เช่น mic, directions_walk, description, school" autocomplete="off">
+                            <small class="text-muted">ชื่อไอคอนที่หน้าบ้านใช้แสดงบนการ์ดหมวดหมู่ (ปล่อยว่างได้)</small>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label" for="f_desc">คำอธิบายสั้น</label>
+                            <textarea class="form-control" name="attribute_desc" id="f_desc" rows="2" maxlength="255" placeholder="เช่น บันทึกเสียงบทเรียน หนังสือเสียง"></textarea>
+                        </div>
+                    <?php endif; ?>
                 </form>
             </div>
             <div class="modal-footer">
@@ -138,6 +150,10 @@
                 document.getElementById('itemForm').reset();
                 $('#attribute_id').val(response.data.attribute_id);
                 $('#f_name').val(response.data.attribute_name);
+                <?php if ($hasMeta): ?>
+                $('#f_icon').val(response.data.attribute_icon || '');
+                $('#f_desc').val(response.data.attribute_desc || '');
+                <?php endif; ?>
                 $('#itemModalLabel').text('แก้ไข<?php echo htmlspecialchars($itemLabel, ENT_QUOTES); ?>');
                 new bootstrap.Modal(document.getElementById('itemModal')).show();
             },

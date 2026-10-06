@@ -11,4 +11,5 @@ class InterestController extends AttributeController
     protected $pageTitle = 'ตั้งค่าหมวดหมู่กิจกรรม';
     protected $itemLabel = 'หมวดหมู่กิจกรรม';
     protected $routeBase = 'interest';
+    protected $hasMeta   = true;   // หมวดหมู่กิจกรรม จัดการ icon + คำอธิบาย ด้วย
 }

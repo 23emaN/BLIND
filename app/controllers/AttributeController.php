@@ -9,6 +9,7 @@ class AttributeController
     protected $pageTitle = 'ตั้งค่าทักษะและความถนัด';
     protected $itemLabel = 'ทักษะ';             // ใช้ในข้อความ เช่น "เพิ่มทักษะ"
     protected $routeBase = 'skill';             // base ของ endpoint (skill / interest)
+    protected $hasMeta   = false;               // true = จัดการ icon + desc ด้วย (หมวดหมู่กิจกรรม)
     protected $authUser  = null;
 
     private function checkAuth()
@@ -52,6 +53,7 @@ class AttributeController
             'type'       => $this->type,
             'route'      => $this->routeBase,
             'item_label' => $this->itemLabel,
+            'has_meta'   => $this->hasMeta,
             'firstname'  => $user['user_firstname'] ?? 'ผู้ใช้งาน',
             'lastname'   => $user['user_lastname'] ?? '',
             'items'      => $model->getList($this->type, '', 1, $perPage),
@@ -78,6 +80,7 @@ class AttributeController
         $total      = $model->countList($this->type, $keyword);
         $items      = $model->getList($this->type, $keyword, $page, $perPage);
         $item_label = $this->itemLabel;
+        $has_meta   = $this->hasMeta;
 
         ob_start();
         include '../app/views/main/table/attribute_table.php';
@@ -116,8 +119,11 @@ class AttributeController
             return;
         }
 
+        $icon = $this->hasMeta ? trim($_POST['attribute_icon'] ?? '') : null;
+        $desc = $this->hasMeta ? trim($_POST['attribute_desc'] ?? '') : null;
+
         try {
-            $model->create($this->type, $name, (int) ($user['user_id'] ?? 0));
+            $model->create($this->type, $name, (int) ($user['user_id'] ?? 0), $icon, $desc);
             echo json_encode(['result' => 1, 'msg' => 'เพิ่ม' . $this->itemLabel . 'สำเร็จ']);
         } catch (\Throwable $e) {
             echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล']);
@@ -149,8 +155,11 @@ class AttributeController
             return;
         }
 
+        $icon = $this->hasMeta ? trim($_POST['attribute_icon'] ?? '') : null;
+        $desc = $this->hasMeta ? trim($_POST['attribute_desc'] ?? '') : null;
+
         try {
-            $model->update($id, $this->type, $name);
+            $model->update($id, $this->type, $name, $icon, $desc);
             echo json_encode(['result' => 1, 'msg' => 'แก้ไข' . $this->itemLabel . 'สำเร็จ']);
         } catch (\Throwable $e) {
             echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล']);
