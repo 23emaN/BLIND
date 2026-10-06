@@ -9,4 +9,5 @@ class SkillController extends AttributeController
     protected $type      = '2';
     protected $pageTitle = 'ตั้งค่าทักษะและความถนัด';
     protected $itemLabel = 'ทักษะ';
+    protected $routeBase = 'skill';
 }

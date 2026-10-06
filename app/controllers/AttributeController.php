@@ -8,6 +8,7 @@ class AttributeController
     protected $type      = '2';                 // override ใน subclass
     protected $pageTitle = 'ตั้งค่าทักษะและความถนัด';
     protected $itemLabel = 'ทักษะ';             // ใช้ในข้อความ เช่น "เพิ่มทักษะ"
+    protected $routeBase = 'skill';             // base ของ endpoint (skill / interest)
     protected $authUser  = null;
 
     private function checkAuth()
@@ -49,6 +50,7 @@ class AttributeController
         $data = [
             'title'      => $this->pageTitle,
             'type'       => $this->type,
+            'route'      => $this->routeBase,
             'item_label' => $this->itemLabel,
             'firstname'  => $user['user_firstname'] ?? 'ผู้ใช้งาน',
             'lastname'   => $user['user_lastname'] ?? '',

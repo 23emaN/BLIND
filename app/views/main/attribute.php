@@ -5,8 +5,8 @@
     $baseUrl    = defined('BASE_URL') ? BASE_URL : '';
     $type       = $data['type'] ?? '2';
     $itemLabel  = $data['item_label'] ?? 'รายการ';
-    // base path ของ endpoint: type '1' => activity, อื่น ๆ => skill
-    $route      = $type === '1' ? 'activity' : 'skill';
+    // base path ของ endpoint (ส่งมาจาก controller: skill / interest)
+    $route      = $data['route'] ?? 'skill';
 ?>
 
 <div class="container-fluid">
