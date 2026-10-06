@@ -9,7 +9,7 @@ $routes = [
         'user'   => ['UserController', 'index'],
         'user/get' => ['UserController', 'get'],
         'volunteer' => ['MainController', 'index'],
-        'volunteer_approve' => ['MainController', 'index'],
+        'volunteer_approve' => ['VolunteerController', 'index'],
         'activity' => ['ActivityController', 'index'],
         'activity/get' => ['ActivityController', 'get'],
         'skill' => ['SkillController', 'index'],
@@ -29,6 +29,9 @@ $routes = [
         'activity/add'    => ['ActivityController', 'add'],
         'activity/edit'   => ['ActivityController', 'edit'],
         'activity/delete' => ['ActivityController', 'delete'],
+        'volunteer_approve_table' => ['VolunteerController', 'getTable'],
+        'approveVolunteer'        => ['VolunteerController', 'approve'],
+        'rejectVolunteer'         => ['VolunteerController', 'reject'],
     ]
 ];
 
