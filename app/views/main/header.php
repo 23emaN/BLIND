@@ -1,0 +1,2858 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title><?php echo htmlspecialchars($data['title'] ?? 'CPD ACC - ระบบบริหารสำนักงานบัญชี') ?></title>
+
+    <link rel="icon" type="image/png"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/assets/images/am-group-logo.png">
+    <link rel="apple-touch-icon"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/assets/images/am-group-logo.png">
+
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/font.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/sidebar-menu.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/simplebar.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/apexcharts.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/prism.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/rangeslider.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/google-icon.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/remixicon.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/swiper-bundle.min.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/fullcalendar.main.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/jsvectormap.min.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/lightpick.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/select2.min.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/style.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/toastr.min.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/sweetalert2.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/custom.css?ver=<?php echo @filemtime(dirname(__DIR__, 2) . '/public/template/assets/css/custom.css') ?: time(); ?>">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/web.css">
+    <link rel="stylesheet"
+        href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/css/ui.css?ver=<?php echo @filemtime(dirname(__DIR__, 2) . '/public/template/assets/css/ui.css') ?: time(); ?>">
+
+    <style>
+        /* --- CPD ACC Modern Header & Workspace Dropdown --- */
+        .acc-topbar {
+            background-color: #F7F9FB;
+            /* border-bottom: 1px solid #edf2f7; */
+            padding: 15px 40px;
+            min-height: 68px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex !important;
+            flex-grow: 1 !important;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Kanit', sans-serif;
+            /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02); */
+        }
+
+        .acc-brand-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            flex-shrink: 0;
+            padding-right: 18px;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .acc-brand-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .acc-brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .acc-brand-info .acc-brand-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.2;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .acc-brand-info .acc-brand-subtitle {
+            font-size: 0.72rem;
+            color: #64748b;
+            margin: 0;
+            line-height: 1.2;
+            font-weight: 500;
+        }
+
+        /* Company / Workspace Tab Bar Container */
+        .acc-company-container {
+            display: flex;
+            align-items: stretch;
+            gap: 10px;
+            overflow-x: auto;
+            flex: 1;
+            min-width: 0;
+            padding: 4px 6px 4px 16px;
+            scrollbar-width: thin;
+        }
+
+        .acc-company-container::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        .acc-company-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        /* Workspace Dropdown Container */
+        .acc-workspace-dropdown {
+            position: relative;
+            flex-shrink: 0;
+            display: flex;
+        }
+
+        /* Sleek Modern Workspace Button (ตามภาพต้นแบบ 1) */
+        .acc-workspace-btn {
+            background-color: #ffffff;
+            border: 1.5px solid #edf2f7;
+            border-radius: 14px;
+            padding: 6px 14px 6px 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            user-select: none;
+            height: 56px;
+            min-height: 56px;
+            box-sizing: border-box;
+        }
+
+        .acc-workspace-btn::after {
+            display: none !important;
+            /* Hide default bootstrap dropdown caret */
+        }
+
+        .acc-workspace-btn:hover {
+            border-color: #3b82f6;
+            background-color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.10);
+        }
+
+        .acc-workspace-btn.active,
+        .acc-workspace-dropdown.show .acc-workspace-btn {
+            border-color: #2563eb;
+            background-color: #ffffff;
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.14);
+        }
+
+        .acc-workspace-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .acc-workspace-btn:hover .acc-workspace-icon,
+        .acc-workspace-btn.active .acc-workspace-icon {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .acc-workspace-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            line-height: 1.15;
+        }
+
+        .acc-workspace-badge {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: #94a3b8;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .acc-workspace-name {
+            font-size: 0.90rem;
+            font-weight: 800;
+            color: #0f172a;
+            max-width: 170px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .acc-workspace-year {
+            font-size: 0.74rem;
+            font-weight: 600;
+            color: #64748b;
+            margin-top: 1px;
+        }
+
+        .acc-workspace-arrow {
+            color: #64748b;
+            font-size: 18px;
+            margin-left: 2px;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .acc-workspace-dropdown.show .acc-workspace-arrow {
+            transform: rotate(180deg);
+            color: #2563eb;
+        }
+
+        /* --- Workspace Dropdown Menu (ตามภาพต้นแบบ 2 - แสดงลอยอยู่ด้านหน้าไม่โดนตัด) --- */
+        .acc-workspace-menu {
+            border: 1px solid #edf2f7;
+            border-radius: 16px;
+            box-shadow: 0 16px 48px rgba(15, 23, 42, 0.16);
+            padding: 18px;
+            min-width: 320px;
+            max-width: 360px;
+            background: #ffffff;
+            z-index: 99999 !important;
+            animation: dropdownFadeIn 0.15s ease-out;
+        }
+
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .acc-menu-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .acc-menu-header-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .acc-menu-title {
+            font-size: 0.98rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .acc-menu-subtitle {
+            font-size: 0.78rem;
+            color: #64748b;
+            margin: 3px 0 0 0;
+            line-height: 1.2;
+            font-weight: 500;
+        }
+
+        /* การ์ดปีที่ใช้งานอยู่ (Active Year Card) */
+        .acc-active-year-card {
+            background-color: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .acc-active-year-card:hover {
+            background-color: #e0f0fe;
+            border-color: #bfdbfe;
+        }
+
+        .acc-active-year-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .acc-active-year-icon {
+            width: 32px;
+            height: 32px;
+            color: #2563eb;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .acc-active-year-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .acc-active-year-label {
+            font-size: 0.72rem;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .acc-active-year-val {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .acc-active-badge {
+            color: #0066fe;
+            font-weight: 700;
+            font-size: 0.82rem;
+            white-space: nowrap;
+        }
+
+        /* หมวดหมู่: เลือกปีอื่น */
+        .acc-other-years-wrap {
+            margin-bottom: 12px;
+        }
+
+        .acc-other-years-title {
+            font-size: 0.80rem;
+            font-weight: 700;
+            color: #64748b;
+            margin-bottom: 8px;
+            padding-left: 2px;
+        }
+
+        .acc-other-years-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 175px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        .acc-other-years-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .acc-other-years-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .acc-other-year-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .acc-other-year-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .acc-other-year-icon {
+            font-size: 20px;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            flex-shrink: 0;
+            transition: color 0.15s ease;
+        }
+
+        .acc-other-year-item:hover .acc-other-year-icon {
+            color: #2563eb;
+        }
+
+        .acc-other-year-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .acc-other-year-val {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #1e293b;
+            transition: color 0.15s ease;
+        }
+
+        .acc-other-year-item:hover .acc-other-year-val {
+            color: #2563eb;
+        }
+
+        .acc-other-year-sub {
+            font-size: 0.74rem;
+            color: #94a3b8;
+            margin-top: 1px;
+        }
+
+        /* ท้ายเมนู: จัดการปีทำงาน */
+        .acc-menu-footer {
+            border-top: 1px solid #f1f5f9;
+            padding-top: 10px;
+            margin-top: 8px;
+        }
+
+        .acc-manage-year-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #1e293b;
+            font-weight: 700;
+            font-size: 0.88rem;
+            transition: all 0.15s ease;
+        }
+
+        .acc-manage-year-btn:hover {
+            background-color: #eff6ff;
+            color: #2563eb;
+        }
+
+        .acc-manage-year-btn i {
+            font-size: 18px;
+            color: #475569;
+            transition: color 0.15s ease;
+        }
+
+        .acc-manage-year-btn:hover i {
+            color: #2563eb;
+        }
+
+        /* ปุ่มเพิ่มบริษัท */
+        .acc-add-workspace-btn {
+            height: 56px;
+            min-height: 56px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #ffffff;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 14px;
+            padding: 0 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            color: #475569;
+            flex-shrink: 0;
+            box-sizing: border-box;
+        }
+
+        .acc-add-workspace-btn:hover {
+            border-color: #2563eb;
+            background-color: #eff6ff;
+            color: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .acc-add-workspace-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background-color: #f1f5f9;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .acc-add-workspace-icon i {
+            color: #64748b;
+            transition: color 0.2s ease;
+        }
+
+        .acc-add-workspace-btn:hover .acc-add-workspace-icon {
+            background-color: #2563eb;
+            color: #ffffff !important;
+        }
+
+        .acc-add-workspace-btn:hover .acc-add-workspace-icon i {
+            color: #ffffff !important;
+        }
+
+        .acc-add-workspace-text {
+            font-size: 0.88rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+
+        /* Right Actions & User Profile */
+        .acc-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        /* --- Notification Bell --- */
+        .acc-notif-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .acc-notif-btn:hover {
+            background-color: #f1f5f9;
+            color: #2563eb;
+        }
+
+        .acc-notif-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background-color: #ef4444;
+            color: #ffffff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+            border: 2px solid #ffffff;
+            display: none;
+        }
+
+        .acc-notif-menu {
+            border: 1px solid #edf2f7;
+            border-radius: 16px;
+            box-shadow: 0 16px 48px rgba(15, 23, 42, 0.16);
+            padding: 0;
+            min-width: 320px;
+            max-width: 360px;
+            background: #ffffff;
+            z-index: 99999 !important;
+            overflow: hidden;
+        }
+
+        .acc-notif-header {
+            padding: 15px 18px;
+            border-bottom: 1px solid #f1f5f9;
+            background-color: #f8fafc;
+            font-weight: 700;
+            color: #0f172a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .acc-notif-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .acc-notif-item {
+            padding: 15px 18px;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .acc-notif-item.unread {
+            background-color: #eff6ff;
+        }
+
+        .acc-notif-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .acc-notif-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #1e293b;
+        }
+
+        .acc-notif-text {
+            font-size: 0.85rem;
+            color: #475569;
+            line-height: 1.4;
+        }
+
+        .acc-notif-time {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .acc-notif-action {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 5px;
+        }
+
+        .acc-notif-ack-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .acc-notif-ack-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .acc-notif-empty {
+            padding: 30px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .acc-user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            padding: 4px 10px;
+            border-radius: 10px;
+            background-color: #f8fafc;
+            border: 1px solid #f1f5f9;
+            transition: all 0.2s ease;
+        }
+
+        .acc-user-profile:hover {
+            background-color: #f1f5f9;
+            border-color: #e2e8f0;
+        }
+
+        .acc-user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
+            flex-shrink: 0;
+        }
+
+        .acc-user-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
+            text-align: left;
+        }
+
+        .acc-user-name {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #1e293b;
+            white-space: nowrap;
+        }
+
+        .acc-user-role {
+            font-size: 0.68rem;
+            color: #64748b;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .acc-logout-btn {
+            width: 36px;
+            height: 36px;
+            /* border-radius: 8px;
+            background-color: #fff1f2;
+            border: 1px solid #ffe4e6; */
+            color: #e11d48;
+            font-size: 18px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .acc-logout-btn:hover {
+            /* background-color: #e11d48; */
+            color: #e11d48;
+            /* border-color: #e11d48; */
+            /* box-shadow: 0 3px 8px rgba(225, 29, 72, 0.25); */
+        }
+
+        /* --- Sidebar Toggle Button --- */
+        .header-burger-menu {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background-color: #ffffff;
+            border: 1.5px solid #edf2f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+            font-size: 22px;
+            cursor: pointer;
+            margin-left: 16px;
+            margin-right: 8px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .header-burger-menu:hover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        /* --- Global Keen/Metronic Modal & Form Utilities --- */
+        .mw-550px {
+            max-width: 550px !important;
+        }
+
+        .mw-600px {
+            max-width: 600px !important;
+        }
+
+        .mw-650px {
+            max-width: 650px !important;
+        }
+
+        .mw-700px {
+            max-width: 700px !important;
+        }
+
+        .mw-800px {
+            max-width: 800px !important;
+        }
+
+        /* --- Mobile Responsive Rules for Header --- */
+        @media (max-width: 768px) {
+            .acc-topbar {
+                padding: 10px 15px;
+                min-height: 60px;
+            }
+
+            .acc-brand-info {
+                display: none;
+            }
+
+            .acc-company-container {
+                max-width: calc(100vw - 220px);
+                padding: 4px;
+                scrollbar-width: none;
+            }
+
+            .acc-company-container::-webkit-scrollbar {
+                display: none;
+            }
+
+            .acc-workspace-btn {
+                padding: 6px 10px 6px 8px;
+                height: 40px;
+                min-height: 40px;
+            }
+
+            .acc-workspace-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+
+            .acc-workspace-name {
+                font-size: 0.8rem;
+                max-width: 90px;
+            }
+
+            .acc-workspace-year {
+                font-size: 0.65rem;
+            }
+
+            .acc-workspace-badge {
+                display: none;
+            }
+
+            .acc-add-workspace-btn {
+                height: 40px;
+                min-height: 40px;
+                padding: 0 10px;
+            }
+
+            .acc-add-workspace-text {
+                display: none;
+            }
+
+            .acc-add-workspace-icon {
+                width: 24px;
+                height: 24px;
+            }
+
+            .acc-user-info {
+                display: none;
+            }
+
+            .acc-user-profile {
+                padding: 4px;
+                border: none;
+                background: transparent;
+            }
+
+            .acc-user-avatar {
+                width: 32px;
+                height: 32px;
+            }
+
+            .acc-logout-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+
+            .acc-notif-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 17px;
+            }
+
+            .header-burger-menu {
+                width: 38px;
+                height: 38px;
+                margin-left: 8px;
+                margin-right: 4px;
+                font-size: 18px;
+            }
+        }
+
+        /* ==================================================
+           --- Global Modal Custom Styling (Standard CPD ACC) ---
+           ================================================== */
+        .modal-content,
+        .modal-content-custom {
+            border: none !important;
+            border-radius: 20px !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+            background-color: #ffffff !important;
+        }
+
+        .modal-header,
+        .modal-header-custom {
+            border-bottom: 1px solid #f1f5f9 !important;
+            padding: 24px 28px 16px 28px !important;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #ffffff;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .modal-title,
+        .modal-title-custom {
+            font-weight: 800;
+            color: #1e293b;
+            font-size: 1.25rem;
+            margin: 0;
+        }
+
+        .modal-close-custom,
+        .modal-header .btn-close {
+            font-size: 0.9rem;
+            opacity: 0.5;
+        }
+
+        .modal-body,
+        .modal-body-custom {
+            padding: 24px 28px !important;
+            overflow-x: hidden;
+        }
+
+        .modal-footer,
+        .modal-footer-custom {
+            border-top: 1px solid #f1f5f9 !important;
+            padding: 16px 28px !important;
+            gap: 12px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
+            background-color: #ffffff;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .modal-btn-cancel {
+            background-color: #f8fafc !important;
+            color: #334155 !important;
+            font-weight: 700 !important;
+            border-radius: 12px !important;
+            padding: 10px 24px !important;
+            border: 1px solid #e2e8f0 !important;
+            font-size: 0.92rem !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .modal-btn-cancel:hover {
+            background-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+
+        .modal-btn-save {
+            background-color: #007aff !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            border-radius: 12px !important;
+            padding: 10px 28px !important;
+            border: none !important;
+            font-size: 0.92rem !important;
+            box-shadow: 0 4px 14px rgba(0, 122, 255, 0.25) !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .modal-btn-save:hover {
+            background-color: #0066cc !important;
+            color: #ffffff !important;
+        }
+
+        .modal-section-title {
+            margin-bottom: 16px;
+        }
+
+        .modal-section-divider {
+            border-top: 1px dashed #e2e8f0;
+            margin: 24px 0 20px 0;
+        }
+
+        .modal-form-label,
+        .modal-body label {
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .modal-form-control,
+        .modal-form-select,
+        .modal-body .form-control,
+        .modal-body .form-select {
+            background-color: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 12px !important;
+            padding: 12px 16px !important;
+            height: 50px !important;
+            outline: none !important;
+            box-shadow: none !important;
+            width: 100%;
+        }
+
+        .modal-form-control:focus,
+        .modal-form-select:focus,
+        .flatpickr-input-custom:focus,
+        .modal-body .form-control:focus,
+        .modal-body .form-select:focus {
+            background-color: #ffffff !important;
+            border-color: #007aff !important;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1) !important;
+        }
+
+        .modal-form-control:disabled,
+        .modal-form-control[disabled],
+        .modal-form-select:disabled,
+        .modal-body .form-control:disabled,
+        .modal-body .form-control[disabled],
+        .modal-body .form-select:disabled {
+            background-color: #f1f5f9 !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #94a3b8 !important;
+            cursor: not-allowed !important;
+        }
+
+        .modal-form-control.is-invalid,
+        .modal-form-control.border-danger,
+        .modal-body .form-control.is-invalid,
+        .modal-body .form-control.border-danger {
+            border: 1px solid #ef4444 !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.10) !important;
+        }
+
+        .company-name-input.is-invalid {
+            background-color: #fffafa !important;
+            border: 1px solid #ef4444 !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.10) !important;
+        }
+
+        /* --- Flatpickr Date Input & Icon Styling --- */
+        .flatpickr-wrapper,
+        .modal-input-icon-wrap {
+            width: 100% !important;
+            display: block !important;
+            position: relative !important;
+        }
+
+        input.flatpickr-date,
+        input.flatpickr-input,
+        .flatpickr-input-custom {
+            background-color: #ffffff !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 14px center !important;
+            background-size: 18px 18px !important;
+            padding-right: 40px !important;
+            cursor: pointer !important;
+        }
+
+        .modal-input-icon-wrap i,
+        .flatpickr-wrapper i {
+            position: absolute !important;
+            right: 14px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            color: #64748b !important;
+            font-size: 18px !important;
+            pointer-events: none !important;
+            z-index: 5 !important;
+        }
+
+        .modal-input-icon-wrap i.modal-input-icon-clickable {
+            pointer-events: auto !important;
+            cursor: pointer !important;
+        }
+
+        .modal-content-keen {
+            border: none !important;
+            border-radius: 16px !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+            background-color: #ffffff;
+        }
+
+        .modal-header-keen {
+            border-bottom: 1px solid #f1f5f9 !important;
+            padding: 20px 28px !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title-keen {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 1.15rem;
+            margin: 0;
+        }
+
+        .modal-body-keen {
+            padding: 24px 28px !important;
+        }
+
+        .modal-footer-keen {
+            border-top: 1px solid #f1f5f9 !important;
+            padding: 16px 28px !important;
+            gap: 12px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .form-label-keen {
+            font-weight: 500;
+            color: #334155;
+            font-size: 0.90rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-label-keen.required::after,
+        .form-label-keen .req-star {
+            content: " *";
+            color: #ef4444;
+        }
+
+        .form-control-solid,
+        .form-select-solid {
+            background-color: #f8fafc !important;
+            border: 1px solid #f1f5f9 !important;
+            border-radius: 10px !important;
+            padding: 12px 16px !important;
+            font-weight: 500 !important;
+            font-size: 0.90rem !important;
+            color: #334155 !important;
+            box-shadow: none !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .form-control-solid:focus,
+        .form-select-solid:focus {
+            background-color: #ffffff !important;
+            border-color: #0066fe !important;
+            box-shadow: 0 0 0 3px rgba(0, 102, 254, 0.1) !important;
+        }
+
+        .btn-light-keen {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 500;
+            border-radius: 8px;
+            padding: 10px 20px;
+            border: none;
+            font-size: 0.90rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-light-keen:hover {
+            background-color: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .btn-primary-keen {
+            background-color: #0066fe;
+            color: #ffffff;
+            font-weight: 500;
+            border-radius: 8px;
+            padding: 10px 22px;
+            border: none;
+            font-size: 0.90rem;
+            box-shadow: 0 4px 12px rgba(0, 102, 254, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary-keen:hover {
+            background-color: #0052cc;
+            color: #ffffff;
+        }
+
+        /* --- Master Page Layout & Card Wrapper --- */
+        @media only screen and (min-width: 1200px) {
+            body:not([sidebar-data-theme="sidebar-hide"]) .sidebar-area {
+                width: 220px !important;
+            }
+
+            body:not([sidebar-data-theme="sidebar-hide"]) .main-content {
+                padding-left: 220px !important;
+                padding-right: 0 !important;
+                padding-top: 0 !important;
+            }
+        }
+
+        body[sidebar-data-theme="sidebar-hide"] .sidebar-area {
+            width: 80px !important;
+        }
+
+        body[sidebar-data-theme="sidebar-hide"] .main-content {
+            padding-left: 80px !important;
+            padding-right: 0 !important;
+            padding-top: 0 !important;
+        }
+
+        .container-fluid {
+            padding-left: 0 !important;
+            padding-right: 14px !important;
+        }
+
+        .main-page-wrapper {
+            padding-top: 0px !important;
+            padding: 20px 0px !important;
+            min-height: calc(100vh - 72px);
+        }
+
+        .main-card-wrapper {
+            background-color: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #edf2f7;
+            box-shadow: 0 2px 12px rgba(16, 24, 40, 0.03);
+            padding: 24px 20px;
+        }
+
+        .page-header-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .page-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 3px;
+            letter-spacing: -0.2px;
+        }
+
+        .page-subtitle {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        /* --- Master Action Buttons --- */
+        .btn-excel-action {
+            background-color: #EBF4FF;
+            color: #007aff;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 15px;
+            font-size: 0.80rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-excel-action i {
+            color: #007aff;
+            font-size: 16px;
+            transition: color 0.2s ease;
+        }
+
+        .btn-excel-action:hover {
+            background-color: #007aff;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
+        }
+
+        .btn-excel-action:hover i {
+            color: #ffffff !important;
+        }
+
+        .btn-add-action {
+            background-color: #007aff;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 18px;
+            font-size: 0.80rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-add-action i {
+            color: #ffffff !important;
+            font-size: 15px;
+        }
+
+        .btn-add-action:hover {
+            background-color: #0062cc;
+            color: #ffffff !important;
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.35);
+        }
+
+        /* --- Stats Grid --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background-color: #ffffff;
+            border: 1px solid #edf2f7;
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            user-select: none;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+            border-color: #cbd5e1;
+        }
+
+        .stat-card.active {
+            border-color: #3b82f6 !important;
+            background-color: #eff6ff !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15), 0 4px 12px rgba(59, 130, 246, 0.08) !important;
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.blue {
+            background-color: #eff6ff;
+            color: #3b82f6;
+            border: 1px solid #dbeafe;
+        }
+
+        .stat-icon.green {
+            background-color: #f0fdf4;
+            color: #22c55e;
+            border: 1px solid #dcfce7;
+        }
+
+        .stat-icon.purple {
+            background-color: #faf5ff;
+            color: #a855f7;
+            border: 1px solid #f3e8ff;
+        }
+
+        .stat-icon.yellow {
+            background-color: #fefce8;
+            color: #ca8a04;
+            border: 1px solid #fef08a;
+        }
+
+        .stat-icon.red {
+            background-color: #fef2f2;
+            color: #ef4444;
+            border: 1px solid #fee2e2;
+        }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-val {
+            font-size: 1.20rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.1;
+            margin-bottom: 2px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* --- Filter Toolbar --- */
+        .filter-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .search-box-wrap {
+            position: relative;
+            flex: 1;
+            max-width: 360px;
+        }
+
+        .search-box-wrap i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: #f8fafc;
+            border: 1px solid #f1f5f9;
+            border-radius: 10px;
+            padding: 9px 12px 9px 38px;
+            font-size: 0.80rem;
+            color: #334155;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            background-color: #ffffff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+
+
+        .filter-select {
+            background-color: #f8fafc;
+            border: 1px solid #f1f5f9;
+            border-radius: 10px;
+            padding: 9px 32px 9px 14px;
+            font-size: 0.80rem;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16' fill='%2364748b'%3E%3Cpath d='M11.9997 13.1716L16.9495 8.22168L18.3637 9.63589L11.9997 16L5.63574 9.63589L7.04996 8.22168L11.9997 13.1716Z'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            min-width: 130px;
+            transition: all 0.2s ease;
+        }
+
+        .filter-select:focus {
+            background-color: #ffffff;
+            border-color: #3b82f6;
+        }
+
+        /* --- Universal Master Table Styles --- */
+        .table-container-card {
+            background-color: #ffffff;
+            border: 1px solid #edf2f7;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .table-header-wrap {
+            margin-bottom: 20px;
+        }
+
+        .table-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .table-subtitle {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .table-wrap::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .table-wrap::-webkit-scrollbar-track {
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .table-wrap::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .table-wrap::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 0;
+        }
+
+        .table th {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94a3b8;
+            padding: 10px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            white-space: nowrap;
+            background-color: transparent;
+            vertical-align: middle;
+        }
+
+        .table th.text-start {
+            text-align: left;
+        }
+
+        .table th.text-center {
+            text-align: center;
+        }
+
+        .table th.text-end {
+            text-align: right;
+        }
+
+        .table td {
+            padding: 14px 14px;
+            border-bottom: 1px dashed #f1f5f9;
+            vertical-align: middle;
+            font-size: 0.80rem;
+            color: #475569;
+            background-color: transparent;
+            white-space: nowrap;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Generic Table Helpers */
+        .table-item-title {
+            font-size: 0.84rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .table-item-sub {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .badge-active {
+            background-color: #ecfdf5;
+            color: #10b981;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .badge-inactive {
+            background-color: #fae7e7ff;
+            color: #d43333ff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .badge-warning {
+            background-color: #fffbe6;
+            color: #d48806;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .badge-info {
+            background-color: #eff6ff;
+            color: #2563eb;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .badge-subtext {
+            font-size: 0.70rem;
+            color: #64748b;
+            font-weight: 600;
+            margin-top: 3px;
+            display: block;
+            line-height: 1.2;
+        }
+
+        .fee-amount-text {
+            font-weight: 800;
+            color: #0f172a;
+            font-size: 0.82rem;
+        }
+
+        .caretaker-text {
+            font-weight: 600;
+            color: #334155;
+            font-size: 0.80rem;
+        }
+
+        /* Generic Action Buttons */
+        .action-btn-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-action-edit {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-edit:hover {
+            background-color: #ffffff;
+            color: #2563eb;
+            border-color: #bfdbfe;
+
+        }
+
+        .btn-action-message {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background-color: #eff6ff;
+            border: 1px solid #dbeafe;
+            color: #2563eb;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-message:hover {
+            background-color: #dbeafe;
+            color: #2563eb;
+            border-color: #bfdbfe;
+        }
+
+        .btn-action-message:hover i {
+            color: #2563eb !important;
+        }
+
+        .btn-action-drive {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background-color: #fff7ed;
+            border: 1px solid #fed7aa;
+            color: #ea580c;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-drive:hover {
+            background-color: #fed7aa;
+            color: #c2410c;
+            border-color: #fdba74;
+        }
+
+        .btn-action-delete {
+            width: 32px;
+            height: 32px;
+            border-radius: 7px;
+            background-color: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #ef4444;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action-delete:hover {
+            background-color: #fca5a5;
+            color: #dc2626;
+            border-color: #f87171;
+        }
+
+        /* --- Pagination Toolbar --- */
+        .pagination-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #f8fafc;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .per-page-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .per-page-select {
+            background-color: #f8fafc;
+            border: 1px solid #f1f5f9;
+            border-radius: 7px;
+            padding: 3px 24px 3px 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #334155;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='14' height='14' fill='%2364748b'%3E%3Cpath d='M11.9997 13.1716L16.9495 8.22168L18.3637 9.63589L11.9997 16L5.63574 9.63589L7.04996 8.22168L11.9997 13.1716Z'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 6px center;
+        }
+
+        .pagination-info {
+            font-size: 0.78rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .pagination-nav {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .page-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            border: 1px solid transparent;
+            background-color: transparent;
+            color: #64748b;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .page-btn:hover {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+
+
+        /* --- SweetAlert2 Custom Styling (ขนาดกะทัดรัด) --- */
+        .swal2-popup:not(.swal2-toast) {
+            width: 360px !important;
+            max-width: 90vw !important;
+            padding: 24px 20px !important;
+            border-radius: 16px !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.10) !important;
+            font-family: 'Kanit', sans-serif !important;
+        }
+
+        .swal2-popup:not(.swal2-toast) .swal2-icon {
+            transform: scale(0.85) !important;
+            margin: 8px auto 0 auto !important;
+        }
+
+        .swal2-popup:not(.swal2-toast) .swal2-title {
+            font-size: 17px !important;
+            font-weight: 700 !important;
+            color: #1e293b !important;
+            margin-top: 8px !important;
+            margin-bottom: 6px !important;
+        }
+
+        .swal2-popup:not(.swal2-toast) .swal2-html-container {
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            color: #475569 !important;
+            margin: 6px 0 14px 0 !important;
+        }
+
+        .swal2-actions {
+            gap: 8px !important;
+            margin-top: 12px !important;
+        }
+
+        .swal2-styled {
+            padding: 7px 18px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            border-radius: 8px !important;
+            box-shadow: none !important;
+        }
+
+        /* .swal2-styled.swal2-confirm {
+            background-color: #000000ff !important;
+            color: #ffffff !important;
+        } */
+
+        .swal2-styled.swal2-cancel {
+            background-color: #64748b !important;
+            color: #ffffff !important;
+        }
+
+        /* --- Toast Specific Sleek Styling --- */
+        .swal2-container.swal2-top-end .swal2-toast,
+        .swal2-toast {
+            width: auto !important;
+            min-width: 240px !important;
+            max-width: 380px !important;
+            padding: 10px 16px !important;
+            border-radius: 12px !important;
+            background: #ffffff !important;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12) !important;
+            border: 1px solid #f1f5f9 !important;
+            display: flex !important;
+            align-items: center !important;
+            font-family: 'Kanit', sans-serif !important;
+        }
+
+        .swal2-toast .swal2-icon {
+            transform: scale(0.75) !important;
+            margin: 0 10px 0 0 !important;
+            flex-shrink: 0 !important;
+        }
+
+        .swal2-toast .swal2-title {
+            font-size: 0.88rem !important;
+            font-weight: 600 !important;
+            color: #1e293b !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            line-height: 1.3 !important;
+        }
+
+        .swal2-toast .swal2-timer-progress-bar {
+            background: #3b82f6 !important;
+            height: 3px !important;
+            border-radius: 0 0 12px 12px !important;
+        }
+
+        /* --- Dashboard Progress Cards & Custom Elements --- */
+        .dashboard-progress-card {
+            background-color: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #edf2f7;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .card-header-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .card-header-icon.purple {
+            background-color: #faf5ff;
+            color: #a855f7;
+        }
+
+        .card-header-icon.green {
+            background-color: #f0fdf4;
+            color: #22c55e;
+        }
+
+        .card-header-icon.blue {
+            background-color: #eff6ff;
+            color: #3b82f6;
+        }
+
+        .card-section-title {
+            color: #1e293b;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .progress-item-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .progress-item-value {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .progress-badge-zero {
+            background-color: #f1f5f9;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+        }
+
+        .custom-progress-bar {
+            height: 8px;
+            background-color: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        .custom-progress-bar-lg {
+            height: 10px;
+            background-color: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .user-item-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .user-item-sub {
+            font-size: 0.78rem;
+            color: #64748b;
+        }
+
+        .user-item-status-text {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .table-custom {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table-custom th {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94a3b8;
+            padding: 12px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            white-space: nowrap;
+        }
+
+        .table-custom td {
+            padding: 14px 14px;
+            border-bottom: 1px dashed #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .table-custom tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* --- Custom Select2 Pill Design --- */
+        .select2-container--default .select2-selection--single {
+            background-color: #f8fafc !important;
+            border: 1px solid #f1f5f9 !important;
+            border-radius: 12px !important;
+            height: 50px !important;
+            display: flex !important;
+            align-items: center !important;
+            transition: all 0.2s ease !important;
+            box-shadow: none !important;
+        }
+
+        .select2-container--default .select2-selection--single:focus,
+        .select2-container--default.select2-container--open .select2-selection--single {
+            background-color: #ffffff !important;
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #334155 !important;
+            font-size: 0.875rem !important;
+            font-weight: 500 !important;
+            padding-left: 16px !important;
+            padding-right: 36px !important;
+            line-height: 48px !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 48px !important;
+            width: 30px !important;
+            right: 10px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            border-color: #64748b transparent transparent transparent !important;
+            border-width: 5px 4px 0 4px !important;
+        }
+
+        .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+            border-color: transparent transparent #64748b transparent !important;
+            border-width: 0 4px 5px 4px !important;
+        }
+
+
+        .select2-container--default.select2-container--disabled .select2-selection--single {
+            background-color: #f1f5f9 !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #94a3b8 !important;
+            cursor: not-allowed !important;
+        }
+
+        /* Select2 Form Validation State */
+        .is-invalid+.select2-container .select2-selection--single,
+        .was-validated select:invalid+.select2-container .select2-selection--single {
+            border-color: #ef4444 !important;
+        }
+
+
+        .select2-dropdown {
+            border: 1px solid #edf2f7 !important;
+            border-radius: 14px !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08) !important;
+            overflow: hidden !important;
+            z-index: 9999 !important;
+            font-size: 0.875rem !important;
+            background-color: #ffffff !important;
+        }
+
+        .select2-container--default .select2-results__option {
+            padding: 10px 16px !important;
+            font-weight: 500 !important;
+            color: #475569 !important;
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #3b82f6 !important;
+            color: #ffffff !important;
+        }
+
+        .select2-container--default .select2-results__option[aria-selected=true] {
+            background-color: #eff6ff !important;
+            color: #1d4ed8 !important;
+            font-weight: 700 !important;
+        }
+
+        /* ===== Add Company Form ===== */
+
+        .company-form-group {
+            padding: 20px 24px 4px 24px;
+            margin: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .company-form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 0.90rem;
+            color: #334155;
+        }
+
+        .company-name-input {
+            display: block;
+            width: 100% !important;
+            height: 42px;
+            box-sizing: border-box !important;
+
+            background-color: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+
+            padding: 9px 14px !important;
+            font-size: 0.90rem !important;
+            font-weight: 500 !important;
+            color: #334155 !important;
+
+            outline: none !important;
+            box-shadow: none !important;
+
+            transition: all 0.2s ease;
+        }
+
+        .company-name-input:focus {
+            background-color: #ffffff !important;
+            border-color: #007aff !important;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.10) !important;
+        }
+
+        /* ===== Validation Error ===== */
+
+        .company-name-input.is-invalid {
+            background-color: #fffafa !important;
+            border: 1px solid #ef4444 !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.10) !important;
+        }
+
+        .company-name-input.is-invalid:focus {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12) !important;
+        }
+
+        .company-name-error {
+            display: none;
+            margin-top: 6px;
+            color: #ef4444;
+            font-size: 0.78rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .company-name-error.show {
+            display: block;
+        }
+
+        /* ระบบราชการ */
+        .gov-accounts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .gov-account-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            transition: border-color .15s ease, box-shadow .15s ease;
+        }
+
+        .gov-account-card:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, .06);
+        }
+
+
+        .gov-account-fields {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .gov-account-fields .modal-input-icon-wrap {
+            margin: 0;
+        }
+
+        .gov-account-remove {
+            flex-shrink: 0;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background .15s ease, color .15s ease;
+        }
+
+        .gov-account-remove:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .gov-accounts-empty {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 20px;
+            border: 1px dashed #cbd5e1;
+            border-radius: 10px;
+            color: #94a3b8;
+            font-size: .85rem;
+            text-align: center;
+        }
+
+        .gov-accounts-empty.show {
+            display: flex;
+        }
+
+        .gov-accounts-empty i {
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 576px) {
+            .gov-account-fields {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="boxed-size">
+
+    <div class="preloader" id="preloader">
+        <script>
+            if (sessionStorage.getItem('cpdth_show_preloader') === '1') {
+                sessionStorage.removeItem('cpdth_show_preloader');
+            } else {
+                var _p = document.getElementById('preloader');
+                if (_p) { _p.style.display = 'none'; }
+            }
+        </script>
+        <div class="preloader">
+            <div class="waviy position-relative">
+                <span class="d-inline-block">B</span>   
+                <span class="d-inline-block">L</span>
+                <span class="d-inline-block">I</span>
+                <span class="d-inline-block">N</span>
+                <span class="d-inline-block">D</span>
+            </div>
+        </div>
+    </div>
+
+    <header class="acc-topbar">
+        <div class="d-flex align-items-center flex-grow-1" style="min-width: 0;">
+            <!-- Brand Logo & Title -->
+            <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/main" class="acc-brand-wrap">
+                <!-- <div class="acc-brand-logo"> -->
+                    <!-- <img src="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/assets/images/G_AM_logo-01.jpg"
+                        alt="Cpd Acc Logo"> -->
+                <!-- </div> -->
+                <div class="acc-brand-info">
+                    <h1 class="acc-brand-title">BLIND</h1>
+                    <!-- <p class="acc-brand-subtitle">ระบบบริหารสำนักงานบัญชี</p> -->
+                </div>
+            </a>
+
+            <!-- Sidebar Toggle Button -->
+            <button type="button" id="header-burger-menu" class="header-burger-menu">
+                <i class="ri-menu-line"></i>
+            </button>
+
+        </div>
+
+        <div class="acc-actions">
+
+            <div class="dropdown">
+                <button type="button" class="acc-notif-btn" id="notifDropdownBtn" data-bs-toggle="dropdown"
+                    data-bs-auto-close="outside" aria-expanded="false" title="การแจ้งเตือน">
+                    <i class="ri-notification-3-line"></i>
+                    <span class="acc-notif-badge" id="notifBadge">0</span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end acc-notif-menu" aria-labelledby="notifDropdownBtn">
+                    <div class="acc-notif-header d-flex justify-content-between align-items-center">
+                        <span>การแจ้งเตือน</span>
+                        <a href="javascript:void(0)" onclick="readAllNotificationsOnly()"
+                            class="text-primary text-decoration-none" style="font-size: 0.85rem;"
+                            title="ทำเครื่องหมายว่าอ่านแล้วทั้งหมด">อ่านทั้งหมด</a>
+                    </div>
+                    <div class="acc-notif-list" id="notifListContainer">
+                        <div class="acc-notif-empty">กำลังโหลด...</div>
+                    </div>
+                    <!-- View All Notifications Button -->
+                    <div class="acc-notif-footer text-center border-top">
+                        <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/notifications"
+                            class="text-primary text-decoration-none d-block py-2">ดูการแจ้งเตือนทั้งหมด</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Notification Bell -->
+
+            <div class="dropdown">
+                <div class="acc-user-profile" title="ข้อมูลผู้ใช้งาน" data-bs-toggle="dropdown"
+                    data-bs-auto-close="outside" aria-expanded="false" style="cursor: pointer;" id="profileDropdownBtn">
+                    <div class="acc-user-avatar">
+                        <i class="ri-user-3-fill"></i>
+                    </div>
+                    <div class="acc-user-info d-none d-sm-flex pe-2">
+                        <span class="acc-user-name">
+                            <?php echo htmlspecialchars(trim(($data['firstname'] ?? $_SESSION['user_firstname'] ?? '') . ' ' . ($data['lastname'] ?? $_SESSION['user_lastname'] ?? 'ผู้ใช้งาน'))) ?>
+                        </span>
+                        <span class="acc-user-role">
+                            <?php echo (!empty($data['is_super_admin'] ?? $_SESSION['is_super_admin'] ?? null) && ($data['is_super_admin'] ?? $_SESSION['is_super_admin']) === '1') ? 'ผู้ดูแลระบบ' : 'ผู้ใช้งานระบบ' ?>
+                        </span>
+                    </div>
+                </div>
+                <!-- <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="profileDropdownBtn"
+                    style="border-radius: 14px; min-width: 270px; padding: 10px; border: 1px solid #edf2f7; margin-top: 10px;">
+                    Web Push Notification Permission Card
+                    <li onclick="event.stopPropagation()">
+                        <div id="notifPermCard" style="
+                            margin: 2px 0 6px 0;
+                            border-radius: 10px;
+                            padding: 12px 14px;
+                            background: linear-gradient(135deg, #f0f7ff 0%, #e8f4ff 100%);
+                            border: 1px solid #bfdbfe;
+                            transition: all 0.2s ease;
+                        ">
+                            
+                            <div id="notifPermHint"
+                                style="font-size: 11px; color: #94a3b8; margin-top: 8px; padding-top: 8px; border-top: 1px solid #e2e8f0; display: none;">
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-block d-sm-none">
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li class="d-block d-sm-none">
+                        <a class="dropdown-item d-flex align-items-center px-3 py-2 text-danger"
+                            href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/logout"
+                            style="font-weight: 500; font-size: 14px; border-radius: 8px;">
+                            <i class="ri-logout-box-r-line me-2" style="font-size: 18px;"></i>
+                            ออกจากระบบ
+                        </a>
+                    </li>
+                </ul> -->
+            </div>
+
+            <!-- Logout Button -->
+            <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/logout"
+                class="acc-logout-btn d-none d-sm-flex" title="ออกจากระบบ">
+                <i class="ri-logout-box-r-line"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Modal เพิ่มบริษัท -->
+    <div class="modal fade" id="addCompanyModal" tabindex="-1" aria-labelledby="addCompanyModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content"
+                style="border-radius: 16px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <div class="modal-header" style="border-bottom: 1px solid #f1f5f9; padding: 20px 24px;">
+                    <h5 class="modal-title" id="addCompanyModalLabel" style="font-weight: 800; color: #1e293b;">
+                        เพิ่มบริษัทใหม่</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="addCompanyForm">
+                    <div class="company-form-group">
+                        <label for="companyNameInput" class="company-form-label">
+                            ชื่อบริษัท
+                            <span class="text-danger">*</span>
+                        </label>
+
+                        <input type="text" class="form-control company-name-input" id="companyNameInput"
+                            name="company_name" placeholder="กรอกชื่อบริษัท" oninput="clearCompanyNameError()">
+
+                        <div id="companyNameError" class="company-name-error"></div>
+                    </div>
+                </form>
+                <div class="modal-footer" style="border-top: 1px solid #f1f5f9; padding: 16px 24px;">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                        style="border-radius: 8px; font-weight: 600;">ยกเลิก</button>
+                    <button type="button" class="btn btn-primary" onclick="addCompany()"
+                        style="border-radius: 8px; font-weight: 700; background-color: #0066fe; border: none; padding: 8px 20px;">บันทึก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal แก้ไขบริษัท -->
+    <div class="modal fade" id="editCompanyModal" tabindex="-1" aria-labelledby="editCompanyModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content"
+                style="border-radius: 16px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <div class="modal-header" style="border-bottom: 1px solid #f1f5f9; padding: 20px 24px;">
+                    <h5 class="modal-title" id="editCompanyModalLabel" style="font-weight: 800; color: #1e293b;">
+                        แก้ไขข้อมูลบริษัท</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editCompanyForm">
+                    <input type="hidden" id="editCompanyId" name="company_id" value="">
+                    <div class="company-form-group">
+                        <label for="editCompanyNameInput" class="company-form-label">
+                            ชื่อบริษัท
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control company-name-input" id="editCompanyNameInput"
+                            name="company_name" placeholder="กรอกชื่อบริษัท" oninput="clearEditCompanyNameError()">
+                        <div id="editCompanyNameError" class="company-name-error"></div>
+                    </div>
+                </form>
+                <div class="modal-footer" style="border-top: 1px solid #f1f5f9; padding: 16px 24px;">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                        style="border-radius: 8px; font-weight: 600;">ยกเลิก</button>
+                    <button type="button" class="btn btn-primary" onclick="submitEditCompany()"
+                        style="border-radius: 8px; font-weight: 700; background-color: #0066fe; border: none; padding: 8px 20px;">บันทึก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script
+        src="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/template/assets/js/jquery-3.1.1.min.js"></script>
+
+    <script>
+        // ตรวจสอบว่าอยู่ในหน้าฝั่ง Backoffice หรือไม่
+        function checkIsBackoffice() {
+            return Boolean(
+
+                document.querySelector('.sidebar-area') ||
+                window.location.pathname.includes('/backoffice') ||
+                window.location.pathname.includes('/customer') ||
+                window.location.pathname.includes('/employee') ||
+                window.location.pathname.includes('/register_board') ||
+                window.location.pathname.includes('/closing') ||
+
+                window.location.pathname.includes('/tasks')
+            );
+        }
+
+        // ซ่อนปุ่ม 3 ขีด (toggle sidebar) ถ้าอยู่หน้าแรก หรือหน้าที่ไม่มี sidebar
+        function toggleBurgerMenuVisibility() {
+            const burgerBtn = document.getElementById('header-burger-menu');
+            if (!burgerBtn) return;
+
+            const isBackoffice = checkIsBackoffice();
+
+            if (!isBackoffice) {
+                burgerBtn.style.display = 'none';
+            } else {
+                burgerBtn.style.display = 'flex';
+            }
+        }
+
+        // --- Notification Logic ---
+        // function loadNotifications() {
+        //     $.ajax({
+        //         url: "<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/notification/get",
+        //         method: "POST",
+        //         dataType: "json",
+        //         success: function (res) {
+        //             // console.log('notification response:', res); // เอาไว้ดูค่าจริงใน Console ก่อน แล้วค่อยลบทิ้ง
+
+        //             if (res && (res.result === 1 || res.result === '1')) { // แก้ตรงนี้ ป้องกันปัญหา string vs int
+        //                 let count = res.count || 0;
+        //                 let badge = document.getElementById('notifBadge');
+        //                 if (count > 0) {
+        //                     badge.style.display = 'block';
+        //                     badge.innerText = count > 99 ? '99+' : count;
+        //                 } else {
+        //                     badge.style.display = 'none';
+        //                 }
+
+        //                 let listHtml = '';
+        //                 if (res.data && res.data.length > 0) {
+        //                     const baseUrl = "<?php echo defined('BASE_URL') ? BASE_URL : ''; ?>";
+        //                     res.data.forEach(function (item) {
+        //                         let timeStr = new Date(item.created_at).toLocaleString('th-TH');
+
+        //                         let fullUrl = item.url_link ? item.url_link : '';
+        //                         if (fullUrl && fullUrl.startsWith('/')) {
+        //                             // ถ้า url เริ่มด้วย / ให้เอา baseUrl มาต่อหน้า
+        //                             fullUrl = baseUrl + fullUrl;
+        //                         } else if (fullUrl && !fullUrl.startsWith('http')) {
+        //                             fullUrl = baseUrl + '/' + fullUrl;
+        //                         }
+
+        //                         listHtml += `
+        //                     <div class="acc-notif-item unread" id="notif-item-${item.notif_id}">
+        //                         <div class="acc-notif-title">
+        //                             ${fullUrl ? `<a href="${fullUrl}" style="color: inherit; text-decoration: none;">${item.task_type === 'post_it' ? 'งานใหม่' : 'แจ้งเตือน'} <i class="ri-external-link-line ms-1 text-primary"></i></a>` : (item.task_type === 'post_it' ? 'งานใหม่' : 'แจ้งเตือน')}
+        //                         </div>
+        //                         <div class="acc-notif-text">${item.message}</div>
+        //                         <div class="acc-notif-time">${timeStr}</div>
+        //                         <div class="acc-notif-action d-flex align-items-center gap-2">
+        //                             ${fullUrl ? `<a href="${fullUrl}" class="btn btn-sm btn-outline-primary" style="font-size: 0.75rem; padding: 2px 8px;">เปิดดู</a>` : ''}
+        //                             <button class="acc-notif-ack-btn" onclick="markNotificationRead(${item.notif_id})">รับทราบ</button>
+        //                         </div>
+        //                     </div>
+        //                 `;
+        //                     });
+        //                 } else {
+        //                     listHtml = '<div class="acc-notif-empty">ไม่มีการแจ้งเตือน</div>';
+        //                 }
+        //                 document.getElementById('notifListContainer').innerHTML = listHtml;
+        //             } else {
+        //                 document.getElementById('notifListContainer').innerHTML =
+        //                     '<div class="acc-notif-empty">ไม่สามารถโหลดข้อมูลได้</div>';
+        //             }
+        //         },
+        //         error: function (xhr, status, err) {
+        //             if (xhr.status === 401) {
+        //                 window.location.href = "<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/login";
+        //                 return;
+        //             }
+        //             // ตรงนี้สำคัญมาก — เดิมไม่มีเลย ทำให้ error เงียบหายไป
+        //             console.error('notification/get failed:', status, err, xhr.responseText);
+        //             document.getElementById('notifListContainer').innerHTML =
+        //                 '<div class="acc-notif-empty">เกิดข้อผิดพลาดในการโหลด</div>';
+
+        //             if (typeof Swal !== 'undefined') {
+        //                 Swal.fire({
+        //                     icon: 'error',
+        //                     title: 'เกิดข้อผิดพลาดในการโหลดข้อมูลการแจ้งเตือน',
+        //                     confirmButtonText: 'ตกลง',
+        //                     confirmButtonColor: '#0066fe',
+        //                     showConfirmButton: true
+        //                 });
+        //             }
+        //         }
+        //     });
+        // }
+
+        // function readAllNotificationsOnly() {
+        //     const baseUrl = "<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>";
+        //     $.ajax({
+        //         url: baseUrl + "/notification/read-all",
+        //         method: "POST",
+        //         dataType: "json",
+        //         success: function (res) {
+        //             if (res && res.result === 1) {
+        //                 loadNotifications(); // โหลดใหม่ใน dropdown
+        //             }
+        //         }
+        //     });
+        // }
+
+        // function markNotificationRead(notifId) {
+        //     $.ajax({
+        //         url: "<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/notification/read",
+        //         method: "POST",
+        //         data: { notif_id: notifId },
+        //         dataType: "json",
+        //         success: function (res) {
+        //             if (res && res.result === 1) {
+        //                 let item = document.getElementById('notif-item-' + notifId);
+        //                 if (item) {
+        //                     item.classList.remove('unread');
+        //                     item.style.opacity = '0.5';
+        //                     setTimeout(() => { item.style.display = 'none'; }, 300);
+        //                 }
+        //                 loadNotifications();
+        //             }
+        //         }
+        //     });
+        // }
+
+        // function urlB64ToUint8Array(base64String) {
+        //     const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        //     const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+        //     const rawData = window.atob(base64);
+        //     const outputArray = new Uint8Array(rawData.length);
+        //     for (let i = 0; i < rawData.length; ++i) {
+        //         outputArray[i] = rawData.charCodeAt(i);
+        //     }
+        //     return outputArray;
+        // }
+
+        // async function subscribeUserToPush() {
+        //     if ('serviceWorker' in navigator && 'PushManager' in window) {
+        //         try {
+        //             const baseUrl = "<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>";
+        //             const registration = await navigator.serviceWorker.register(baseUrl + '/sw.js');
+        //             await navigator.serviceWorker.ready;
+
+        //             const response = await fetch(baseUrl + '/notification/vapid-public-key', {
+        //                 credentials: 'same-origin',
+        //                 headers: { 'Accept': 'application/json' }
+        //             });
+
+        //             if (!response.ok || !(response.headers.get('content-type') || '').includes('application/json')) {
+        //                 return false;
+        //             }
+
+        //             const data = await response.json();
+
+        //             if (!data.publicKey) return false;
+
+        //             const applicationServerKey = urlB64ToUint8Array(data.publicKey);
+
+        //             let permission = Notification.permission;
+        //             if (permission === 'default') {
+        //                 permission = await Notification.requestPermission();
+        //             }
+
+        //             if (permission === 'granted') {
+        //                 const subscription = await registration.pushManager.subscribe({
+        //                     userVisibleOnly: true,
+        //                     applicationServerKey: applicationServerKey
+        //                 });
+
+        //                 const saveRes = await fetch(baseUrl + '/notification/subscribe', {
+        //                     method: 'POST',
+        //                     credentials: 'same-origin',
+        //                     headers: { 'Content-Type': 'application/json' },
+        //                     body: JSON.stringify(subscription)
+        //                 });
+
+        //                 if (saveRes.ok) {
+        //                     return true;
+        //                 } else {
+        //                     alert('ไม่สามารถบันทึกข้อมูลแจ้งเตือนได้');
+        //                     return false;
+        //                 }
+        //             } else {
+        //                 alert('คุณไม่อนุญาตให้แสดงการแจ้งเตือน (Permission Denied) โปรดไปตั้งค่าเบราว์เซอร์เพื่ออนุญาต');
+        //                 return false;
+        //             }
+        //         } catch (error) {
+        //             console.error('Push Subscription error:', error);
+        //             alert('เกิดข้อผิดพลาดในการลงทะเบียนรับการแจ้งเตือน');
+        //             return false;
+        //         }
+        //     } else {
+        //         // Not supported, prompt user if they want to enable notifications anyway?
+        //         // Requesting permission just in case
+        //         let permission = Notification.permission;
+        //         if (permission === 'default') {
+        //             permission = await Notification.requestPermission();
+        //         }
+        //         return false;
+        //     }
+        // }
+
+        // async function unsubscribeUserFromPush() {
+        //     if ('serviceWorker' in navigator && 'PushManager' in window) {
+        //         try {
+        //             const registration = await navigator.serviceWorker.ready;
+        //             const subscription = await registration.pushManager.getSubscription();
+        //             if (subscription) {
+        //                 await subscription.unsubscribe();
+
+        //                 const baseUrl = "<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>";
+        //                 await fetch(baseUrl + '/notification/unsubscribe', {
+        //                     method: 'POST',
+        //                     headers: { 'Content-Type': 'application/json' },
+        //                     body: JSON.stringify({ endpoint: subscription.endpoint })
+        //                 });
+        //             }
+        //             return true;
+        //         } catch (error) {
+        //             console.error('Push Unsubscription error:', error);
+        //             return false;
+        //         }
+        //     }
+        //     return false;
+        // }
+
+        // $(document).ready(function () {
+        //     loadNotifications();
+        //     // Optional: Auto fetch every 1 minute
+        //     setInterval(loadNotifications, 60000);
+
+        //     // Web Push Toggle Logic
+        //     function updateNavNotificationToggleState() {
+        //         const webPushToggle = document.getElementById('webPushToggle');
+        //         const permIcon = document.getElementById('notifPermIcon');
+        //         const permStatus = document.getElementById('notifPermStatus');
+        //         const permCard = document.getElementById('notifPermCard');
+        //         const permHint = document.getElementById('notifPermHint');
+        //         if (!webPushToggle) return;
+
+        //         const isUserDisabled = localStorage.getItem('web_push_enabled') === 'false';
+        //         const notifSupported = (typeof Notification !== 'undefined');
+        //         const permission = notifSupported ? Notification.permission : 'unsupported';
+        //         const hasPermission = permission === 'granted';
+
+        //         webPushToggle.checked = hasPermission && !isUserDisabled;
+
+        //         // อัปเดต visual ของ custom toggle (track + thumb)
+        //         (function () {
+        //             var track = document.getElementById('webPushTrack');
+        //             var thumb = document.getElementById('webPushThumb');
+        //             var isOn = webPushToggle.checked;
+        //             if (track) track.style.backgroundColor = isOn ? '#2563eb' : '#cbd5e1';
+        //             if (thumb) thumb.style.left = isOn ? '25px' : '3px';
+        //         })();
+
+        //         if (!permIcon || !permStatus || !permCard) return;
+
+        //         if (permission === 'granted' && !isUserDisabled) {
+        //             // Active / Granted - green
+        //             permCard.style.background = 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)';
+        //             permCard.style.borderColor = '#86efac';
+        //             permIcon.style.backgroundColor = '#bbf7d0';
+        //             permIcon.style.color = '#16a34a';
+        //             permIcon.querySelector('i').className = 'ri-notification-3-fill';
+        //             permStatus.textContent = '\u2714 \u0e2d\u0e19\u0e38\u0e0d\u0e32\u0e15\u0e41\u0e25\u0e49\u0e27';
+        //             permStatus.style.color = '#16a34a';
+        //             webPushToggle.disabled = false;
+        //             if (permHint) permHint.style.display = 'none';
+        //         } else if (permission === 'denied') {
+        //             // Blocked - red, disable toggle
+        //             permCard.style.background = 'linear-gradient(135deg, #fff7f7 0%, #fee2e2 100%)';
+        //             permCard.style.borderColor = '#fca5a5';
+        //             permIcon.style.backgroundColor = '#fee2e2';
+        //             permIcon.style.color = '#dc2626';
+        //             permIcon.querySelector('i').className = 'ri-notification-off-line';
+        //             permStatus.textContent = '\u26d4 \u0e16\u0e39\u0e01\u0e1a\u0e25\u0e47\u0e2d\u0e01\u0e43\u0e19\u0e40\u0e1a\u0e23\u0e32\u0e27\u0e4c\u0e40\u0e0b\u0e2d\u0e23\u0e4c';
+        //             permStatus.style.color = '#dc2626';
+        //             webPushToggle.disabled = true;
+        //             if (permHint) {
+        //                 permHint.style.display = 'block';
+        //                 permHint.innerHTML = '\uD83D\uDD12 \u0e44\u0e1b\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e40\u0e1a\u0e23\u0e32\u0e27\u0e4c\u0e40\u0e0b\u0e2d\u0e23\u0e4c \u2192 <b>\u0e01\u0e32\u0e23\u0e41\u0e08\u0e49\u0e07\u0e40\u0e15\u0e37\u0e2d\u0e19</b> \u2192 \u0e2d\u0e19\u0e38\u0e0d\u0e32\u0e15';
+        //             }
+        //         } else if (hasPermission && isUserDisabled) {
+        //             // Granted but user muted
+        //             permCard.style.background = 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)';
+        //             permCard.style.borderColor = '#cbd5e1';
+        //             permIcon.style.backgroundColor = '#e2e8f0';
+        //             permIcon.style.color = '#94a3b8';
+        //             permIcon.querySelector('i').className = 'ri-notification-off-line';
+        //             permStatus.textContent = '\u23f8\ufe0f \u0e1b\u0e34\u0e14\u0e2d\u0e22\u0e39\u0e48\u0e0a\u0e31\u0e48\u0e27\u0e04\u0e23\u0e32\u0e27';
+        //             permStatus.style.color = '#94a3b8';
+        //             webPushToggle.disabled = false;
+        //             if (permHint) permHint.style.display = 'none';
+        //         } else {
+        //             // Default - blue (not yet asked)
+        //             permCard.style.background = 'linear-gradient(135deg, #f0f7ff 0%, #e8f4ff 100%)';
+        //             permCard.style.borderColor = '#bfdbfe';
+        //             permIcon.style.backgroundColor = '#dbeafe';
+        //             permIcon.style.color = '#2563eb';
+        //             permIcon.querySelector('i').className = 'ri-notification-3-line';
+        //             permStatus.textContent = '\uD83D\uDD14 \u0e01\u0e14 Toggle \u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e02\u0e2d\u0e2d\u0e19\u0e38\u0e0d\u0e32\u0e15';
+        //             permStatus.style.color = '#2563eb';
+        //             webPushToggle.disabled = false;
+        //             if (permHint) permHint.style.display = 'none';
+        //         }
+        //     }
+
+        //     updateNavNotificationToggleState();
+
+        //     const profileDropdown = document.getElementById('profileDropdownBtn');
+        //     if (profileDropdown) {
+        //         profileDropdown.addEventListener('show.bs.dropdown', function () {
+        //             updateNavNotificationToggleState();
+        //         });
+        //     }
+
+        //     const webPushToggle = document.getElementById('webPushToggle');
+        //     if (webPushToggle) {
+        //         webPushToggle.addEventListener('change', async function () {
+        //             const isChecked = this.checked;
+        //             this.disabled = true;
+
+        //             if (isChecked) {
+        //                 localStorage.removeItem('web_push_enabled');
+        //                 if (typeof Notification !== 'undefined' && Notification.permission === 'denied') {
+        //                     this.checked = false;
+        //                 } else {
+        //                     if (typeof subscribeUserToPush === 'function') {
+        //                         const success = await subscribeUserToPush();
+        //                         if (success) {
+        //                             localStorage.setItem('web_push_enabled', 'true');
+        //                         } else {
+        //                             this.checked = false;
+        //                         }
+        //                     } else if (typeof Notification !== 'undefined') {
+        //                         const perm = await Notification.requestPermission();
+        //                         if (perm !== 'granted') {
+        //                             this.checked = false;
+        //                         }
+        //                     }
+        //                 }
+        //             } else {
+        //                 localStorage.setItem('web_push_enabled', 'false');
+        //                 if (typeof unsubscribeUserFromPush === 'function') {
+        //                     await unsubscribeUserFromPush();
+        //                 }
+        //             }
+
+        //             if (typeof Notification === 'undefined' || Notification.permission !== 'denied') {
+        //                 this.disabled = false;
+        //             }
+        //             updateNavNotificationToggleState();
+        //         });
+        //     }
+        // });
+
+    </script>
