@@ -9,12 +9,15 @@ $routes = [
         'customer' => ['CustomerController', 'index'],
         'user'   => ['UserController', 'index'],
         'volunteer' => ['MainController', 'index'],
-        'volunteer_approve' => ['MainController', 'index'],
+        'volunteer_approve' => ['VolunteerController', 'index'],
         'activity' => ['MainController', 'index'],
         'skill' => ['MainController', 'index'],
     ],
     'POST' => [
-        'auth/login'  => ['AuthController', 'processLogin']
+        'auth/login'  => ['AuthController', 'processLogin'],
+        'volunteer_approve_table' => ['VolunteerController', 'getTable'],
+        'approveVolunteer' => ['VolunteerController', 'approve'],
+        'rejectVolunteer' => ['VolunteerController', 'reject']
     ]
 ];
 
