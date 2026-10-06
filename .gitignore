@@ -2,3 +2,9 @@
 vendor/
 *.log
 debug_*.log
+
+# Composer binary (ติดตั้งเองในเครื่อง)
+composer.phar
+
+# DB dump ที่ export เป็น artifact (ไม่ต้อง track; schema จริงอยู่ใน sql/*.sql)
+sql/admin_blind_export_*.sql

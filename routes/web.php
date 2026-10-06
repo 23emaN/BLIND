@@ -6,15 +6,29 @@ $routes = [
     'GET' => [
         'login'  => ['AuthController', 'showLogin'],
         'main'   => ['MainController', 'index'],
-        'customer' => ['CustomerController', 'index'],
         'user'   => ['UserController', 'index'],
+        'user/get' => ['UserController', 'get'],
         'volunteer' => ['MainController', 'index'],
         'volunteer_approve' => ['MainController', 'index'],
-        'activity' => ['MainController', 'index'],
-        'skill' => ['MainController', 'index'],
+        'activity' => ['ActivityController', 'index'],
+        'activity/get' => ['ActivityController', 'get'],
+        'skill' => ['SkillController', 'index'],
+        'skill/get' => ['SkillController', 'get'],
     ],
     'POST' => [
-        'auth/login'  => ['AuthController', 'processLogin']
+        'auth/login'   => ['AuthController', 'processLogin'],
+        'user/filter'  => ['UserController', 'filter'],
+        'user/add'     => ['UserController', 'add'],
+        'user/edit'    => ['UserController', 'edit'],
+        'user/delete'  => ['UserController', 'delete'],
+        'skill/filter' => ['SkillController', 'filter'],
+        'skill/add'    => ['SkillController', 'add'],
+        'skill/edit'   => ['SkillController', 'edit'],
+        'skill/delete' => ['SkillController', 'delete'],
+        'activity/filter' => ['ActivityController', 'filter'],
+        'activity/add'    => ['ActivityController', 'add'],
+        'activity/edit'   => ['ActivityController', 'edit'],
+        'activity/delete' => ['ActivityController', 'delete'],
     ]
 ];
 
