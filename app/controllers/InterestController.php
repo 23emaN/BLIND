@@ -8,7 +8,7 @@ require_once '../app/controllers/AttributeController.php';
 class InterestController extends AttributeController
 {
     protected $type      = '1';
-    protected $pageTitle = 'ตั้งค่ากิจกรรมที่สนใจเข้าร่วม';
-    protected $itemLabel = 'กิจกรรมที่สนใจ';
+    protected $pageTitle = 'ตั้งค่าหมวดหมู่กิจกรรม';
+    protected $itemLabel = 'หมวดหมู่กิจกรรม';
     protected $routeBase = 'interest';
 }

@@ -246,7 +246,7 @@ $skill_pages = ['skill'];
                 <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/interest"
                     class="menu-link">
                     <i class="ri-checkbox-circle-line menu-icon"></i>
-                    <span class="title">กิจกรรมที่สนใจเข้าร่วม</span>
+                    <span class="title">หมวดหมู่กิจกรรม</span>
                 </a>
             </li>
 
