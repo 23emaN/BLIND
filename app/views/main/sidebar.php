@@ -225,10 +225,32 @@
             </li>
 
             <li class="menu-item <?php echo in_array($now_page, $activity_pages) ? 'open active' : '' ?>">
+            <li class="menu-item <?php echo in_array($now_page, $volunteer_approve_page) ? 'open active' : '' ?>">
+                <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/volunteer_approve"
+                    class="menu-link <?php echo in_array($now_page, $volunteer_approve_page) ? 'active' : '' ?>">
+                    <i class="ri-team-line menu-icon"></i>
+                    <span class="title">ยืนยันตัวตนอาสาสมัคร</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
                 <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/activity"
-                    class="menu-link <?php echo in_array($now_page, $activity_pages) ? 'active' : '' ?>">
+                    class="menu-link">
+                    <i class="ri-calendar-event-line menu-icon"></i>
+                    <span class="title">ปฏิทินกิจกรรม</span>
+                </a>
+            </li>
+
+            <!-- หมวดหมู่: ตั้งค่า -->
+            <li class="menu-title small">
+                <span class="menu-title-text">ตั้งค่า</span>
+            </li>
+
+            <li class="menu-item">
+                <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/interest"
+                    class="menu-link">
                     <i class="ri-checkbox-circle-line menu-icon"></i>
-                    <span class="title">ตั้งค่ากิจกรรมที่สนใจเข้าร่วม</span>
+                    <span class="title">หมวดหมู่กิจกรรม</span>
                 </a>
             </li>
             <li class="menu-item <?php echo in_array($now_page, $activity_category_pages) ? 'open active' : '' ?>">
@@ -244,6 +266,24 @@
                     class="menu-link <?php echo in_array($now_page, $skill_pages) ? 'active' : '' ?>">
                     <i class="ri-tools-line menu-icon"></i>
                     <span class="title">ตั้งค่าทักษะและความถนัด</span>
+                    <i class="ri-checkbox-circle-line menu-icon"></i>
+                    <span class="title">ทักษะและความถนัด</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/location"
+                    class="menu-link">
+                    <i class="ri-map-pin-line menu-icon"></i>
+                    <span class="title">สถานที่ที่ใช้บ่อย</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/timeslot"
+                    class="menu-link">
+                    <i class="ri-time-line menu-icon"></i>
+                    <span class="title">ช่วงเวลาที่ใช้บ่อย</span>
                 </a>
             </li>
             <li class="menu-item <?php echo in_array($now_page, $location_pages) ? 'open active' : '' ?>">
