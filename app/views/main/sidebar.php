@@ -229,11 +229,24 @@ $skill_pages = ['skill'];
                 </a>
             </li>
 
-            <li class="menu-item <?php echo in_array($now_page, $activity_pages) ? 'open active' : '' ?>">
+            <li class="menu-item">
                 <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/activity"
-                    class="menu-link <?php echo in_array($now_page, $activity_pages) ? 'active' : '' ?>">
+                    class="menu-link">
+                    <i class="ri-calendar-event-line menu-icon"></i>
+                    <span class="title">ปฏิทินกิจกรรม</span>
+                </a>
+            </li>
+
+            <!-- หมวดหมู่: ตั้งค่า -->
+            <li class="menu-title small">
+                <span class="menu-title-text">ตั้งค่า</span>
+            </li>
+
+            <li class="menu-item">
+                <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/interest"
+                    class="menu-link">
                     <i class="ri-checkbox-circle-line menu-icon"></i>
-                    <span class="title">ตั้งค่ากิจกรรมที่สนใจเข้าร่วม</span>
+                    <span class="title">หมวดหมู่กิจกรรม</span>
                 </a>
             </li>
 
@@ -241,7 +254,23 @@ $skill_pages = ['skill'];
                 <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/skill"
                     class="menu-link <?php echo in_array($now_page, $skill_pages) ? 'active' : '' ?>">
                     <i class="ri-checkbox-circle-line menu-icon"></i>
-                    <span class="title">ตั้งค่าทักษะและความถนัด</span>
+                    <span class="title">ทักษะและความถนัด</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/location"
+                    class="menu-link">
+                    <i class="ri-map-pin-line menu-icon"></i>
+                    <span class="title">สถานที่ที่ใช้บ่อย</span>
+                </a>
+            </li>
+
+            <li class="menu-item">
+                <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/timeslot"
+                    class="menu-link">
+                    <i class="ri-time-line menu-icon"></i>
+                    <span class="title">ช่วงเวลาที่ใช้บ่อย</span>
                 </a>
             </li>
         </ul>
