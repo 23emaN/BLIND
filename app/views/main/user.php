@@ -16,6 +16,10 @@
 
                     <div class="page-header-box">
                         <div>
+                            <h2 class="page-title">ผู้ใช้</h2>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <button type="button" class="btn-add-action" onclick="modal_add_customer()">
                             <h2 class="page-title">จัดการผู้ใช้</h2>
                         </div>
                         <div class="d-flex align-items-center gap-2">

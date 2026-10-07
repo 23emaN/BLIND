@@ -7,6 +7,10 @@ $routes = [
         'login'  => ['AuthController', 'showLogin'],
         'main'   => ['MainController', 'index'],
         'user'   => ['UserController', 'index'],
+        'volunteer' => ['VolunteerController', 'listApproved'],
+        'volunteer_approve' => ['VolunteerController', 'index'],
+        'activity' => ['ActivityController', 'index'],
+        'skill' => ['SkillController', 'index'],
         'user/get' => ['UserController', 'get'],
         'volunteer' => ['MainController', 'index'],
         'volunteer_approve' => ['VolunteerController', 'index'],
@@ -48,6 +52,15 @@ $routes = [
         'timeslot/edit'   => ['TimeslotController', 'edit'],
         'timeslot/delete' => ['TimeslotController', 'delete'],
         'volunteer_approve_table' => ['VolunteerController', 'getTable'],
+        'volunteer_table' => ['VolunteerController', 'getApprovedTable'],
+        'approveVolunteer' => ['VolunteerController', 'approve'],
+        'rejectVolunteer' => ['VolunteerController', 'reject'],
+        'activity_table' => ['ActivityController', 'getTable'],
+        'addActivity' => ['ActivityController', 'add'],
+        'getActivityById' => ['ActivityController', 'getById'],
+        'updateActivity' => ['ActivityController', 'update'],
+        'skill_table' => ['SkillController', 'getTable']
+
         'approveVolunteer'        => ['VolunteerController', 'approve'],
         'rejectVolunteer'         => ['VolunteerController', 'reject'],
     ]

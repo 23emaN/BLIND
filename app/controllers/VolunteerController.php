@@ -102,4 +102,59 @@ class VolunteerController
         // โหลดตารางใหม่กลับไปอัปเดตหน้าจอ
         $this->getTable();
     }
+
+    public function listApproved()
+    {
+        $user = $this->checkAuth();
+
+        require_once '../app/models/VolunteerModel.php';
+        $volunteerModel = new \App\models\VolunteerModel();
+        
+        $page = max(1, (int)($_GET['page'] ?? 1));
+        $per_page = max(1, (int)($_GET['per_page'] ?? 10));
+        $status = '2'; // อนุมัติแล้ว
+        $search = $_GET['search'] ?? ''; 
+        
+        $volunteers = $volunteerModel->getVolunteersByStatus($status, $page, $per_page, $search);
+        $total = $volunteerModel->countVolunteersByStatus($status, $search);
+
+        $data = [
+            'title' => 'อาสาสมัคร',
+            'firstname' => $user['user_firstname'] ?? 'ผู้ใช้งาน',
+            'lastname' => $user['user_lastname'] ?? '',
+            'volunteers' => $volunteers,
+            'total' => $total,
+            'page' => $page,
+            'per_page' => $per_page,
+            'search' => $search
+        ];
+
+        require_once '../app/views/main/volunteer.php';
+    }
+
+    public function getApprovedTable()
+    {
+        $this->checkAuth();
+
+        require_once '../app/models/VolunteerModel.php';
+        $volunteerModel = new \App\models\VolunteerModel();
+        
+        $page = max(1, (int)($_POST['page'] ?? 1));
+        $per_page = max(1, (int)($_POST['per_page'] ?? 10));
+        $status = '2';
+        $search = $_POST['search'] ?? '';
+        
+        $volunteers = $volunteerModel->getVolunteersByStatus($status, $page, $per_page, $search);
+        $total = $volunteerModel->countVolunteersByStatus($status, $search);
+
+        $data = [
+            'volunteers' => $volunteers,
+            'total' => $total,
+            'page' => $page,
+            'per_page' => $per_page,
+            'search' => $search
+        ];
+
+        require_once '../app/views/main/table/volunteer_table.php';
+    }
 }

@@ -1,0 +1,64 @@
+2026-10-06 20:08:48
+POST DATA:
+Array
+(
+    [title] => ทดสอบ
+    [attribute_id] => 6
+    [activity_date] => 08/10/2026
+    [timeslot] => 1
+    [start_time] => 09:00
+    [end_time] => 12:00
+    [location] => 1
+    [max_volunteers] => 1
+    [reserve_count] => 0
+    [activity_detail] => ทดสอบ
+)
+
+FILES DATA:
+Array
+(
+    [activity_image] => Array
+        (
+            [name] => Screenshot 2026-10-06 200046.png
+            [type] => image/png
+            [tmp_name] => C:\xampp\tmp\php8409.tmp
+            [error] => 0
+            [size] => 38201
+        )
+
+)
+
+Status: Data received successfully but DB insert is still commented out.
+------------------------
+2026-10-06 20:13:35
+POST DATA:
+Array
+(
+    [title] => ทดสอบ
+    [attribute_id] => 6
+    [activity_date] => 08/10/2026
+    [timeslot] => 2
+    [start_time] => 13:00
+    [end_time] => 16:00
+    [location] => 1
+    [max_volunteers] => 20
+    [reserve_count] => 0
+    [activity_detail] => ทดสอบ
+)
+
+FILES DATA:
+Array
+(
+    [activity_image] => Array
+        (
+            [name] => Screenshot 2026-10-06 200046.png
+            [type] => image/png
+            [tmp_name] => C:\xampp\tmp\phpE1E6.tmp
+            [error] => 0
+            [size] => 38201
+        )
+
+)
+
+Status: Data successfully inserted into tbl_activity.
+------------------------
