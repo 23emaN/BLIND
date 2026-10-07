@@ -28,7 +28,7 @@
                     </div>
 
                     <div id="activityTableContainer">
-                        <?php require_once __DIR__ . '/table/activity_table.php'; ?>
+                        <?php require_once __DIR__ . '/table/activity_setting_table.php'; ?>
                     </div>
 
                     <!-- Modal เพิ่มกิจกรรม -->
@@ -113,7 +113,7 @@
                                         <div class="row g-3 mb-2">
                                             <div class="col-md-12">
                                                 <label class="form-label">รายละเอียดกิจกรรม</label>
-                                                <textarea class="form-control" id="modal_activity_detail" rows="4" placeholder="ระบุรายละเอียดกิจกรรมที่อาสาสมัครควรรู้..." style="resize: vertical !important; height: auto !important; min-height: 120px !important; max-height: 800px !important;"></textarea>
+                                                <textarea class="form-control" id="modal_activity_detail" rows="4" placeholder="ระบุรายละเอียดกิจกรรมที่อาสาสมัครควรรู้..." style="resize: vertical !important; min-height: 120px !important; max-height: 800px !important;"></textarea>
                                             </div>
                                             <div class="col-md-12">
                                                 <label class="form-label">รูปภาพหน้าปกกิจกรรม (ถ้ามี)</label>
@@ -220,7 +220,7 @@
                                         <div class="row g-3 mb-2">
                                             <div class="col-md-12">
                                                 <label class="form-label">รายละเอียดกิจกรรม</label>
-                                                <textarea class="form-control" id="edit_modal_activity_detail" rows="4" placeholder="ระบุรายละเอียดกิจกรรมที่อาสาสมัครควรรู้..." style="resize: vertical !important; height: auto !important; min-height: 120px !important; max-height: 800px !important;"></textarea>
+                                                <textarea class="form-control" id="edit_modal_activity_detail" rows="4" placeholder="ระบุรายละเอียดกิจกรรมที่อาสาสมัครควรรู้..." style="resize: vertical !important; min-height: 120px !important; max-height: 800px !important;"></textarea>
                                             </div>
                                             <div class="col-md-12">
                                                 <label class="form-label">รูปภาพหน้าปกกิจกรรม (ถ้ามี)</label>

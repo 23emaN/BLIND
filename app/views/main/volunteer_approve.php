@@ -20,16 +20,22 @@
                         </div>
                     </div>
 
-                    <div class="filter-toolbar mb-3 mt-3 d-flex justify-content-start">
+                    <div class="filter-toolbar">
                         <div class="search-box-wrap">
                             <i class="ri-search-line"></i>
                             <input type="text" class="search-input" id="search_input" onkeyup="triggerFilterDebounced()" placeholder="ค้นหาชื่อผู้สมัคร" value="<?php echo htmlspecialchars($data['search'] ?? ''); ?>">
                         </div>
-                        <div class="filter-group" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; width: 100%; max-width: 300px;">
-                            <select class="filter-select form-select" id="filter_status" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
+                        <div class="filter-group" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; min-width: 400px;">
+                            <select id="filter_status" class="filter-select" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
                                 <option value="" <?php echo (isset($data['status']) && $data['status'] === '') ? 'selected' : ''; ?>>ทุกสถานะ</option>
                                 <option value="0" <?php echo (!isset($data['status']) || $data['status'] === '0') ? 'selected' : ''; ?>>ยังไม่ได้อนุมัติ</option>
                                 <option value="1" <?php echo (isset($data['status']) && $data['status'] === '1') ? 'selected' : ''; ?>>ปฏิเสธ</option>
+                            </select>
+                            <select id="itemPerPage" class="filter-select" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
+                                <option value="10" <?php echo (isset($data['per_page']) && $data['per_page'] == 10) ? 'selected' : ''; ?>>10 รายการ</option>
+                                <option value="25" <?php echo (isset($data['per_page']) && $data['per_page'] == 25) ? 'selected' : ''; ?>>25 รายการ</option>
+                                <option value="50" <?php echo (isset($data['per_page']) && $data['per_page'] == 50) ? 'selected' : ''; ?>>50 รายการ</option>
+                                <option value="100" <?php echo (isset($data['per_page']) && $data['per_page'] == 100) ? 'selected' : ''; ?>>100 รายการ</option>
                             </select>
                         </div>
                     </div>
@@ -79,11 +85,15 @@
                                             <div class="row g-3 text-center">
                                                 <div class="col-md-6">
                                                     <label class="form-label d-block">รูปถ่ายผู้สมัคร</label>
-                                                    <img id="modal_vol_img" src="" style="max-width: 100%; max-height: 200px; object-fit: contain; border: 1px solid #ddd; border-radius: 8px;">
+                                                    <div class="image-upload-wrapper" style="border: 2px dashed #ccc; border-radius: 8px; padding: 5px; height: 220px; position: relative; background-color: #f8f9fa; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden;">
+                                                        <img id="modal_vol_img" src="" style="max-width: 100%; max-height: 180px; object-fit: contain; z-index: 1;">
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label d-block">รูปบัตรประชาชน</label>
-                                                    <img id="modal_vol_citizen_img" src="" style="max-width: 100%; max-height: 200px; object-fit: contain; border: 1px solid #ddd; border-radius: 8px;">
+                                                    <div class="image-upload-wrapper" style="border: 2px dashed #ccc; border-radius: 8px; padding: 5px; height: 220px; position: relative; background-color: #f8f9fa; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden;">
+                                                        <img id="modal_vol_citizen_img" src="" style="max-width: 100%; max-height: 180px; object-fit: contain; z-index: 1;">
+                                                    </div>
                                                 </div>
                                             </div>
                                             
@@ -118,12 +128,14 @@
         const formData = new FormData();
         formData.append('page', page);
         
-        // แนบสถานะและคำค้นหาไปด้วย
+        // แนบสถานะ คำค้นหา และจำนวนรายการต่อหน้า
         const filterStatus = document.getElementById('filter_status').value;
         const searchInput = document.getElementById('search_input').value;
+        const perPage = document.getElementById('itemPerPage').value;
         
         formData.append('status', filterStatus);
         formData.append('search', searchInput);
+        formData.append('per_page', perPage);
 
         fetch("<?php echo defined('BASE_URL') ? BASE_URL : '/Blind_/public'; ?>/volunteer_approve_table", {
             method: 'POST',

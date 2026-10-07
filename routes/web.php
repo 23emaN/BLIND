@@ -1,19 +1,18 @@
 <?php
-
 $requestMethod = $_SERVER['REQUEST_METHOD'];
-
 $routes = [
     'GET' => [
         'login'  => ['AuthController', 'showLogin'],
         'main'   => ['MainController', 'index'],
         'user'   => ['UserController', 'index'],
+        'user/get' => ['UserController', 'get'],
         'volunteer' => ['VolunteerController', 'listApproved'],
         'volunteer_approve' => ['VolunteerController', 'index'],
-        'activity' => ['ActivityController', 'index'],
-        'skill' => ['SkillController', 'index'],
-        'user/get' => ['UserController', 'get'],
-        'volunteer' => ['MainController', 'index'],
-        'volunteer_approve' => ['VolunteerController', 'index'],
+        
+        # User routes
+        'activity_setting' => ['ActivityController', 'index_old'],
+
+        # Friend routes
         'activity' => ['ActivityController', 'index'],
         'activity/get' => ['ActivityController', 'get'],
         'skill' => ['SkillController', 'index'],
@@ -27,6 +26,19 @@ $routes = [
     ],
     'POST' => [
         'auth/login'   => ['AuthController', 'processLogin'],
+        
+        # User routes
+        'volunteer_approve_table' => ['VolunteerController', 'getTable'],
+        'volunteer_table' => ['VolunteerController', 'getApprovedTable'],
+        'approveVolunteer' => ['VolunteerController', 'approve'],
+        'rejectVolunteer' => ['VolunteerController', 'reject'],
+        'activity_table' => ['ActivityController', 'getTable'],
+        'addActivity' => ['ActivityController', 'add'],
+        'getActivityById' => ['ActivityController', 'getById'],
+        'updateActivity' => ['ActivityController', 'update'],
+        'skill_table' => ['SkillController', 'getTable'],
+
+        # Friend routes
         'user/filter'  => ['UserController', 'filter'],
         'user/add'     => ['UserController', 'add'],
         'user/edit'    => ['UserController', 'edit'],
@@ -51,25 +63,12 @@ $routes = [
         'timeslot/add'    => ['TimeslotController', 'add'],
         'timeslot/edit'   => ['TimeslotController', 'edit'],
         'timeslot/delete' => ['TimeslotController', 'delete'],
-        'volunteer_approve_table' => ['VolunteerController', 'getTable'],
-        'volunteer_table' => ['VolunteerController', 'getApprovedTable'],
-        'approveVolunteer' => ['VolunteerController', 'approve'],
-        'rejectVolunteer' => ['VolunteerController', 'reject'],
-        'activity_table' => ['ActivityController', 'getTable'],
-        'addActivity' => ['ActivityController', 'add'],
-        'getActivityById' => ['ActivityController', 'getById'],
-        'updateActivity' => ['ActivityController', 'update'],
-        'skill_table' => ['SkillController', 'getTable']
-
-        'approveVolunteer'        => ['VolunteerController', 'approve'],
-        'rejectVolunteer'         => ['VolunteerController', 'reject'],
     ]
 ];
 
 if (isset($routes[$requestMethod]) && array_key_exists($url, $routes[$requestMethod])) {
     $controllerName = $routes[$requestMethod][$url][0];
     $methodName = $routes[$requestMethod][$url][1];
-
     require_once "../app/controllers/{$controllerName}.php";
     $controller = new $controllerName();
     $controller->$methodName();
