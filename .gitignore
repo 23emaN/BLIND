@@ -8,3 +8,6 @@ composer.phar
 
 # DB dump ที่ export เป็น artifact (ไม่ต้อง track; schema จริงอยู่ใน sql/*.sql)
 sql/admin_blind_export_*.sql
+
+# ไฟล์ที่ผู้ใช้อัปโหลด (อยู่บนเซิร์ฟเวอร์ ไม่เก็บใน git)
+upload_image/

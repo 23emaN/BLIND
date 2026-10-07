@@ -80,7 +80,7 @@ class ActivityPresetModel
     public function getTimeslots(string $keyword, int $page, int $perPage): array
     {
         $offset = ($page - 1) * $perPage;
-        $sql = "SELECT timeslot_id, timeslot_name, start_time, end_time, sort_order
+        $sql = "SELECT timeslot_id, timeslot_name, start_time, end_time, timeslot_icon, sort_order
                 FROM tbl_activity_timeslot
                 WHERE active_status = '1'" . ($keyword !== '' ? " AND timeslot_name LIKE :kw" : "") . "
                 ORDER BY sort_order, timeslot_id
@@ -109,26 +109,26 @@ class ActivityPresetModel
 
     public function getTimeslot(int $id): ?array
     {
-        $stmt = $this->db->prepare("SELECT timeslot_id, timeslot_name, start_time, end_time
+        $stmt = $this->db->prepare("SELECT timeslot_id, timeslot_name, start_time, end_time, timeslot_icon
                                     FROM tbl_activity_timeslot WHERE timeslot_id = :id AND active_status = '1' LIMIT 1");
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 
-    public function createTimeslot(string $name, string $start, string $end): int
+    public function createTimeslot(string $name, string $start, string $end, string $icon): int
     {
-        $sql = "INSERT INTO tbl_activity_timeslot (timeslot_name, start_time, end_time, sort_order, active_status)
-                VALUES (:name, :start, :end, (SELECT * FROM (SELECT COALESCE(MAX(sort_order),0)+1 FROM tbl_activity_timeslot) t), '1')";
+        $sql = "INSERT INTO tbl_activity_timeslot (timeslot_name, start_time, end_time, timeslot_icon, sort_order, active_status)
+                VALUES (:name, :start, :end, :icon, (SELECT * FROM (SELECT COALESCE(MAX(sort_order),0)+1 FROM tbl_activity_timeslot) t), '1')";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([':name' => $name, ':start' => $start, ':end' => $end]);
+        $stmt->execute([':name' => $name, ':start' => $start, ':end' => $end, ':icon' => $icon]);
         return (int) $this->db->lastInsertId();
     }
 
-    public function updateTimeslot(int $id, string $name, string $start, string $end): bool
+    public function updateTimeslot(int $id, string $name, string $start, string $end, string $icon): bool
     {
-        $stmt = $this->db->prepare("UPDATE tbl_activity_timeslot SET timeslot_name = :name, start_time = :start, end_time = :end
+        $stmt = $this->db->prepare("UPDATE tbl_activity_timeslot SET timeslot_name = :name, start_time = :start, end_time = :end, timeslot_icon = :icon
                                     WHERE timeslot_id = :id AND active_status = '1'");
-        return $stmt->execute([':name' => $name, ':start' => $start, ':end' => $end, ':id' => $id]);
+        return $stmt->execute([':name' => $name, ':start' => $start, ':end' => $end, ':icon' => $icon, ':id' => $id]);
     }
 
     public function deleteTimeslot(int $id): bool

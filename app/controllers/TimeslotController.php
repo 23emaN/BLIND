@@ -40,6 +40,7 @@ class TimeslotController
 
         $data = [
             'title'     => 'ตั้งค่าช่วงเวลาที่ใช้บ่อย',
+            'icons'     => $this->iconOptions(),
             'firstname' => $user['user_firstname'] ?? 'ผู้ใช้งาน',
             'lastname'  => $user['user_lastname'] ?? '',
             'items'     => $model->getTimeslots('', 1, $perPage),
@@ -83,7 +84,7 @@ class TimeslotController
         $err = $this->validate($in);
         if ($err) { echo json_encode(['result' => 0, 'msg' => implode("\n", $err)]); return; }
         try {
-            $this->model()->createTimeslot($in['name'], $in['start'], $in['end']);
+            $this->model()->createTimeslot($in['name'], $in['start'], $in['end'], $in['icon']);
             echo json_encode(['result' => 1, 'msg' => 'เพิ่มช่วงเวลาสำเร็จ']);
         } catch (\Throwable $e) {
             echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล']);
@@ -102,7 +103,7 @@ class TimeslotController
         $model = $this->model();
         if (!$model->getTimeslot($id)) { echo json_encode(['result' => 0, 'msg' => 'ไม่พบข้อมูล']); return; }
         try {
-            $model->updateTimeslot($id, $in['name'], $in['start'], $in['end']);
+            $model->updateTimeslot($id, $in['name'], $in['start'], $in['end'], $in['icon']);
             echo json_encode(['result' => 1, 'msg' => 'แก้ไขช่วงเวลาสำเร็จ']);
         } catch (\Throwable $e) {
             echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล']);
@@ -130,6 +131,7 @@ class TimeslotController
             'name'  => trim($_POST['timeslot_name'] ?? ''),
             'start' => trim($_POST['start_time'] ?? ''),
             'end'   => trim($_POST['end_time'] ?? ''),
+            'icon'  => trim($_POST['timeslot_icon'] ?? ''),
         ];
     }
 
@@ -144,6 +146,15 @@ class TimeslotController
         } elseif ($in['end'] <= $in['start']) {
             $err[] = 'เวลาสิ้นสุดต้องมากกว่าเวลาเริ่ม';
         }
+        if (!array_key_exists($in['icon'], $this->iconOptions())) {
+            $err[] = 'กรุณาเลือกไอคอนช่วงเวลา';
+        }
         return $err;
+    }
+
+    // ไอคอนที่ให้เลือก — ดู app/config/TimeslotIcons.php
+    private function iconOptions(): array
+    {
+        return require '../app/config/TimeslotIcons.php';
     }
 }

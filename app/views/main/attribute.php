@@ -157,9 +157,44 @@
                     </div>
                     <?php if ($hasMeta): ?>
                         <div class="mb-3">
-                            <label class="form-label" for="f_icon">ไอคอน (Material Symbol ของหน้าบ้าน)</label>
-                            <input type="text" class="form-control" name="attribute_icon" id="f_icon" maxlength="50" placeholder="เช่น mic, directions_walk, description, school" autocomplete="off">
-                            <small class="text-muted">ชื่อไอคอนที่หน้าบ้านใช้แสดงบนการ์ดหมวดหมู่ (ปล่อยว่างได้)</small>
+                            <label class="form-label" id="iconPickerLabel">ไอคอน</label>
+                            <input type="hidden" name="attribute_icon" id="f_icon" value="">
+                            <div class="icon-picker-selected">
+                                <span class="material-symbols-outlined" id="iconPreview" aria-hidden="true">block</span>
+                                <span id="iconPreviewText" class="text-muted">ไม่ใช้ไอคอน</span>
+                            </div>
+                            <div class="icon-picker-grid" role="group" aria-labelledby="iconPickerLabel">
+                                <button type="button" class="icon-picker-item" data-icon="" title="ไม่ใช้ไอคอน" aria-label="ไม่ใช้ไอคอน" onclick="selectIcon(this.dataset.icon)">
+                                    <span class="material-symbols-outlined" aria-hidden="true">block</span>
+                                </button>
+                                <?php foreach ($data['icons'] ?? [] as $iconName => $iconLabel): ?>
+                                    <button type="button" class="icon-picker-item" data-icon="<?php echo htmlspecialchars($iconName, ENT_QUOTES); ?>"
+                                        data-label="<?php echo htmlspecialchars($iconLabel, ENT_QUOTES); ?>"
+                                        title="<?php echo htmlspecialchars($iconLabel, ENT_QUOTES); ?>" aria-label="<?php echo htmlspecialchars($iconLabel, ENT_QUOTES); ?>"
+                                        onclick="selectIcon(this.dataset.icon)">
+                                        <span class="material-symbols-outlined" aria-hidden="true"><?php echo htmlspecialchars($iconName); ?></span>
+                                    </button>
+                                <?php endforeach; ?>
+                            </div>
+                            <small class="text-muted">ไอคอนที่หน้าบ้านแสดงบนการ์ดหมวดหมู่ — ชี้เมาส์ค้างเพื่อดูความหมาย</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" id="stylePickerLabel">สีและรูปทรง <span class="text-danger">*</span></label>
+                            <input type="hidden" name="attribute_style" id="f_style" value="">
+                            <div class="style-picker" role="group" aria-labelledby="stylePickerLabel">
+                                <?php foreach ($data['styles'] ?? [] as $styleKey => $st): ?>
+                                    <button type="button" class="style-picker-item" data-style="<?php echo htmlspecialchars($styleKey, ENT_QUOTES); ?>"
+                                        style="--cat-color: <?php echo htmlspecialchars($st['color'], ENT_QUOTES); ?>;"
+                                        aria-pressed="false" onclick="selectStyle(this.dataset.style)">
+                                        <span class="cat-mark cat-shape-<?php echo htmlspecialchars($st['shape'], ENT_QUOTES); ?>" aria-hidden="true"></span>
+                                        <span class="style-picker-text">
+                                            <span><?php echo htmlspecialchars($st['label']); ?></span>
+                                            <small class="style-picker-used" data-used-for="<?php echo htmlspecialchars($styleKey, ENT_QUOTES); ?>"></small>
+                                        </span>
+                                    </button>
+                                <?php endforeach; ?>
+                            </div>
+                            <small class="text-muted">สีคู่กับรูปทรงเสมอ เพื่อให้คนตาบอดสีแยกหมวดได้ (WCAG 1.4.1) — ควรให้แต่ละหมวดใช้ชุดไม่ซ้ำกัน</small>
                         </div>
                         <div class="mb-2">
                             <label class="form-label" for="f_desc">คำอธิบายสั้น</label>
@@ -201,6 +236,7 @@
             success: function (response) {
                 if (response.result === 1) {
                     $('#itemTableContainer').html(response.html);
+                    if (response.style_usage) STYLE_USAGE = response.style_usage;
                 } else {
                     Swal.fire('ผิดพลาด', response.msg || 'โหลดข้อมูลไม่สำเร็จ', 'error');
                 }
@@ -216,9 +252,57 @@
         itemFilterTimer = setTimeout(() => GetData(1), 350);
     }
 
+    // ตัวเลือกไอคอน: เก็บชื่อลง hidden input + ไฮไลต์ปุ่ม + แสดงตัวอย่าง
+    function selectIcon(name) {
+        if (!$('#f_icon').length) return;
+        name = name || '';
+        const btn = $('.icon-picker-item').filter(function () { return this.dataset.icon === name; });
+        $('.icon-picker-item').removeClass('active').attr('aria-pressed', 'false');
+        $('#f_icon').val(name);
+        if (name !== '' && !btn.length) {
+            // ไอคอนเดิมที่ไม่อยู่ในรายการ (ข้อมูลเก่า) — บันทึกไม่ผ่านจนกว่าจะเลือกใหม่
+            $('#iconPreview').text(name);
+            $('#iconPreviewText').text('ไอคอนเดิม "' + name + '" ไม่อยู่ในรายการ กรุณาเลือกใหม่').attr('class', 'text-danger');
+            return;
+        }
+        btn.addClass('active').attr('aria-pressed', 'true');
+        $('#iconPreview').text(name || 'block');
+        $('#iconPreviewText').text(name ? btn.data('label') : 'ไม่ใช้ไอคอน').attr('class', name ? '' : 'text-muted');
+    }
+
+    // ชุดสี+รูปทรง: {style: {attribute_id: ชื่อ}} — อัปเดตทุกครั้งที่โหลดตาราง
+    let STYLE_USAGE = <?php echo json_encode((object) ($data['style_usage'] ?? []), JSON_UNESCAPED_UNICODE); ?>;
+
+    function selectStyle(key) {
+        if (!$('#f_style').length) return;
+        key = key || '';
+        $('#f_style').val(key);
+        $('.style-picker-item').each(function () {
+            const on = this.dataset.style === key;
+            $(this).toggleClass('active', on).attr('aria-pressed', on ? 'true' : 'false');
+        });
+        // ตัวอย่างไอคอนใช้สีของชุดที่เลือก
+        const el = key ? document.querySelector('.style-picker-item[data-style="' + key + '"]') : null;
+        const color = el ? getComputedStyle(el).getPropertyValue('--cat-color').trim() : '';
+        $('#iconPreview').css('color', color || '');
+    }
+
+    // บอกว่าชุดไหนมีหมวดอื่นใช้อยู่แล้ว (ไม่นับหมวดที่กำลังแก้ไข)
+    function renderStyleUsage() {
+        const selfId = String($('#attribute_id').val() || '');
+        $('.style-picker-used').each(function () {
+            const used = STYLE_USAGE[this.dataset.usedFor] || {};
+            const names = Object.keys(used).filter(id => id !== selfId).map(id => used[id]);
+            $(this).text(names.length ? 'ใช้แล้ว: ' + names.join(', ') : '');
+        });
+    }
+
     function openAddItem() {
         document.getElementById('itemForm').reset();
+        selectIcon('');
+        selectStyle('');
         $('#attribute_id').val('');
+        renderStyleUsage();
         $('#f_image').val('');
         $('#f_image_preview').attr('src', '').hide();
         $('#f_image_placeholder').show();
@@ -242,7 +326,9 @@
                 $('#attribute_id').val(response.data.attribute_id);
                 $('#f_name').val(response.data.attribute_name);
                 <?php if ($hasMeta): ?>
-                $('#f_icon').val(response.data.attribute_icon || '');
+                selectIcon(response.data.attribute_icon || '');
+                selectStyle(response.data.attribute_style || '');
+                renderStyleUsage();
                 $('#f_desc').val(response.data.attribute_desc || '');
                 <?php endif; ?>
 

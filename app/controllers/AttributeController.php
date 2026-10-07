@@ -67,6 +67,24 @@ class AttributeController
         return new AttributeModel();
     }
 
+    // ไอคอนที่ให้เลือก (หมวดหมู่กิจกรรม) — ดู app/config/CategoryIcons.php
+    protected function iconOptions(): array
+    {
+        return require '../app/config/CategoryIcons.php';
+    }
+
+    // ชุดสี+รูปทรงของหมวดหมู่ — ดู app/config/CategoryStyles.php
+    protected function styleOptions(): array
+    {
+        return require '../app/config/CategoryStyles.php';
+    }
+
+    // ว่าง = ไม่ใช้ไอคอน, ไม่งั้นต้องอยู่ในรายการ (กันพิมพ์ชื่อผิดแล้วหน้าบ้านแสดงเป็นตัวหนังสือ)
+    private function iconAllowed(?string $icon): bool
+    {
+        return $icon === null || $icon === '' || array_key_exists($icon, $this->iconOptions());
+    }
+
     public function index()
     {
         $user    = $this->checkAuth();
@@ -74,17 +92,20 @@ class AttributeController
         $perPage = 25;
 
         $data = [
-            'title'      => $this->pageTitle,
-            'type'       => $this->type,
-            'route'      => $this->routeBase,
-            'item_label' => $this->itemLabel,
-            'has_meta'   => $this->hasMeta,
-            'firstname'  => $user['user_firstname'] ?? 'ผู้ใช้งาน',
-            'lastname'   => $user['user_lastname'] ?? '',
-            'items'      => $model->getList($this->type, '', 1, $perPage),
-            'total'      => $model->countList($this->type, ''),
-            'page'       => 1,
-            'per_page'   => $perPage,
+            'title'       => $this->pageTitle,
+            'type'        => $this->type,
+            'route'       => $this->routeBase,
+            'item_label'  => $this->itemLabel,
+            'has_meta'    => $this->hasMeta,
+            'icons'       => $this->hasMeta ? $this->iconOptions() : [],
+            'styles'      => $this->hasMeta ? $this->styleOptions() : [],
+            'style_usage' => $this->hasMeta ? $model->getStyleUsage($this->type) : [],
+            'firstname'   => $user['user_firstname'] ?? 'ผู้ใช้งาน',
+            'lastname'    => $user['user_lastname'] ?? '',
+            'items'       => $model->getList($this->type, '', 1, $perPage),
+            'total'       => $model->countList($this->type, ''),
+            'page'        => 1,
+            'per_page'    => $perPage,
         ];
 
         require_once '../app/views/main/attribute.php';
@@ -106,12 +127,17 @@ class AttributeController
         $items      = $model->getList($this->type, $keyword, $page, $perPage);
         $item_label = $this->itemLabel;
         $has_meta   = $this->hasMeta;
+        $styles     = $this->hasMeta ? $this->styleOptions() : [];
 
         ob_start();
         include '../app/views/main/table/attribute_table.php';
         $html = ob_get_clean();
 
-        echo json_encode(['result' => 1, 'html' => $html]);
+        $resp = ['result' => 1, 'html' => $html];
+        if ($this->hasMeta) {
+            $resp['style_usage'] = $model->getStyleUsage($this->type);
+        }
+        echo json_encode($resp);
     }
 
     public function get()
@@ -146,10 +172,21 @@ class AttributeController
 
         $icon = $this->hasMeta ? trim($_POST['attribute_icon'] ?? '') : null;
         $desc = $this->hasMeta ? trim($_POST['attribute_desc'] ?? '') : null;
+        $style = $this->hasMeta ? trim($_POST['attribute_style'] ?? '') : null;
+        if ($this->hasMeta && !array_key_exists($style, $this->styleOptions())) {
+            echo json_encode(['result' => 0, 'msg' => 'กรุณาเลือกสีและรูปทรงของหมวดหมู่']);
+            return;
+        }
+        if (!$this->iconAllowed($icon)) {
+            echo json_encode(['result' => 0, 'msg' => 'กรุณาเลือกไอคอนจากรายการ']);
+            return;
+        }
+
+        // อัปโหลดรูปหลัง validate ผ่านแล้วเท่านั้น (ไม่ให้มีไฟล์ค้างเมื่อบันทึกไม่ผ่าน)
         $image = $this->handleImageUpload();
 
         try {
-            $model->create($this->type, $name, (int) ($user['user_id'] ?? 0), $icon, $desc, $image);
+            $model->create($this->type, $name, (int) ($user['user_id'] ?? 0), $icon, $desc, $style, $image);
             echo json_encode(['result' => 1, 'msg' => 'เพิ่ม' . $this->itemLabel . 'สำเร็จ']);
         } catch (\Throwable $e) {
             echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล']);
@@ -183,10 +220,21 @@ class AttributeController
 
         $icon = $this->hasMeta ? trim($_POST['attribute_icon'] ?? '') : null;
         $desc = $this->hasMeta ? trim($_POST['attribute_desc'] ?? '') : null;
+        $style = $this->hasMeta ? trim($_POST['attribute_style'] ?? '') : null;
+        if ($this->hasMeta && !array_key_exists($style, $this->styleOptions())) {
+            echo json_encode(['result' => 0, 'msg' => 'กรุณาเลือกสีและรูปทรงของหมวดหมู่']);
+            return;
+        }
+        if (!$this->iconAllowed($icon)) {
+            echo json_encode(['result' => 0, 'msg' => 'กรุณาเลือกไอคอนจากรายการ']);
+            return;
+        }
+
+        // อัปโหลดรูปหลัง validate ผ่านแล้วเท่านั้น (ไม่ให้มีไฟล์ค้างเมื่อบันทึกไม่ผ่าน)
         $image = $this->handleImageUpload();
 
         try {
-            $model->update($id, $this->type, $name, $icon, $desc, $image);
+            $model->update($id, $this->type, $name, $icon, $desc, $style, $image);
             echo json_encode(['result' => 1, 'msg' => 'แก้ไข' . $this->itemLabel . 'สำเร็จ']);
         } catch (\Throwable $e) {
             echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล']);

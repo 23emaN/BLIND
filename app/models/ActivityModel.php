@@ -46,7 +46,7 @@ class ActivityModel
     // ช่วงเวลาที่ใช้บ่อย (preset ช่วยเติมเวลาเริ่ม/สิ้นสุด)
     public function getTimeslots(): array
     {
-        $sql = "SELECT timeslot_id, timeslot_name, start_time, end_time
+        $sql = "SELECT timeslot_id, timeslot_name, start_time, end_time, timeslot_icon
                 FROM tbl_activity_timeslot
                 WHERE active_status = '1'
                 ORDER BY sort_order, timeslot_id";

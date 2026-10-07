@@ -93,6 +93,7 @@
                                 <?php foreach ($timeslots as $ts): ?>
                                     <button type="button" class="btn btn-sm btn-outline-primary"
                                         onclick="applyTimeslot('<?php echo substr($ts['start_time'], 0, 5); ?>', '<?php echo substr($ts['end_time'], 0, 5); ?>')">
+                                        <span class="material-symbols-outlined align-middle" style="font-size: 18px;" aria-hidden="true"><?php echo htmlspecialchars($ts['timeslot_icon'] ?: 'schedule'); ?></span>
                                         <?php echo htmlspecialchars($ts['timeslot_name']); ?>
                                         (<?php echo substr($ts['start_time'], 0, 5); ?>–<?php echo substr($ts['end_time'], 0, 5); ?>)
                                     </button>
