@@ -46,6 +46,7 @@
                                 </button>
                                 <button type="button" class="btn btn-sm btn-outline-danger" title="ลบ" onclick="delete_activity(<?php echo $activity['activity_id']; ?>)">
                                     <i class="ri-delete-bin-line"></i> 
+
                                 </button>
                             </div>
                         </td>
@@ -59,6 +60,7 @@
                             <p class="mb-0">ไม่มีข้อมูลกิจกรรม</p>
                         </div>
                     </td>
+1
                 </tr>
             <?php endif; ?>
         </tbody>
@@ -66,5 +68,6 @@
 </div>
 
 <?php if (! empty($list)): ?>
+
     <?php include dirname(__DIR__) . '/_pagination.php'; ?>
 <?php endif; ?>
