@@ -43,8 +43,8 @@
 
                             <select class="filter-select" id="filter_status" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
                                 <option value="">ทุกสถานะ</option>
-                                <option value="1">ใช้งานได้</option>
-                                <option value="0">ถูกระงับ</option>
+                                <option value="1">ใช้งานอยู่</option>
+                                <option value="0">ปิดการใช้งาน</option>
                             </select>
                         </div>
                     </div>
@@ -99,8 +99,8 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label" for="f_status">สถานะ</label>
                             <select class="form-select" name="user_status" id="f_status">
-                                <option value="1">ใช้งานได้</option>
-                                <option value="0">ถูกระงับ</option>
+                                <option value="1">ใช้งานอยู่</option>
+                                <option value="0">ปิดการใช้งาน</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -241,38 +241,6 @@
         });
     }
 
-    // ---- ลบ ----
-    function deleteUser(id, name) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'ยืนยันการลบ',
-            html: 'ต้องการลบผู้ใช้ <strong>' + $('<div>').text(name).html() + '</strong> ใช่หรือไม่?',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            confirmButtonText: 'ลบ',
-            cancelButtonText: 'ยกเลิก',
-            reverseButtons: true
-        }).then((result) => {
-            if (!result.isConfirmed) return;
-            $.ajax({
-                url: USER_BASE_URL + '/user/delete',
-                method: 'POST',
-                data: { user_id: id },
-                dataType: 'json',
-                success: function (response) {
-                    if (response.result === 1) {
-                        Swal.fire({ icon: 'success', title: response.msg, timer: 1200, showConfirmButton: false });
-                        GetData(1);
-                    } else {
-                        Swal.fire('ผิดพลาด', response.msg || 'ไม่สามารถลบได้', 'error');
-                    }
-                },
-                error: function () {
-                    Swal.fire('ผิดพลาด', 'เกิดข้อผิดพลาดในการเชื่อมต่อ', 'error');
-                }
-            });
-        });
-    }
 </script>
 
 <?php

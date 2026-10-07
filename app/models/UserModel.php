@@ -158,13 +158,4 @@ class UserModel
         $stmt = $this->db->prepare($sql);
         return $stmt->execute($params);
     }
-
-    /**
-     * ลบแบบ soft delete (ตั้ง active_status = '0') — ไม่ลบข้อมูลจริง
-     */
-    public function softDelete(int $id): bool
-    {
-        $stmt = $this->db->prepare("UPDATE tbl_user SET active_status = '0' WHERE user_id = :id");
-        return $stmt->execute([':id' => $id]);
-    }
 }

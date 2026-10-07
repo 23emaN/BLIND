@@ -42,7 +42,6 @@ $routes = [
         'user/filter'  => ['UserController', 'filter'],
         'user/add'     => ['UserController', 'add'],
         'user/edit'    => ['UserController', 'edit'],
-        'user/delete'  => ['UserController', 'delete'],
         'skill/filter' => ['SkillController', 'filter'],
         'skill/add'    => ['SkillController', 'add'],
         'skill/edit'   => ['SkillController', 'edit'],

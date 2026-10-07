@@ -129,7 +129,7 @@ class UserController
     // AJAX: แก้ไขผู้ใช้
     public function edit()
     {
-        $this->checkAuthJson();
+        $user = $this->checkAuthJson();
 
         $id = (int) ($_POST['user_id'] ?? 0);
         if ($id <= 0) {
@@ -153,43 +153,17 @@ class UserController
             echo json_encode(['result' => 0, 'msg' => 'ชื่อผู้ใช้นี้มีอยู่ในระบบแล้ว']);
             return;
         }
+        // กันปิดการใช้งานบัญชีตัวเอง (จะโดนเด้งออกทันทีและเข้าระบบไม่ได้อีก)
+        if ((int) ($user['user_id'] ?? 0) === $id && $input['user_status'] !== '1') {
+            echo json_encode(['result' => 0, 'msg' => 'ไม่สามารถปิดการใช้งานบัญชีที่กำลังใช้งานอยู่ได้']);
+            return;
+        }
 
         try {
             $model->update($id, $input);
             echo json_encode(['result' => 1, 'msg' => 'แก้ไขผู้ใช้สำเร็จ']);
         } catch (\Throwable $e) {
             echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล']);
-        }
-    }
-
-    // AJAX: ลบ (soft delete)
-    public function delete()
-    {
-        $user = $this->checkAuthJson();
-
-        $id = (int) ($_POST['user_id'] ?? 0);
-        if ($id <= 0) {
-            echo json_encode(['result' => 0, 'msg' => 'ไม่พบรหัสผู้ใช้']);
-            return;
-        }
-
-        // กันลบบัญชีตัวเอง
-        if ((int) ($user['user_id'] ?? 0) === $id) {
-            echo json_encode(['result' => 0, 'msg' => 'ไม่สามารถลบบัญชีที่กำลังใช้งานอยู่ได้']);
-            return;
-        }
-
-        $model = $this->model();
-        if (!$model->getById($id)) {
-            echo json_encode(['result' => 0, 'msg' => 'ไม่พบข้อมูลผู้ใช้']);
-            return;
-        }
-
-        try {
-            $model->softDelete($id);
-            echo json_encode(['result' => 1, 'msg' => 'ลบผู้ใช้สำเร็จ']);
-        } catch (\Throwable $e) {
-            echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการลบข้อมูล']);
         }
     }
 

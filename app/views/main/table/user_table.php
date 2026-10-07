@@ -49,18 +49,15 @@ $per_page = max(1, (int) ($per_page ?? 25));
                         </td>
                         <td class="text-center">
                             <?php if ($isEnabled): ?>
-                                <span class="badge-active">ใช้งานได้</span>
+                                <span class="badge-active">ใช้งานอยู่</span>
                             <?php else: ?>
-                                <span class="badge-inactive">ถูกระงับ</span>
+                                <span class="badge-inactive">ปิดการใช้งาน</span>
                             <?php endif; ?>
                         </td>
                         <td class="text-center">
                             <div class="action-btn-group">
                                 <button type="button" class="btn-action-edit" title="แก้ไข" onclick="editUser(<?php echo $uid; ?>)">
                                     <i class="ri-pencil-line"></i>
-                                </button>
-                                <button type="button" class="btn-action-delete" title="ลบ" onclick="deleteUser(<?php echo $uid; ?>, '<?php echo htmlspecialchars($u['user_name'] ?? '', ENT_QUOTES); ?>')">
-                                    <i class="ri-delete-bin-line"></i>
                                 </button>
                             </div>
                         </td>
