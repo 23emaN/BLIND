@@ -107,7 +107,7 @@
                             <label class="form-label" for="f_super">สิทธิ์</label>
                             <select class="form-select" name="is_super_admin" id="f_super">
                                 <option value="0">ผู้ใช้ทั่วไป</option>
-                                <option value="1">ผู้ดูแลระบบสูงสุด</option>
+                                <option value="1">ผู้ดูแลระบบ</option>
                             </select>
                         </div>
                     </div>

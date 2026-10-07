@@ -42,7 +42,7 @@ $per_page = max(1, (int) ($per_page ?? 25));
                         </td>
                         <td class="text-center">
                             <?php if ($isSuper): ?>
-                                <span class="badge bg-primary">ผู้ดูแลระบบสูงสุด</span>
+                                <span class="badge bg-primary">ผู้ดูแลระบบ</span>
                             <?php else: ?>
                                 <span class="badge bg-secondary">ผู้ใช้ทั่วไป</span>
                             <?php endif; ?>
