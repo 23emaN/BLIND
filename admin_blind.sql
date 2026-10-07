@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 06, 2026 at 10:33 AM
+-- Generation Time: Oct 07, 2026 at 06:23 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -32,12 +32,14 @@ CREATE TABLE `tbl_activity` (
   `activity_title` varchar(100) NOT NULL,
   `attribute_id` int(11) NOT NULL COMMENT 'หมวดหมู่ -> tbl_attribute (attribute_type = 1)',
   `activity_date` date NOT NULL,
-  `activity_image` varchar(255) DEFAULT NULL,
   `start_time` time NOT NULL,
   `end_time` time NOT NULL,
   `location` varchar(255) NOT NULL,
   `max_volunteers` int(11) NOT NULL DEFAULT 0 COMMENT 'จำนวนอาสาที่เปิดรับ',
   `reserve_count` int(11) NOT NULL DEFAULT 0 COMMENT 'จำนวนสำรองที่นั่งอัตโนมัติ',
+  `grant_hours` varchar(1) NOT NULL DEFAULT '1' COMMENT '1 = ได้ชั่วโมงจิตอาสา, 0 = ไม่ได้ชั่วโมง',
+  `hours_per_person` decimal(4,1) DEFAULT NULL COMMENT 'จำนวนชั่วโมงจิตอาสาต่อคน',
+  `hours_count_method` varchar(1) NOT NULL DEFAULT '1' COMMENT '1 = ตามเวลาที่เข้าร่วมจริง (ไม่เกินที่ระบุ), 2 = เข้าร่วมแล้วได้เต็มตามที่ระบุ',
   `activity_detail` text DEFAULT NULL,
   `activity_status` varchar(1) NOT NULL DEFAULT '1' COMMENT '1 = เปิดรับสมัคร, 0 = ปิด/ยกเลิก',
   `active_status` varchar(1) NOT NULL DEFAULT '1' COMMENT 'soft delete',
@@ -172,7 +174,9 @@ INSERT INTO `tbl_login_token` (`token_code`, `user_id`, `ip_address`, `user_agen
 (7, 1, '::1', 'curl/8.14.1', '2026-10-06 14:35:13', '2026-10-07 14:35:13', NULL),
 (8, 1, '::1', 'curl/8.14.1', '2026-10-06 14:38:54', '2026-10-07 14:38:54', NULL),
 (9, 1, '::1', 'curl/8.14.1', '2026-10-06 14:47:29', '2026-10-07 14:47:29', NULL),
-(10, 1, '::1', 'curl/8.14.1', '2026-10-06 15:05:10', '2026-10-07 15:05:10', NULL);
+(10, 1, '::1', 'curl/8.14.1', '2026-10-06 15:05:10', '2026-10-07 15:05:10', NULL),
+(11, 1, '::1', 'curl/8.14.1', '2026-10-06 15:10:16', '2026-10-07 15:10:16', NULL),
+(12, 1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36', '2026-10-07 11:21:42', '2026-10-08 11:21:42', NULL);
 
 -- --------------------------------------------------------
 
@@ -349,7 +353,7 @@ ALTER TABLE `tbl_attribute`
 -- AUTO_INCREMENT for table `tbl_login_token`
 --
 ALTER TABLE `tbl_login_token`
-  MODIFY `token_code` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `token_code` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `tbl_mapping_attribute`
