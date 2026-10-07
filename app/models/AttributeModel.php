@@ -31,7 +31,7 @@ class AttributeModel
         $f      = $this->buildFilter($type, $keyword);
         $offset = ($page - 1) * $perPage;
 
-        $sql = "SELECT attribute_id, attribute_name, attribute_icon, attribute_desc, create_at
+        $sql = "SELECT attribute_id, attribute_name, attribute_icon, attribute_style, attribute_desc, create_at
                 FROM tbl_attribute
                 WHERE {$f['sql']}
                 ORDER BY attribute_id DESC
@@ -56,7 +56,7 @@ class AttributeModel
 
     public function getById(int $id, string $type): ?array
     {
-        $sql = "SELECT attribute_id, attribute_name, attribute_icon, attribute_desc, attribute_type
+        $sql = "SELECT attribute_id, attribute_name, attribute_icon, attribute_style, attribute_desc, attribute_type
                 FROM tbl_attribute
                 WHERE attribute_id = :id AND attribute_type = :type AND active_status = '1'
                 LIMIT 1";
@@ -64,6 +64,19 @@ class AttributeModel
         $stmt->execute([':id' => $id, ':type' => $type]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ?: null;
+    }
+
+    // style ที่ใช้อยู่แล้ว → [style => [attribute_id => ชื่อ, ...]] (ให้หน้าเลือกเตือนเมื่อซ้ำ)
+    public function getStyleUsage(string $type): array
+    {
+        $stmt = $this->db->prepare("SELECT attribute_id, attribute_name, attribute_style FROM tbl_attribute
+                                    WHERE attribute_type = :type AND active_status = '1' AND attribute_style IS NOT NULL");
+        $stmt->execute([':type' => $type]);
+        $usage = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $usage[$row['attribute_style']][(int) $row['attribute_id']] = $row['attribute_name'];
+        }
+        return $usage;
     }
 
     // ชื่อซ้ำภายใน type เดียวกัน (เว้น id ที่กำลังแก้ไข) — เฉพาะ record ที่ยัง active
@@ -77,14 +90,15 @@ class AttributeModel
         return (int) $stmt->fetchColumn() > 0;
     }
 
-    public function create(string $type, string $name, int $createUserId, ?string $icon = null, ?string $desc = null): int
+    public function create(string $type, string $name, int $createUserId, ?string $icon = null, ?string $desc = null, ?string $style = null): int
     {
-        $sql = "INSERT INTO tbl_attribute (attribute_name, attribute_icon, attribute_desc, active_status, create_user_id, create_at, attribute_type)
-                VALUES (:name, :icon, :desc, '1', :uid, NOW(), :type)";
+        $sql = "INSERT INTO tbl_attribute (attribute_name, attribute_icon, attribute_style, attribute_desc, active_status, create_user_id, create_at, attribute_type)
+                VALUES (:name, :icon, :style, :desc, '1', :uid, NOW(), :type)";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             ':name' => $name,
             ':icon' => ($icon !== null && $icon !== '') ? $icon : null,
+            ':style' => ($style !== null && $style !== '') ? $style : null,
             ':desc' => ($desc !== null && $desc !== '') ? $desc : null,
             ':uid'  => $createUserId,
             ':type' => $type,
@@ -92,14 +106,15 @@ class AttributeModel
         return (int) $this->db->lastInsertId();
     }
 
-    public function update(int $id, string $type, string $name, ?string $icon = null, ?string $desc = null): bool
+    public function update(int $id, string $type, string $name, ?string $icon = null, ?string $desc = null, ?string $style = null): bool
     {
-        $sql = "UPDATE tbl_attribute SET attribute_name = :name, attribute_icon = :icon, attribute_desc = :desc
+        $sql = "UPDATE tbl_attribute SET attribute_name = :name, attribute_icon = :icon, attribute_style = :style, attribute_desc = :desc
                 WHERE attribute_id = :id AND attribute_type = :type AND active_status = '1'";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
             ':name' => $name,
             ':icon' => ($icon !== null && $icon !== '') ? $icon : null,
+            ':style' => ($style !== null && $style !== '') ? $style : null,
             ':desc' => ($desc !== null && $desc !== '') ? $desc : null,
             ':id'   => $id,
             ':type' => $type,

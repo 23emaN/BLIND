@@ -91,6 +91,24 @@
                             </div>
                             <small class="text-muted">ไอคอนที่หน้าบ้านแสดงบนการ์ดหมวดหมู่ — ชี้เมาส์ค้างเพื่อดูความหมาย</small>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label" id="stylePickerLabel">สีและรูปทรง <span class="text-danger">*</span></label>
+                            <input type="hidden" name="attribute_style" id="f_style" value="">
+                            <div class="style-picker" role="group" aria-labelledby="stylePickerLabel">
+                                <?php foreach ($data['styles'] ?? [] as $styleKey => $st): ?>
+                                    <button type="button" class="style-picker-item" data-style="<?php echo htmlspecialchars($styleKey, ENT_QUOTES); ?>"
+                                        style="--cat-color: <?php echo htmlspecialchars($st['color'], ENT_QUOTES); ?>;"
+                                        aria-pressed="false" onclick="selectStyle(this.dataset.style)">
+                                        <span class="cat-mark cat-shape-<?php echo htmlspecialchars($st['shape'], ENT_QUOTES); ?>" aria-hidden="true"></span>
+                                        <span class="style-picker-text">
+                                            <span><?php echo htmlspecialchars($st['label']); ?></span>
+                                            <small class="style-picker-used" data-used-for="<?php echo htmlspecialchars($styleKey, ENT_QUOTES); ?>"></small>
+                                        </span>
+                                    </button>
+                                <?php endforeach; ?>
+                            </div>
+                            <small class="text-muted">สีคู่กับรูปทรงเสมอ เพื่อให้คนตาบอดสีแยกหมวดได้ (WCAG 1.4.1) — ควรให้แต่ละหมวดใช้ชุดไม่ซ้ำกัน</small>
+                        </div>
                         <div class="mb-2">
                             <label class="form-label" for="f_desc">คำอธิบายสั้น</label>
                             <textarea class="form-control" name="attribute_desc" id="f_desc" rows="2" maxlength="255" placeholder="เช่น บันทึกเสียงบทเรียน หนังสือเสียง"></textarea>
@@ -131,6 +149,7 @@
             success: function (response) {
                 if (response.result === 1) {
                     $('#itemTableContainer').html(response.html);
+                    if (response.style_usage) STYLE_USAGE = response.style_usage;
                 } else {
                     Swal.fire('ผิดพลาด', response.msg || 'โหลดข้อมูลไม่สำเร็จ', 'error');
                 }
@@ -164,10 +183,39 @@
         $('#iconPreviewText').text(name ? btn.data('label') : 'ไม่ใช้ไอคอน').attr('class', name ? '' : 'text-muted');
     }
 
+    // ชุดสี+รูปทรง: {style: {attribute_id: ชื่อ}} — อัปเดตทุกครั้งที่โหลดตาราง
+    let STYLE_USAGE = <?php echo json_encode((object) ($data['style_usage'] ?? []), JSON_UNESCAPED_UNICODE); ?>;
+
+    function selectStyle(key) {
+        if (!$('#f_style').length) return;
+        key = key || '';
+        $('#f_style').val(key);
+        $('.style-picker-item').each(function () {
+            const on = this.dataset.style === key;
+            $(this).toggleClass('active', on).attr('aria-pressed', on ? 'true' : 'false');
+        });
+        // ตัวอย่างไอคอนใช้สีของชุดที่เลือก
+        const el = key ? document.querySelector('.style-picker-item[data-style="' + key + '"]') : null;
+        const color = el ? getComputedStyle(el).getPropertyValue('--cat-color').trim() : '';
+        $('#iconPreview').css('color', color || '');
+    }
+
+    // บอกว่าชุดไหนมีหมวดอื่นใช้อยู่แล้ว (ไม่นับหมวดที่กำลังแก้ไข)
+    function renderStyleUsage() {
+        const selfId = String($('#attribute_id').val() || '');
+        $('.style-picker-used').each(function () {
+            const used = STYLE_USAGE[this.dataset.usedFor] || {};
+            const names = Object.keys(used).filter(id => id !== selfId).map(id => used[id]);
+            $(this).text(names.length ? 'ใช้แล้ว: ' + names.join(', ') : '');
+        });
+    }
+
     function openAddItem() {
         document.getElementById('itemForm').reset();
         selectIcon('');
+        selectStyle('');
         $('#attribute_id').val('');
+        renderStyleUsage();
         $('#itemModalLabel').text('เพิ่ม<?php echo htmlspecialchars($itemLabel, ENT_QUOTES); ?>');
         new bootstrap.Modal(document.getElementById('itemModal')).show();
         setTimeout(() => $('#f_name').trigger('focus'), 300);
@@ -188,6 +236,8 @@
                 $('#f_name').val(response.data.attribute_name);
                 <?php if ($hasMeta): ?>
                 selectIcon(response.data.attribute_icon || '');
+                selectStyle(response.data.attribute_style || '');
+                renderStyleUsage();
                 $('#f_desc').val(response.data.attribute_desc || '');
                 <?php endif; ?>
                 $('#itemModalLabel').text('แก้ไข<?php echo htmlspecialchars($itemLabel, ENT_QUOTES); ?>');

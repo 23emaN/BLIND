@@ -13,6 +13,7 @@ $page       = max(1, (int) ($page ?? 1));
 $per_page   = max(1, (int) ($per_page ?? 25));
 $item_label = $item_label ?? ($data['item_label'] ?? 'รายการ');
 $has_meta   = $has_meta ?? !empty($data['has_meta']);
+$styles     = $styles ?? ($data['styles'] ?? []);
 ?>
 
 <div class="table-wrap">
@@ -22,7 +23,7 @@ $has_meta   = $has_meta ?? !empty($data['has_meta']);
                 <th class="text-center" style="width: 8%;">ลำดับ</th>
                 <th class="text-start" style="width: <?php echo $has_meta ? '26%' : '62%'; ?>;">ชื่อ<?php echo htmlspecialchars($item_label); ?></th>
                 <?php if ($has_meta): ?>
-                    <th class="text-center" style="width: 14%;">ไอคอน</th>
+                    <th class="text-center" style="width: 14%;">ไอคอน / สี</th>
                     <th class="text-start" style="width: 32%;">คำอธิบาย</th>
                 <?php endif; ?>
                 <th class="text-center" style="width: 20%;">จัดการ</th>
@@ -39,12 +40,21 @@ $has_meta   = $has_meta ?? !empty($data['has_meta']);
                             <div class="table-item-title"><?php echo htmlspecialchars($item['attribute_name'] ?? '-'); ?></div>
                         </td>
                         <?php if ($has_meta): ?>
+                            <?php $st = $styles[$item['attribute_style'] ?? ''] ?? null; ?>
                             <td class="text-center">
-                                <?php if (!empty($item['attribute_icon'])): ?>
-                                    <span class="material-symbols-outlined" title="<?php echo htmlspecialchars($item['attribute_icon'], ENT_QUOTES); ?>" aria-hidden="true"><?php echo htmlspecialchars($item['attribute_icon']); ?></span>
-                                <?php else: ?>
-                                    <span class="text-muted">-</span>
-                                <?php endif; ?>
+                                <span class="cat-style-cell" <?php if ($st): ?>style="--cat-color: <?php echo htmlspecialchars($st['color'], ENT_QUOTES); ?>;" title="<?php echo htmlspecialchars($st['label'], ENT_QUOTES); ?>"<?php endif; ?>>
+                                    <?php if (!empty($item['attribute_icon'])): ?>
+                                        <span class="material-symbols-outlined" aria-hidden="true"><?php echo htmlspecialchars($item['attribute_icon']); ?></span>
+                                    <?php endif; ?>
+                                    <?php if ($st): ?>
+                                        <span class="cat-mark cat-shape-<?php echo htmlspecialchars($st['shape'], ENT_QUOTES); ?>" aria-hidden="true"></span>
+                                        <span class="visually-hidden"><?php echo htmlspecialchars($st['label']); ?></span>
+                                    <?php elseif (empty($item['attribute_icon'])): ?>
+                                        <span class="text-muted">-</span>
+                                    <?php else: ?>
+                                        <span class="text-danger small">ยังไม่เลือกสี</span>
+                                    <?php endif; ?>
+                                </span>
                             </td>
                             <td class="text-start text-muted">
                                 <?php echo !empty($item['attribute_desc']) ? htmlspecialchars($item['attribute_desc']) : '-'; ?>

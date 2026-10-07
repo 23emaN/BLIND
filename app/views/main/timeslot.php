@@ -54,12 +54,31 @@
                     <div class="row">
                         <div class="col-6 mb-2">
                             <label class="form-label" for="f_start">เวลาเริ่ม <span class="text-danger">*</span></label>
-                            <input type="time" class="form-control" name="start_time" id="f_start">
+                            <input type="time" class="form-control" name="start_time" id="f_start" oninput="autoIcon()">
                         </div>
                         <div class="col-6 mb-2">
                             <label class="form-label" for="f_end">เวลาสิ้นสุด <span class="text-danger">*</span></label>
-                            <input type="time" class="form-control" name="end_time" id="f_end">
+                            <input type="time" class="form-control" name="end_time" id="f_end" oninput="autoIcon()">
                         </div>
+                    </div>
+                    <div class="mt-2">
+                        <label class="form-label" id="iconPickerLabel">ไอคอน <span class="text-danger">*</span></label>
+                        <input type="hidden" name="timeslot_icon" id="f_icon" value="">
+                        <div class="icon-picker-selected">
+                            <span class="material-symbols-outlined" id="iconPreview" aria-hidden="true">schedule</span>
+                            <span id="iconPreviewText" class="text-muted">เลือกตามเวลาเริ่มให้อัตโนมัติ</span>
+                        </div>
+                        <div class="icon-picker-grid" role="group" aria-labelledby="iconPickerLabel">
+                            <?php foreach ($data['icons'] ?? [] as $iconName => $iconLabel): ?>
+                                <button type="button" class="icon-picker-item" data-icon="<?php echo htmlspecialchars($iconName, ENT_QUOTES); ?>"
+                                    data-label="<?php echo htmlspecialchars($iconLabel, ENT_QUOTES); ?>"
+                                    title="<?php echo htmlspecialchars($iconLabel, ENT_QUOTES); ?>" aria-label="<?php echo htmlspecialchars($iconLabel, ENT_QUOTES); ?>"
+                                    aria-pressed="false" onclick="selectIcon(this.dataset.icon, true)">
+                                    <span class="material-symbols-outlined" aria-hidden="true"><?php echo htmlspecialchars($iconName); ?></span>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+                        <small class="text-muted">ระบบเลือกให้ตามเวลาที่กรอก เปลี่ยนเองได้</small>
                     </div>
                 </form>
             </div>
@@ -85,8 +104,33 @@
     }
     function triggerFilterDebounced() { clearTimeout(itemFilterTimer); itemFilterTimer = setTimeout(() => GetData(1), 350); }
 
+    // ไอคอน: เลือกเอง (manual=true) แล้วจะไม่ถูกเปลี่ยนอัตโนมัติตามเวลาอีก
+    let iconPickedByUser = false;
+    function selectIcon(name, manual = false) {
+        if (manual) iconPickedByUser = true;
+        const btn = $('.icon-picker-item').filter(function () { return this.dataset.icon === name; });
+        $('.icon-picker-item').removeClass('active').attr('aria-pressed', 'false');
+        btn.addClass('active').attr('aria-pressed', 'true');
+        $('#f_icon').val(btn.length ? name : '');
+        $('#iconPreview').text(btn.length ? name : 'schedule');
+        $('#iconPreviewText').text(btn.length ? btn.data('label') : 'เลือกตามเวลาเริ่มให้อัตโนมัติ').attr('class', btn.length ? '' : 'text-muted');
+    }
+    // กฎเดียวกับ sql/update_icon_style.sql
+    function suggestIcon(start, end) {
+        if (!start) return '';
+        if (start < '12:00' && end > '13:00') return 'date_range';
+        if (start >= '17:00') return 'dark_mode';
+        if (start >= '12:00') return 'partly_cloudy_day';
+        return 'light_mode';
+    }
+    function autoIcon() {
+        if (!iconPickedByUser) selectIcon(suggestIcon($('#f_start').val(), $('#f_end').val()));
+    }
+
     function openAddItem() {
         document.getElementById('itemForm').reset();
+        iconPickedByUser = false;
+        selectIcon('');
         $('#timeslot_id').val('');
         $('#itemModalLabel').text('เพิ่มช่วงเวลา');
         new bootstrap.Modal(document.getElementById('itemModal')).show();
@@ -101,6 +145,9 @@
                 $('#f_name').val(r.data.timeslot_name);
                 $('#f_start').val((r.data.start_time||'').substring(0,5));
                 $('#f_end').val((r.data.end_time||'').substring(0,5));
+                // มีไอคอนอยู่แล้ว = ถือว่าเลือกไว้แล้ว ไม่เปลี่ยนอัตโนมัติเมื่อแก้เวลา
+                iconPickedByUser = !!r.data.timeslot_icon;
+                selectIcon(r.data.timeslot_icon || suggestIcon($('#f_start').val(), $('#f_end').val()));
                 $('#itemModalLabel').text('แก้ไขช่วงเวลา');
                 new bootstrap.Modal(document.getElementById('itemModal')).show();
             },

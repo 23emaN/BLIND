@@ -22,7 +22,12 @@ $per_page = max(1, (int) ($per_page ?? 25));
                     <?php $id = (int) ($row['timeslot_id'] ?? 0); ?>
                     <tr>
                         <td class="text-center text-muted"><?php echo ++$i; ?></td>
-                        <td class="text-start"><div class="table-item-title"><?php echo htmlspecialchars($row['timeslot_name'] ?? '-'); ?></div></td>
+                        <td class="text-start">
+                            <div class="table-item-title d-flex align-items-center gap-2">
+                                <span class="material-symbols-outlined" aria-hidden="true"><?php echo htmlspecialchars($row['timeslot_icon'] ?: 'schedule'); ?></span>
+                                <?php echo htmlspecialchars($row['timeslot_name'] ?? '-'); ?>
+                            </div>
+                        </td>
                         <td class="text-center text-muted">
                             <?php echo htmlspecialchars(substr($row['start_time'] ?? '', 0, 5)); ?>–<?php echo htmlspecialchars(substr($row['end_time'] ?? '', 0, 5)); ?> น.
                         </td>
