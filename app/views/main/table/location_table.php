@@ -40,7 +40,7 @@ $per_page = max(1, (int) ($per_page ?? 25));
                                     title="<?php echo $on ? 'ปิดการใช้งาน' : 'เปิดใช้งาน'; ?>" aria-label="<?php echo $on ? 'ปิดการใช้งาน' : 'เปิดใช้งาน'; ?>"
                                     data-id="<?php echo $id; ?>" data-name="<?php echo htmlspecialchars($row['location_label'] ?? '', ENT_QUOTES); ?>" data-to="<?php echo $on ? '0' : '1'; ?>"
                                     onclick="toggleItem(this)">
-                                    <i class="<?php echo $on ? 'ri-forbid-line' : 'ri-checkbox-circle-line'; ?>"></i>
+                                    <i class="<?php echo $on ? 'ri-close-line' : 'ri-checkbox-circle-line'; ?>"></i>
                                 </button>
                             </div>
                         </td>
