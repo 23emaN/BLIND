@@ -181,10 +181,27 @@ class ActivityController
             'max_volunteers'  => (int) ($_POST['max_volunteers'] ?? 0),
             'reserve_count'   => max(0, (int) ($_POST['reserve_count'] ?? 0)),
             'activity_detail' => trim($_POST['activity_detail'] ?? ''),
+            'grant_hours'        => ($_POST['grant_hours'] ?? '0') === '1' ? '1' : '0',
+            'hours_per_person'   => trim($_POST['hours_per_person'] ?? ''),
+            'hours_count_method' => ($_POST['hours_count_method'] ?? '1') === '2' ? '2' : '1',
         ];
     }
 
-    private function validate(array $in): array
+    // ชั่วโมงจิตอาสา: ไม่ให้ชั่วโมง → null, เว้นว่าง → คำนวณจากช่วงเวลา (ปัดลงทีละ 0.5)
+    private function resolveHours(array &$in): void
+    {
+        if ($in['grant_hours'] !== '1') {
+            $in['hours_per_person']   = null;
+            $in['hours_count_method'] = '1';
+            return;
+        }
+        if ($in['hours_per_person'] === '') {
+            $minutes = (strtotime($in['end_time']) - strtotime($in['start_time'])) / 60;
+            $in['hours_per_person'] = floor($minutes / 30) / 2;
+        }
+    }
+
+    private function validate(array &$in): array
     {
         $errors = [];
 
@@ -219,6 +236,18 @@ class ActivityController
 
         if (mb_strlen($in['activity_detail']) > 500) {
             $errors[] = 'รายละเอียดต้องไม่เกิน 500 ตัวอักษร';
+        }
+
+        if (!$errors) {
+            $this->resolveHours($in);
+            if ($in['grant_hours'] === '1') {
+                $h = $in['hours_per_person'];
+                if (!is_numeric($h) || $h < 0.5 || $h > 24 || fmod((float) $h * 2, 1) != 0) {
+                    $errors[] = 'จำนวนชั่วโมงต่อคนต้องอยู่ระหว่าง 0.5–24 (ทีละ 0.5 ชม.)';
+                } else {
+                    $in['hours_per_person'] = (float) $h;
+                }
+            }
         }
 
         return $errors;

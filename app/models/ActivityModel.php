@@ -128,10 +128,12 @@ class ActivityModel
     {
         $sql = "INSERT INTO tbl_activity
                     (activity_title, attribute_id, activity_date, start_time, end_time, location,
-                     max_volunteers, reserve_count, activity_detail, activity_status, active_status, create_user_id, create_at)
+                     max_volunteers, reserve_count, grant_hours, hours_per_person, hours_count_method,
+                     activity_detail, activity_status, active_status, create_user_id, create_at)
                 VALUES
                     (:title, :cat, :date, :start, :end, :loc,
-                     :max, :reserve, :detail, '1', '1', :uid, NOW())";
+                     :max, :reserve, :grant, :hours, :method,
+                     :detail, '1', '1', :uid, NOW())";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             ':title'   => $d['activity_title'],
@@ -142,6 +144,9 @@ class ActivityModel
             ':loc'     => $d['location'],
             ':max'     => $d['max_volunteers'],
             ':reserve' => $d['reserve_count'],
+            ':grant'   => $d['grant_hours'],
+            ':hours'   => $d['hours_per_person'],
+            ':method'  => $d['hours_count_method'],
             ':detail'  => $d['activity_detail'],
             ':uid'     => $createUserId,
         ]);
@@ -153,7 +158,9 @@ class ActivityModel
         $sql = "UPDATE tbl_activity SET
                     activity_title = :title, attribute_id = :cat, activity_date = :date,
                     start_time = :start, end_time = :end, location = :loc,
-                    max_volunteers = :max, reserve_count = :reserve, activity_detail = :detail
+                    max_volunteers = :max, reserve_count = :reserve,
+                    grant_hours = :grant, hours_per_person = :hours, hours_count_method = :method,
+                    activity_detail = :detail
                 WHERE activity_id = :id AND active_status = '1'";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
@@ -165,6 +172,9 @@ class ActivityModel
             ':loc'     => $d['location'],
             ':max'     => $d['max_volunteers'],
             ':reserve' => $d['reserve_count'],
+            ':grant'   => $d['grant_hours'],
+            ':hours'   => $d['hours_per_person'],
+            ':method'  => $d['hours_count_method'],
             ':detail'  => $d['activity_detail'],
             ':id'      => $id,
         ]);

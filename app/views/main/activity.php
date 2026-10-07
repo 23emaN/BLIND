@@ -143,6 +143,28 @@
                         </div>
                     </div>
 
+                    <div class="mb-3">
+                        <div class="form-check form-switch mb-2">
+                            <input type="hidden" name="grant_hours" value="0">
+                            <input class="form-check-input" type="checkbox" name="grant_hours" id="f_grant_hours" value="1" checked onchange="toggleHoursFields()">
+                            <label class="form-check-label" for="f_grant_hours">กิจกรรมนี้ให้ชั่วโมงจิตอาสา</label>
+                        </div>
+                        <div class="row" id="hoursFields">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label" for="f_hours">จำนวนชั่วโมงต่อคน</label>
+                                <input type="number" class="form-control" name="hours_per_person" id="f_hours" min="0.5" max="24" step="0.5">
+                                <small class="text-muted">ว่างไว้ = คำนวณจากช่วงเวลากิจกรรม</small>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label" for="f_hours_method">วิธีนับชั่วโมง</label>
+                                <select class="form-select" name="hours_count_method" id="f_hours_method">
+                                    <option value="1">ตามเวลาที่เข้าร่วมจริง (ไม่เกินที่ระบุ)</option>
+                                    <option value="2">เข้าร่วมแล้วได้เต็มตามที่ระบุ</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="mb-2">
                         <label class="form-label" for="f_detail">รายละเอียดและคำแนะนำ</label>
                         <textarea class="form-control" name="activity_detail" id="f_detail" rows="3" maxlength="500" placeholder="ไม่บังคับ"></textarea>
@@ -207,11 +229,19 @@
         $('#f_location').val(name);
     }
 
+    // ชั่วโมงจิตอาสา: ซ่อนช่องเมื่อกิจกรรมไม่ให้ชั่วโมง
+    function toggleHoursFields() {
+        const on = $('#f_grant_hours').is(':checked');
+        $('#hoursFields').toggle(on);
+        $('#f_hours, #f_hours_method').prop('disabled', !on);
+    }
+
     function openAddItem() {
         document.getElementById('itemForm').reset();
         $('#activity_id').val('');
         $('#f_max').val(20);
         $('#f_reserve').val(5);
+        toggleHoursFields();
         $('#itemModalLabel').text('สร้างกิจกรรมใหม่');
         new bootstrap.Modal(document.getElementById('itemModal')).show();
     }
@@ -238,6 +268,10 @@
                 $('#f_max').val(d.max_volunteers);
                 $('#f_reserve').val(d.reserve_count);
                 $('#f_detail').val(d.activity_detail || '');
+                $('#f_grant_hours').prop('checked', d.grant_hours !== '0');
+                $('#f_hours').val(d.hours_per_person !== null ? parseFloat(d.hours_per_person) : '');
+                $('#f_hours_method').val(d.hours_count_method || '1');
+                toggleHoursFields();
                 $('#itemModalLabel').text('แก้ไขกิจกรรม');
                 new bootstrap.Modal(document.getElementById('itemModal')).show();
             },
