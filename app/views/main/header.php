@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 
 <head>
@@ -1022,10 +1022,16 @@
             border: 1px solid #e2e8f0 !important;
             border-radius: 12px !important;
             padding: 12px 16px !important;
-            height: 50px !important;
             outline: none !important;
             box-shadow: none !important;
             width: 100%;
+        }
+
+        .modal-form-control:not(textarea),
+        .modal-form-select,
+        .modal-body .form-control:not(textarea),
+        .modal-body .form-select {
+            height: 50px !important;
         }
 
         .modal-form-control:focus,
@@ -2307,51 +2313,29 @@
     </div>
 
     <header class="acc-topbar">
-        <div class="d-flex align-items-center flex-grow-1" style="min-width: 0;">
+        <!-- Sidebar Width Container for Logo and Menu (approx 260px) -->
+        <div class="d-flex align-items-center justify-content-between" style="width: 160px; border-right: 1px solid #e2e8f0; padding-right: 20px; margin-right: 20px;">
             <!-- Brand Logo & Title -->
-            <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/main" class="acc-brand-wrap">
-                <!-- <div class="acc-brand-logo"> -->
-                    <!-- <img src="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/assets/images/G_AM_logo-01.jpg"
-                        alt="Cpd Acc Logo"> -->
-                <!-- </div> -->
+            <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/main" class="acc-brand-wrap" style="border-right: none; padding-right: 0; text-decoration: none; display: flex; align-items: center; gap: 10px;">
+                <img src="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/images/logo_blind.jpg" alt="Logo" style="height: 35px; width: auto; border-radius: 4px;">
                 <div class="acc-brand-info">
-                    <h1 class="acc-brand-title">BLIND</h1>
-                    <!-- <p class="acc-brand-subtitle">ระบบบริหารสำนักงานบัญชี</p> -->
+                    <h1 class="acc-brand-title" style="margin: 0;">FBT</h1>
                 </div>
             </a>
 
             <!-- Sidebar Toggle Button -->
-            <button type="button" id="header-burger-menu" class="header-burger-menu">
+            <button type="button" id="header-burger-menu" class="header-burger-menu" style="margin-left: 0; margin-right: 0;">
                 <i class="ri-menu-line"></i>
             </button>
-
+        </div>
+        
+        <div class="d-flex align-items-center flex-grow-1" style="min-width: 0;">
+            <!-- Space for future topbar items -->
         </div>
 
         <div class="acc-actions">
 
-            <div class="dropdown">
-                <button type="button" class="acc-notif-btn" id="notifDropdownBtn" data-bs-toggle="dropdown"
-                    data-bs-auto-close="outside" aria-expanded="false" title="การแจ้งเตือน">
-                    <i class="ri-notification-3-line"></i>
-                    <span class="acc-notif-badge" id="notifBadge">0</span>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end acc-notif-menu" aria-labelledby="notifDropdownBtn">
-                    <div class="acc-notif-header d-flex justify-content-between align-items-center">
-                        <span>การแจ้งเตือน</span>
-                        <a href="javascript:void(0)" onclick="readAllNotificationsOnly()"
-                            class="text-primary text-decoration-none" style="font-size: 0.85rem;"
-                            title="ทำเครื่องหมายว่าอ่านแล้วทั้งหมด">อ่านทั้งหมด</a>
-                    </div>
-                    <div class="acc-notif-list" id="notifListContainer">
-                        <div class="acc-notif-empty">กำลังโหลด...</div>
-                    </div>
-                    <!-- View All Notifications Button -->
-                    <div class="acc-notif-footer text-center border-top">
-                        <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/notifications"
-                            class="text-primary text-decoration-none d-block py-2">ดูการแจ้งเตือนทั้งหมด</a>
-                    </div>
-                </div>
-            </div>
+            
             <!-- Notification Bell -->
 
             <div class="dropdown">
@@ -2369,36 +2353,6 @@
                         </span>
                     </div>
                 </div>
-                <!-- <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="profileDropdownBtn"
-                    style="border-radius: 14px; min-width: 270px; padding: 10px; border: 1px solid #edf2f7; margin-top: 10px;">
-                    Web Push Notification Permission Card
-                    <li onclick="event.stopPropagation()">
-                        <div id="notifPermCard" style="
-                            margin: 2px 0 6px 0;
-                            border-radius: 10px;
-                            padding: 12px 14px;
-                            background: linear-gradient(135deg, #f0f7ff 0%, #e8f4ff 100%);
-                            border: 1px solid #bfdbfe;
-                            transition: all 0.2s ease;
-                        ">
-                            
-                            <div id="notifPermHint"
-                                style="font-size: 11px; color: #94a3b8; margin-top: 8px; padding-top: 8px; border-top: 1px solid #e2e8f0; display: none;">
-                            </div>
-                        </div>
-                    </li>
-                    <li class="d-block d-sm-none">
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li class="d-block d-sm-none">
-                        <a class="dropdown-item d-flex align-items-center px-3 py-2 text-danger"
-                            href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/logout"
-                            style="font-weight: 500; font-size: 14px; border-radius: 8px;">
-                            <i class="ri-logout-box-r-line me-2" style="font-size: 18px;"></i>
-                            ออกจากระบบ
-                        </a>
-                    </li>
-                </ul> -->
             </div>
 
             <!-- Logout Button -->
@@ -2509,350 +2463,5 @@
                 burgerBtn.style.display = 'flex';
             }
         }
-
-        // --- Notification Logic ---
-        // function loadNotifications() {
-        //     $.ajax({
-        //         url: "<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/notification/get",
-        //         method: "POST",
-        //         dataType: "json",
-        //         success: function (res) {
-        //             // console.log('notification response:', res); // เอาไว้ดูค่าจริงใน Console ก่อน แล้วค่อยลบทิ้ง
-
-        //             if (res && (res.result === 1 || res.result === '1')) { // แก้ตรงนี้ ป้องกันปัญหา string vs int
-        //                 let count = res.count || 0;
-        //                 let badge = document.getElementById('notifBadge');
-        //                 if (count > 0) {
-        //                     badge.style.display = 'block';
-        //                     badge.innerText = count > 99 ? '99+' : count;
-        //                 } else {
-        //                     badge.style.display = 'none';
-        //                 }
-
-        //                 let listHtml = '';
-        //                 if (res.data && res.data.length > 0) {
-        //                     const baseUrl = "<?php echo defined('BASE_URL') ? BASE_URL : ''; ?>";
-        //                     res.data.forEach(function (item) {
-        //                         let timeStr = new Date(item.created_at).toLocaleString('th-TH');
-
-        //                         let fullUrl = item.url_link ? item.url_link : '';
-        //                         if (fullUrl && fullUrl.startsWith('/')) {
-        //                             // ถ้า url เริ่มด้วย / ให้เอา baseUrl มาต่อหน้า
-        //                             fullUrl = baseUrl + fullUrl;
-        //                         } else if (fullUrl && !fullUrl.startsWith('http')) {
-        //                             fullUrl = baseUrl + '/' + fullUrl;
-        //                         }
-
-        //                         listHtml += `
-        //                     <div class="acc-notif-item unread" id="notif-item-${item.notif_id}">
-        //                         <div class="acc-notif-title">
-        //                             ${fullUrl ? `<a href="${fullUrl}" style="color: inherit; text-decoration: none;">${item.task_type === 'post_it' ? 'งานใหม่' : 'แจ้งเตือน'} <i class="ri-external-link-line ms-1 text-primary"></i></a>` : (item.task_type === 'post_it' ? 'งานใหม่' : 'แจ้งเตือน')}
-        //                         </div>
-        //                         <div class="acc-notif-text">${item.message}</div>
-        //                         <div class="acc-notif-time">${timeStr}</div>
-        //                         <div class="acc-notif-action d-flex align-items-center gap-2">
-        //                             ${fullUrl ? `<a href="${fullUrl}" class="btn btn-sm btn-outline-primary" style="font-size: 0.75rem; padding: 2px 8px;">เปิดดู</a>` : ''}
-        //                             <button class="acc-notif-ack-btn" onclick="markNotificationRead(${item.notif_id})">รับทราบ</button>
-        //                         </div>
-        //                     </div>
-        //                 `;
-        //                     });
-        //                 } else {
-        //                     listHtml = '<div class="acc-notif-empty">ไม่มีการแจ้งเตือน</div>';
-        //                 }
-        //                 document.getElementById('notifListContainer').innerHTML = listHtml;
-        //             } else {
-        //                 document.getElementById('notifListContainer').innerHTML =
-        //                     '<div class="acc-notif-empty">ไม่สามารถโหลดข้อมูลได้</div>';
-        //             }
-        //         },
-        //         error: function (xhr, status, err) {
-        //             if (xhr.status === 401) {
-        //                 window.location.href = "<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/login";
-        //                 return;
-        //             }
-        //             // ตรงนี้สำคัญมาก — เดิมไม่มีเลย ทำให้ error เงียบหายไป
-        //             console.error('notification/get failed:', status, err, xhr.responseText);
-        //             document.getElementById('notifListContainer').innerHTML =
-        //                 '<div class="acc-notif-empty">เกิดข้อผิดพลาดในการโหลด</div>';
-
-        //             if (typeof Swal !== 'undefined') {
-        //                 Swal.fire({
-        //                     icon: 'error',
-        //                     title: 'เกิดข้อผิดพลาดในการโหลดข้อมูลการแจ้งเตือน',
-        //                     confirmButtonText: 'ตกลง',
-        //                     confirmButtonColor: '#0066fe',
-        //                     showConfirmButton: true
-        //                 });
-        //             }
-        //         }
-        //     });
-        // }
-
-        // function readAllNotificationsOnly() {
-        //     const baseUrl = "<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>";
-        //     $.ajax({
-        //         url: baseUrl + "/notification/read-all",
-        //         method: "POST",
-        //         dataType: "json",
-        //         success: function (res) {
-        //             if (res && res.result === 1) {
-        //                 loadNotifications(); // โหลดใหม่ใน dropdown
-        //             }
-        //         }
-        //     });
-        // }
-
-        // function markNotificationRead(notifId) {
-        //     $.ajax({
-        //         url: "<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/notification/read",
-        //         method: "POST",
-        //         data: { notif_id: notifId },
-        //         dataType: "json",
-        //         success: function (res) {
-        //             if (res && res.result === 1) {
-        //                 let item = document.getElementById('notif-item-' + notifId);
-        //                 if (item) {
-        //                     item.classList.remove('unread');
-        //                     item.style.opacity = '0.5';
-        //                     setTimeout(() => { item.style.display = 'none'; }, 300);
-        //                 }
-        //                 loadNotifications();
-        //             }
-        //         }
-        //     });
-        // }
-
-        // function urlB64ToUint8Array(base64String) {
-        //     const padding = '='.repeat((4 - base64String.length % 4) % 4);
-        //     const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
-        //     const rawData = window.atob(base64);
-        //     const outputArray = new Uint8Array(rawData.length);
-        //     for (let i = 0; i < rawData.length; ++i) {
-        //         outputArray[i] = rawData.charCodeAt(i);
-        //     }
-        //     return outputArray;
-        // }
-
-        // async function subscribeUserToPush() {
-        //     if ('serviceWorker' in navigator && 'PushManager' in window) {
-        //         try {
-        //             const baseUrl = "<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>";
-        //             const registration = await navigator.serviceWorker.register(baseUrl + '/sw.js');
-        //             await navigator.serviceWorker.ready;
-
-        //             const response = await fetch(baseUrl + '/notification/vapid-public-key', {
-        //                 credentials: 'same-origin',
-        //                 headers: { 'Accept': 'application/json' }
-        //             });
-
-        //             if (!response.ok || !(response.headers.get('content-type') || '').includes('application/json')) {
-        //                 return false;
-        //             }
-
-        //             const data = await response.json();
-
-        //             if (!data.publicKey) return false;
-
-        //             const applicationServerKey = urlB64ToUint8Array(data.publicKey);
-
-        //             let permission = Notification.permission;
-        //             if (permission === 'default') {
-        //                 permission = await Notification.requestPermission();
-        //             }
-
-        //             if (permission === 'granted') {
-        //                 const subscription = await registration.pushManager.subscribe({
-        //                     userVisibleOnly: true,
-        //                     applicationServerKey: applicationServerKey
-        //                 });
-
-        //                 const saveRes = await fetch(baseUrl + '/notification/subscribe', {
-        //                     method: 'POST',
-        //                     credentials: 'same-origin',
-        //                     headers: { 'Content-Type': 'application/json' },
-        //                     body: JSON.stringify(subscription)
-        //                 });
-
-        //                 if (saveRes.ok) {
-        //                     return true;
-        //                 } else {
-        //                     alert('ไม่สามารถบันทึกข้อมูลแจ้งเตือนได้');
-        //                     return false;
-        //                 }
-        //             } else {
-        //                 alert('คุณไม่อนุญาตให้แสดงการแจ้งเตือน (Permission Denied) โปรดไปตั้งค่าเบราว์เซอร์เพื่ออนุญาต');
-        //                 return false;
-        //             }
-        //         } catch (error) {
-        //             console.error('Push Subscription error:', error);
-        //             alert('เกิดข้อผิดพลาดในการลงทะเบียนรับการแจ้งเตือน');
-        //             return false;
-        //         }
-        //     } else {
-        //         // Not supported, prompt user if they want to enable notifications anyway?
-        //         // Requesting permission just in case
-        //         let permission = Notification.permission;
-        //         if (permission === 'default') {
-        //             permission = await Notification.requestPermission();
-        //         }
-        //         return false;
-        //     }
-        // }
-
-        // async function unsubscribeUserFromPush() {
-        //     if ('serviceWorker' in navigator && 'PushManager' in window) {
-        //         try {
-        //             const registration = await navigator.serviceWorker.ready;
-        //             const subscription = await registration.pushManager.getSubscription();
-        //             if (subscription) {
-        //                 await subscription.unsubscribe();
-
-        //                 const baseUrl = "<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>";
-        //                 await fetch(baseUrl + '/notification/unsubscribe', {
-        //                     method: 'POST',
-        //                     headers: { 'Content-Type': 'application/json' },
-        //                     body: JSON.stringify({ endpoint: subscription.endpoint })
-        //                 });
-        //             }
-        //             return true;
-        //         } catch (error) {
-        //             console.error('Push Unsubscription error:', error);
-        //             return false;
-        //         }
-        //     }
-        //     return false;
-        // }
-
-        // $(document).ready(function () {
-        //     loadNotifications();
-        //     // Optional: Auto fetch every 1 minute
-        //     setInterval(loadNotifications, 60000);
-
-        //     // Web Push Toggle Logic
-        //     function updateNavNotificationToggleState() {
-        //         const webPushToggle = document.getElementById('webPushToggle');
-        //         const permIcon = document.getElementById('notifPermIcon');
-        //         const permStatus = document.getElementById('notifPermStatus');
-        //         const permCard = document.getElementById('notifPermCard');
-        //         const permHint = document.getElementById('notifPermHint');
-        //         if (!webPushToggle) return;
-
-        //         const isUserDisabled = localStorage.getItem('web_push_enabled') === 'false';
-        //         const notifSupported = (typeof Notification !== 'undefined');
-        //         const permission = notifSupported ? Notification.permission : 'unsupported';
-        //         const hasPermission = permission === 'granted';
-
-        //         webPushToggle.checked = hasPermission && !isUserDisabled;
-
-        //         // อัปเดต visual ของ custom toggle (track + thumb)
-        //         (function () {
-        //             var track = document.getElementById('webPushTrack');
-        //             var thumb = document.getElementById('webPushThumb');
-        //             var isOn = webPushToggle.checked;
-        //             if (track) track.style.backgroundColor = isOn ? '#2563eb' : '#cbd5e1';
-        //             if (thumb) thumb.style.left = isOn ? '25px' : '3px';
-        //         })();
-
-        //         if (!permIcon || !permStatus || !permCard) return;
-
-        //         if (permission === 'granted' && !isUserDisabled) {
-        //             // Active / Granted - green
-        //             permCard.style.background = 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)';
-        //             permCard.style.borderColor = '#86efac';
-        //             permIcon.style.backgroundColor = '#bbf7d0';
-        //             permIcon.style.color = '#16a34a';
-        //             permIcon.querySelector('i').className = 'ri-notification-3-fill';
-        //             permStatus.textContent = '\u2714 \u0e2d\u0e19\u0e38\u0e0d\u0e32\u0e15\u0e41\u0e25\u0e49\u0e27';
-        //             permStatus.style.color = '#16a34a';
-        //             webPushToggle.disabled = false;
-        //             if (permHint) permHint.style.display = 'none';
-        //         } else if (permission === 'denied') {
-        //             // Blocked - red, disable toggle
-        //             permCard.style.background = 'linear-gradient(135deg, #fff7f7 0%, #fee2e2 100%)';
-        //             permCard.style.borderColor = '#fca5a5';
-        //             permIcon.style.backgroundColor = '#fee2e2';
-        //             permIcon.style.color = '#dc2626';
-        //             permIcon.querySelector('i').className = 'ri-notification-off-line';
-        //             permStatus.textContent = '\u26d4 \u0e16\u0e39\u0e01\u0e1a\u0e25\u0e47\u0e2d\u0e01\u0e43\u0e19\u0e40\u0e1a\u0e23\u0e32\u0e27\u0e4c\u0e40\u0e0b\u0e2d\u0e23\u0e4c';
-        //             permStatus.style.color = '#dc2626';
-        //             webPushToggle.disabled = true;
-        //             if (permHint) {
-        //                 permHint.style.display = 'block';
-        //                 permHint.innerHTML = '\uD83D\uDD12 \u0e44\u0e1b\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e40\u0e1a\u0e23\u0e32\u0e27\u0e4c\u0e40\u0e0b\u0e2d\u0e23\u0e4c \u2192 <b>\u0e01\u0e32\u0e23\u0e41\u0e08\u0e49\u0e07\u0e40\u0e15\u0e37\u0e2d\u0e19</b> \u2192 \u0e2d\u0e19\u0e38\u0e0d\u0e32\u0e15';
-        //             }
-        //         } else if (hasPermission && isUserDisabled) {
-        //             // Granted but user muted
-        //             permCard.style.background = 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)';
-        //             permCard.style.borderColor = '#cbd5e1';
-        //             permIcon.style.backgroundColor = '#e2e8f0';
-        //             permIcon.style.color = '#94a3b8';
-        //             permIcon.querySelector('i').className = 'ri-notification-off-line';
-        //             permStatus.textContent = '\u23f8\ufe0f \u0e1b\u0e34\u0e14\u0e2d\u0e22\u0e39\u0e48\u0e0a\u0e31\u0e48\u0e27\u0e04\u0e23\u0e32\u0e27';
-        //             permStatus.style.color = '#94a3b8';
-        //             webPushToggle.disabled = false;
-        //             if (permHint) permHint.style.display = 'none';
-        //         } else {
-        //             // Default - blue (not yet asked)
-        //             permCard.style.background = 'linear-gradient(135deg, #f0f7ff 0%, #e8f4ff 100%)';
-        //             permCard.style.borderColor = '#bfdbfe';
-        //             permIcon.style.backgroundColor = '#dbeafe';
-        //             permIcon.style.color = '#2563eb';
-        //             permIcon.querySelector('i').className = 'ri-notification-3-line';
-        //             permStatus.textContent = '\uD83D\uDD14 \u0e01\u0e14 Toggle \u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e02\u0e2d\u0e2d\u0e19\u0e38\u0e0d\u0e32\u0e15';
-        //             permStatus.style.color = '#2563eb';
-        //             webPushToggle.disabled = false;
-        //             if (permHint) permHint.style.display = 'none';
-        //         }
-        //     }
-
-        //     updateNavNotificationToggleState();
-
-        //     const profileDropdown = document.getElementById('profileDropdownBtn');
-        //     if (profileDropdown) {
-        //         profileDropdown.addEventListener('show.bs.dropdown', function () {
-        //             updateNavNotificationToggleState();
-        //         });
-        //     }
-
-        //     const webPushToggle = document.getElementById('webPushToggle');
-        //     if (webPushToggle) {
-        //         webPushToggle.addEventListener('change', async function () {
-        //             const isChecked = this.checked;
-        //             this.disabled = true;
-
-        //             if (isChecked) {
-        //                 localStorage.removeItem('web_push_enabled');
-        //                 if (typeof Notification !== 'undefined' && Notification.permission === 'denied') {
-        //                     this.checked = false;
-        //                 } else {
-        //                     if (typeof subscribeUserToPush === 'function') {
-        //                         const success = await subscribeUserToPush();
-        //                         if (success) {
-        //                             localStorage.setItem('web_push_enabled', 'true');
-        //                         } else {
-        //                             this.checked = false;
-        //                         }
-        //                     } else if (typeof Notification !== 'undefined') {
-        //                         const perm = await Notification.requestPermission();
-        //                         if (perm !== 'granted') {
-        //                             this.checked = false;
-        //                         }
-        //                     }
-        //                 }
-        //             } else {
-        //                 localStorage.setItem('web_push_enabled', 'false');
-        //                 if (typeof unsubscribeUserFromPush === 'function') {
-        //                     await unsubscribeUserFromPush();
-        //                 }
-        //             }
-
-        //             if (typeof Notification === 'undefined' || Notification.permission !== 'denied') {
-        //                 this.disabled = false;
-        //             }
-        //             updateNavNotificationToggleState();
-        //         });
-        //     }
-        // });
 
     </script>

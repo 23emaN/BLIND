@@ -7,6 +7,7 @@
     $locations  = $data['locations'] ?? [];
     $timeslots  = $data['timeslots'] ?? [];
 ?>
+<!-- Modal สร้าง/แก้ไขกิจกรรม -->
 
 <div class="container-fluid">
     <div class="main-content d-flex flex-column">
@@ -32,7 +33,7 @@
                             <input type="text" class="search-input" id="search_input" onkeyup="triggerFilterDebounced()" placeholder="ค้นหาชื่อกิจกรรม หรือสถานที่">
                         </div>
                         <div class="filter-group" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; min-width: 500px;">
-                            <input type="month" id="filter_month" class="filter-select" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
+                            <input type="text" id="filter_month" class="filter-select" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()" placeholder="เลือกเดือนและปี">
                             <select id="filter_category" class="filter-select" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
                                 <option value="">ทุกหมวดหมู่</option>
                                 <?php foreach ($categories as $c): ?>
@@ -58,7 +59,8 @@
     </div>
 </div>
 
-<!-- Modal สร้าง/แก้ไขกิจกรรม -->
+
+
 <div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="itemModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
         <div class="modal-content">
@@ -69,7 +71,6 @@
             <div class="modal-body">
                 <form id="itemForm" autocomplete="off">
                     <input type="hidden" name="activity_id" id="activity_id" value="">
-
                     <div class="mb-3">
                         <label class="form-label" for="f_title">ชื่อกิจกรรม <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="activity_title" id="f_title" maxlength="100">
@@ -85,7 +86,7 @@
                         </select>
                     </div>
 
-                    <?php if (!empty($timeslots)): ?>
+                    <?php if (! empty($timeslots)): ?>
                         <div class="mb-2">
                             <label class="form-label d-block">เลือกช่วงเวลาที่ใช้บ่อย</label>
                             <div class="d-flex flex-wrap gap-2">
@@ -103,7 +104,7 @@
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label class="form-label" for="f_date">วันที่จัดกิจกรรม <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" name="activity_date" id="f_date">
+                            <input type="text" class="form-control flatpickr-date" name="activity_date" id="f_date" placeholder="วว/ดด/ปปปป">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label" for="f_start">เวลาเริ่ม <span class="text-danger">*</span></label>
@@ -118,7 +119,7 @@
                     <div class="mb-3">
                         <label class="form-label" for="f_location">สถานที่จัดกิจกรรม <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="location" id="f_location" maxlength="255">
-                        <?php if (!empty($locations)): ?>
+                        <?php if (! empty($locations)): ?>
                             <div class="d-flex flex-wrap gap-2 mt-2">
                                 <?php foreach ($locations as $loc): ?>
                                     <button type="button" class="btn btn-sm btn-outline-secondary"
@@ -144,7 +145,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <div class="form-check form-switch mb-2">
+                        <div class="form-check form-switch mb-2 ms-4">
                             <input type="hidden" name="grant_hours" value="0">
                             <input class="form-check-input" type="checkbox" name="grant_hours" id="f_grant_hours" value="1" checked onchange="toggleHoursFields()">
                             <label class="form-check-label" for="f_grant_hours">กิจกรรมนี้ให้ชั่วโมงจิตอาสา</label>
@@ -165,9 +166,9 @@
                         </div>
                     </div>
 
-                    <div class="mb-2">
+                    <div class="mb-3">
                         <label class="form-label" for="f_detail">รายละเอียดและคำแนะนำ</label>
-                        <textarea class="form-control" name="activity_detail" id="f_detail" rows="3" maxlength="500" placeholder="ไม่บังคับ"></textarea>
+                        <textarea class="form-control" name="activity_detail" id="f_detail" rows="4" maxlength="1000" placeholder="ไม่บังคับ"></textarea>
                     </div>
                 </form>
             </div>
@@ -179,10 +180,44 @@
     </div>
 </div>
 
+
+
+<style>
+    #itemModal input.flatpickr-input.form-control[readonly] { background-color: #ffffff !important; }
+    #itemModal .flatpickr-wrapper { width: 100%; }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/th.js"></script>
 <script>
     const ACT_BASE_URL = '<?php echo $baseUrl; ?>';
     let itemFilterTimer = null;
     let isSubmittingItem = false;
+
+    // วันที่จัดกิจกรรม: แสดง d/m/Y แต่ส่งค่า Y-m-d ให้ backend
+    const fpActivityDate = flatpickr('#f_date', {
+        dateFormat: 'Y-m-d',
+        altInput: true,
+        altFormat: 'd/m/Y',
+        locale: 'th',
+        static: true,
+        disableMobile: true
+    });
+
+    // ตัวเลือกเดือนและปี (Filter)
+    flatpickr('#filter_month', {
+        plugins: [
+            new monthSelectPlugin({
+                shorthand: true, // แสดงชื่อย่อเดือน
+                dateFormat: "Y-m", // ส่งค่าปี-เดือน (เช่น 2026-10)
+                altFormat: "F Y", // แสดงผล (เช่น ตุลาคม 2026)
+                theme: "light"
+            })
+        ],
+        locale: 'th',
+        disableMobile: true
+    });
 
     function GetData(page = 1) {
         const payload = {
@@ -241,6 +276,8 @@
         $('#activity_id').val('');
         $('#f_max').val(20);
         $('#f_reserve').val(5);
+        fpActivityDate.clear();
+        fpActivityDate.set('minDate', 'today');
         toggleHoursFields();
         $('#itemModalLabel').text('สร้างกิจกรรมใหม่');
         new bootstrap.Modal(document.getElementById('itemModal')).show();
@@ -261,7 +298,8 @@
                 $('#activity_id').val(d.activity_id);
                 $('#f_title').val(d.activity_title);
                 $('#f_category').val(String(d.category_id));
-                $('#f_date').val(d.activity_date);
+                fpActivityDate.set('minDate', null); // แก้ไขกิจกรรมที่ผ่านไปแล้วได้
+                fpActivityDate.setDate(d.activity_date || null, false);
                 $('#f_start').val((d.start_time || '').substring(0, 5));
                 $('#f_end').val((d.end_time || '').substring(0, 5));
                 $('#f_location').val(d.location);
@@ -271,6 +309,7 @@
                 $('#f_grant_hours').prop('checked', d.grant_hours !== '0');
                 $('#f_hours').val(d.hours_per_person !== null ? parseFloat(d.hours_per_person) : '');
                 $('#f_hours_method').val(d.hours_count_method || '1');
+
                 toggleHoursFields();
                 $('#itemModalLabel').text('แก้ไขกิจกรรม');
                 new bootstrap.Modal(document.getElementById('itemModal')).show();
@@ -291,10 +330,15 @@
         const originalText = btn.text();
         btn.prop('disabled', true).text('กำลังบันทึก...');
 
+        const formElement = document.getElementById('itemForm');
+        const formData = new FormData(formElement);
+
         $.ajax({
             url: url,
             method: 'POST',
-            data: $('#itemForm').serialize(),
+            data: formData,
+            processData: false,
+            contentType: false,
             dataType: 'json',
             success: function (response) {
                 isSubmittingItem = false;
@@ -350,6 +394,6 @@
 
 <?php
     if (file_exists(dirname(__DIR__) . '/main/footer.php')) {
-        require_once dirname(__DIR__) . '/main/footer.php';
+    require_once dirname(__DIR__) . '/main/footer.php';
     }
 ?>

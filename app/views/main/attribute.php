@@ -9,7 +9,79 @@
     $route      = $data['route'] ?? 'skill';
     $hasMeta    = !empty($data['has_meta']);   // หมวดหมู่กิจกรรม = จัดการ icon + คำอธิบาย
 ?>
+<style>
+    /* ===== Image upload (ภาพปกกิจกรรม) ===== */
+    .image-upload-wrapper {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        max-height: 260px;
+        border: 2px dashed #cbd5e1;
+        border-radius: 12px;
+        background-color: #f8fafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        cursor: pointer;
+        transition: border-color .2s ease, background-color .2s ease;
+    }
 
+    .image-upload-wrapper:hover,
+    .image-upload-wrapper.is-dragover {
+        border-color: #4f46e5;
+        background-color: #eef2ff;
+    }
+
+    .image-upload-wrapper.is-invalid {
+        border-color: #dc3545;
+    }
+
+    .image-upload-placeholder {
+        text-align: center;
+        color: #64748b;
+        pointer-events: none;
+    }
+
+    .image-upload-placeholder i {
+        font-size: 2.5rem;
+        color: #94a3b8;
+        display: block;
+        line-height: 1.2;
+    }
+
+    .image-upload-placeholder .main-text {
+        font-weight: 500;
+    }
+
+    .image-upload-placeholder small {
+        display: block;
+        color: #94a3b8;
+    }
+
+    #f_image_preview {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        z-index: 1;
+        display: none;
+    }
+
+    .upload-overlay {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        z-index: 2;
+        padding: 8px 0;
+        text-align: center;
+        font-size: .85rem;
+        background: rgba(255, 255, 255, .9);
+        border-top: 1px solid #e2e8f0;
+        display: none;
+    }
+</style>
 <div class="container-fluid">
     <div class="main-content d-flex flex-column">
         <div class="content-wrapper">
@@ -64,6 +136,21 @@
             <div class="modal-body">
                 <form id="itemForm" autocomplete="off">
                     <input type="hidden" name="attribute_id" id="attribute_id" value="">
+                    <div class="mb-4">
+                        <label class="form-label" for="f_image">ภาพปกกิจกรรม <span class="text-danger">*</span></label>
+                        <div class="image-upload-wrapper" id="f_image_wrapper" onclick="document.getElementById('f_image').click()">
+                            <div id="f_image_placeholder" class="image-upload-placeholder">
+                                <i class="ri-image-add-line"></i>
+                                <span class="main-text">คลิกเพื่อเลือกรูป หรือลากไฟล์มาวางที่นี่</span>
+                                <small>แนะนำสัดส่วน 16:9 · ไฟล์ JPG, PNG, WebP · ไม่เกิน 2MB</small>
+                            </div>
+                            <img id="f_image_preview" src="" alt="ตัวอย่างรูปกิจกรรม">
+                            <div class="upload-overlay text-muted" id="f_image_overlay">
+                                <i class="ri-image-edit-line"></i> คลิกเพื่อเปลี่ยนรูป
+                            </div>
+                        </div>
+                        <input type="file" class="d-none" name="attribute_image" id="f_image" accept="image/*" onchange="previewImage(this)">
+                    </div>
                     <div class="mb-<?php echo $hasMeta ? '3' : '2'; ?>">
                         <label class="form-label" for="f_name">ชื่อ<?php echo htmlspecialchars($itemLabel); ?> <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="attribute_name" id="f_name" maxlength="255" autocomplete="off">
@@ -79,7 +166,7 @@
                             <textarea class="form-control" name="attribute_desc" id="f_desc" rows="2" maxlength="255" placeholder="เช่น บันทึกเสียงบทเรียน หนังสือเสียง"></textarea>
                         </div>
                     <?php endif; ?>
-                </form>
+                </form>      
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
@@ -132,6 +219,10 @@
     function openAddItem() {
         document.getElementById('itemForm').reset();
         $('#attribute_id').val('');
+        $('#f_image').val('');
+        $('#f_image_preview').attr('src', '').hide();
+        $('#f_image_placeholder').show();
+        $('#f_image_overlay').hide();
         $('#itemModalLabel').text('เพิ่ม<?php echo htmlspecialchars($itemLabel, ENT_QUOTES); ?>');
         new bootstrap.Modal(document.getElementById('itemModal')).show();
         setTimeout(() => $('#f_name').trigger('focus'), 300);
@@ -154,6 +245,18 @@
                 $('#f_icon').val(response.data.attribute_icon || '');
                 $('#f_desc').val(response.data.attribute_desc || '');
                 <?php endif; ?>
+
+                $('#f_image').val('');
+                if (response.data.attribute_image) {
+                    $('#f_image_preview').attr('src', ITEM_BASE_URL.replace('/public', '') + '/upload_image/' + response.data.attribute_image).show();
+                    $('#f_image_placeholder').hide();
+                    $('#f_image_overlay').show();
+                } else {
+                    $('#f_image_preview').attr('src', '').hide();
+                    $('#f_image_placeholder').show();
+                    $('#f_image_overlay').hide();
+                }
+
                 $('#itemModalLabel').text('แก้ไข<?php echo htmlspecialchars($itemLabel, ENT_QUOTES); ?>');
                 new bootstrap.Modal(document.getElementById('itemModal')).show();
             },
@@ -173,10 +276,15 @@
         const originalText = btn.text();
         btn.prop('disabled', true).text('กำลังบันทึก...');
 
+        const formElement = document.getElementById('itemForm');
+        const formData = new FormData(formElement);
+
         $.ajax({
             url: url,
             method: 'POST',
-            data: $('#itemForm').serialize(),
+            data: formData,
+            processData: false,
+            contentType: false,
             dataType: 'json',
             success: function (response) {
                 isSubmittingItem = false;
@@ -228,6 +336,79 @@
             });
         });
     }
+     /*
+     * แทนที่ฟังก์ชัน previewImage() เดิมของคุณด้วยชุดนี้
+     * (ถ้ามี previewImage อยู่ในไฟล์ JS อื่น ให้ลบอันเก่าออก ไม่งั้นจะชนกัน)
+     */
+    const IMAGE_MAX_BYTES = 2 * 1024 * 1024; // 2MB
+ 
+    function setImagePreview(src) {
+        const preview = document.getElementById('f_image_preview');
+        const placeholder = document.getElementById('f_image_placeholder');
+        const overlay = document.getElementById('f_image_overlay');
+        const wrapper = document.getElementById('f_image_wrapper');
+ 
+        wrapper.classList.remove('is-invalid');
+        if (src) {
+            preview.src = src;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+            overlay.style.display = 'block';
+        } else {
+            preview.removeAttribute('src');
+            preview.style.display = 'none';
+            placeholder.style.display = '';
+            overlay.style.display = 'none';
+        }
+    }
+ 
+    function previewImage(input) {
+        const file = input.files && input.files[0];
+        if (!file) {
+            setImagePreview('');
+            return;
+        }
+        if (!file.type.startsWith('image/')) {
+            input.value = '';
+            setImagePreview('');
+            alert('กรุณาเลือกไฟล์รูปภาพเท่านั้น');
+            return;
+        }
+        if (file.size > IMAGE_MAX_BYTES) {
+            input.value = '';
+            setImagePreview('');
+            alert('ไฟล์ใหญ่เกินไป กรุณาเลือกรูปที่ไม่เกิน 2MB');
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => setImagePreview(e.target.result);
+        reader.readAsDataURL(file);
+    }
+ 
+    // Drag & drop
+    (function () {
+        const wrapper = document.getElementById('f_image_wrapper');
+        const input = document.getElementById('f_image');
+ 
+        ['dragenter', 'dragover'].forEach((evt) =>
+            wrapper.addEventListener(evt, (e) => {
+                e.preventDefault();
+                wrapper.classList.add('is-dragover');
+            })
+        );
+        ['dragleave', 'drop'].forEach((evt) =>
+            wrapper.addEventListener(evt, (e) => {
+                e.preventDefault();
+                wrapper.classList.remove('is-dragover');
+            })
+        );
+        wrapper.addEventListener('drop', (e) => {
+            if (e.dataTransfer.files.length) {
+                input.files = e.dataTransfer.files;
+                previewImage(input);
+            }
+        });
+    })();
 </script>
 
 <?php

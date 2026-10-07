@@ -36,6 +36,31 @@ class AttributeController
         return $user;
     }
 
+    private function handleImageUpload(): ?string
+    {
+        if (isset($_FILES['attribute_image']) && $_FILES['attribute_image']['error'] === UPLOAD_ERR_OK) {
+            $file = $_FILES['attribute_image'];
+            // validate
+            $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            if (!in_array($ext, ['jpg', 'jpeg', 'png', 'webp'])) {
+                return null;
+            }
+            if ($file['size'] > 2 * 1024 * 1024) {
+                return null;
+            }
+            $newName = uniqid('attr_') . '.' . $ext;
+            $uploadDir = '../upload_image/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+            $targetPath = $uploadDir . $newName;
+            if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+                return $newName;
+            }
+        }
+        return null;
+    }
+
     private function model(): AttributeModel
     {
         require_once '../app/models/AttributeModel.php';
@@ -121,9 +146,10 @@ class AttributeController
 
         $icon = $this->hasMeta ? trim($_POST['attribute_icon'] ?? '') : null;
         $desc = $this->hasMeta ? trim($_POST['attribute_desc'] ?? '') : null;
+        $image = $this->handleImageUpload();
 
         try {
-            $model->create($this->type, $name, (int) ($user['user_id'] ?? 0), $icon, $desc);
+            $model->create($this->type, $name, (int) ($user['user_id'] ?? 0), $icon, $desc, $image);
             echo json_encode(['result' => 1, 'msg' => 'เพิ่ม' . $this->itemLabel . 'สำเร็จ']);
         } catch (\Throwable $e) {
             echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล']);
@@ -157,9 +183,10 @@ class AttributeController
 
         $icon = $this->hasMeta ? trim($_POST['attribute_icon'] ?? '') : null;
         $desc = $this->hasMeta ? trim($_POST['attribute_desc'] ?? '') : null;
+        $image = $this->handleImageUpload();
 
         try {
-            $model->update($id, $this->type, $name, $icon, $desc);
+            $model->update($id, $this->type, $name, $icon, $desc, $image);
             echo json_encode(['result' => 1, 'msg' => 'แก้ไข' . $this->itemLabel . 'สำเร็จ']);
         } catch (\Throwable $e) {
             echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล']);

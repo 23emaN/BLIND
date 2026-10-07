@@ -14,10 +14,23 @@
                         </div>
                     </div>
 
-                    <div class="filter-toolbar mb-3 mt-3 d-flex justify-content-start">
-                        <div class="search-box-wrap" style="max-width: 400px; width: 100%;">
+                    <div class="filter-toolbar">
+                        <div class="search-box-wrap">
                             <i class="ri-search-line"></i>
-                            <input type="text" class="search-input" id="search_input" onkeyup="triggerFilterDebounced()" placeholder="ค้นหาชื่ออาสาสมัคร..." value="<?php echo htmlspecialchars($data['search'] ?? ''); ?>">
+                            <input type="text" class="search-input" id="search_input" onkeyup="triggerFilterDebounced()" placeholder="ค้นหาชื่ออาสาสมัคร" value="<?php echo htmlspecialchars($data['search'] ?? ''); ?>">
+                        </div>
+                        <div class="filter-group" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; min-width: 400px;">
+                            <select id="filter_status" class="filter-select" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
+                                <option value="" <?php echo (isset($data['status']) && $data['status'] === '') ? 'selected' : ''; ?>>ทุกสถานะ</option>
+                                <option value="1" <?php echo (isset($data['status']) && $data['status'] === '1') ? 'selected' : ''; ?>>ใช้งานอยู่</option>
+                                <option value="0" <?php echo (isset($data['status']) && $data['status'] === '0') ? 'selected' : ''; ?>>ปิดการใช้งาน</option>
+                            </select>
+                            <select id="itemPerPage" class="filter-select" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
+                                <option value="10" <?php echo (isset($data['per_page']) && $data['per_page'] == 10) ? 'selected' : ''; ?>>10 รายการ</option>
+                                <option value="25" <?php echo (isset($data['per_page']) && $data['per_page'] == 25) ? 'selected' : ''; ?>>25 รายการ</option>
+                                <option value="50" <?php echo (isset($data['per_page']) && $data['per_page'] == 50) ? 'selected' : ''; ?>>50 รายการ</option>
+                                <option value="100" <?php echo (isset($data['per_page']) && $data['per_page'] == 100) ? 'selected' : ''; ?>>100 รายการ</option>
+                            </select>
                         </div>
                     </div>
 
@@ -107,6 +120,7 @@
 </div>
 
 <script>
+    
     function GetModal_edit(data) {
         document.getElementById('edit_vol_id').value = data.volunteer_id;
         document.getElementById('edit_vol_fname').value = data.first_name || '';
@@ -161,7 +175,12 @@
         formData.append('page', page);
 
         const searchInput = document.getElementById('search_input').value;
+        const filterStatus = document.getElementById('filter_status').value;
+        const perPage = document.getElementById('itemPerPage').value;
+
         formData.append('search', searchInput);
+        formData.append('status', filterStatus);
+        formData.append('per_page', perPage);
 
         fetch("<?php echo defined('BASE_URL') ? BASE_URL : '/Blind_/public'; ?>/volunteer_table", {
             method: 'POST',

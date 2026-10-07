@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <p class="mb-0 text-muted"
             style="font-size: 0.82rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-            &copy; <?php echo date('Y') ?> <strong class="text-dark">CPDTH</strong> Develop By : <span
+            &copy; <?php echo date('Y') ?> <strong class="text-dark">มูลนิธิช่วยคนตาบอดแห่งประเทศไทย (ระบบจัดการข้อมูลอาสาสมัคร)</strong> Develop By : <span
                 class="fw-semibold text-primary">Bigsara Company</span>
         </p>
     </div>
@@ -25,6 +25,7 @@
 <script src="<?php echo $baseUrl; ?>/template/assets/js/swiper-bundle.min.js"></script>
 <script src="<?php echo $baseUrl; ?>/template/assets/js/sidebar-menu.js"></script>
 <script src="<?php echo $baseUrl; ?>/template/assets/js/custom/custom.js"></script>
+
 
 
 

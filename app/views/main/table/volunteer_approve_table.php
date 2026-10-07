@@ -81,8 +81,8 @@
                         </td>
                         <td class="text-center">
                             <div class="action-btn-group">
-                                <button type="button" class="btn btn-sm btn-primary" onclick='openApproveModal(<?php echo htmlspecialchars(json_encode($volunteer), ENT_QUOTES, 'UTF-8'); ?>)'>
-                                    <?php echo ($volunteer['approve_status'] == '1') ? 'แก้ไข' : 'ดำเนินการ'; ?>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" title="<?php echo ($volunteer['approve_status'] == '1') ? 'แก้ไข' : 'ดำเนินการ'; ?>" onclick='openApproveModal(<?php echo json_encode($volunteer); ?>)'>
+                                    <i class="ri-checkbox-circle-line" style="font-size: 1.1rem;"></i>
                                 </button>
                             </div>
                         </td>
