@@ -76,7 +76,7 @@ $styles     = $styles ?? ($data['styles'] ?? []);
                                     title="<?php echo $on ? 'ปิดการใช้งาน' : 'เปิดใช้งาน'; ?>" aria-label="<?php echo $on ? 'ปิดการใช้งาน' : 'เปิดใช้งาน'; ?>"
                                     data-id="<?php echo $aid; ?>" data-name="<?php echo htmlspecialchars($item['attribute_name'] ?? '', ENT_QUOTES); ?>" data-to="<?php echo $on ? '0' : '1'; ?>"
                                     onclick="toggleItem(this)">
-                                    <i class="<?php echo $on ? 'ri-close-line' : 'ri-checkbox-circle-line'; ?>"></i>
+                                    <i class="<?php echo $on ? 'ri-close-line' : 'ri-check-line'; ?>"></i>
                                 </button>
                             </div>
                         </td>
