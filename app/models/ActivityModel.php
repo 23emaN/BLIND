@@ -129,11 +129,11 @@ class ActivityModel
         $sql = "INSERT INTO tbl_activity
                     (activity_title, attribute_id, activity_date, start_time, end_time, location,
                      max_volunteers, reserve_count, grant_hours, hours_per_person, hours_count_method,
-                     activity_detail, activity_status, active_status, create_user_id, create_at)
+                     activity_detail, image_activity, activity_status, active_status, create_user_id, create_at)
                 VALUES
                     (:title, :cat, :date, :start, :end, :loc,
                      :max, :reserve, :grant, :hours, :method,
-                     :detail, '1', '1', :uid, NOW())";
+                     :detail, :image, '1', '1', :uid, NOW())";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
             ':title'   => $d['activity_title'],
@@ -148,6 +148,7 @@ class ActivityModel
             ':hours'   => $d['hours_per_person'],
             ':method'  => $d['hours_count_method'],
             ':detail'  => $d['activity_detail'],
+            ':image'   => $d['image_activity'] ?? null,
             ':uid'     => $createUserId,
         ]);
         return (int) $this->db->lastInsertId();
@@ -155,15 +156,20 @@ class ActivityModel
 
     public function update(int $id, array $d): bool
     {
+        $imageSql = "";
+        if (array_key_exists('image_activity', $d) && $d['image_activity'] !== null) {
+            $imageSql = ", image_activity = :image";
+        }
         $sql = "UPDATE tbl_activity SET
                     activity_title = :title, attribute_id = :cat, activity_date = :date,
                     start_time = :start, end_time = :end, location = :loc,
                     max_volunteers = :max, reserve_count = :reserve,
                     grant_hours = :grant, hours_per_person = :hours, hours_count_method = :method,
-                    activity_detail = :detail
+                    activity_detail = :detail {$imageSql}
                 WHERE activity_id = :id AND active_status = '1'";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([
+        
+        $params = [
             ':title'   => $d['activity_title'],
             ':cat'     => $d['category_id'],
             ':date'    => $d['activity_date'],
@@ -177,7 +183,11 @@ class ActivityModel
             ':method'  => $d['hours_count_method'],
             ':detail'  => $d['activity_detail'],
             ':id'      => $id,
-        ]);
+        ];
+        if (array_key_exists('image_activity', $d) && $d['image_activity'] !== null) {
+            $params[':image'] = $d['image_activity'];
+        }
+        return $stmt->execute($params);
     }
 
     public function softDelete(int $id): bool

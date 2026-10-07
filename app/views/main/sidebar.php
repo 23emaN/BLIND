@@ -193,13 +193,13 @@ $skill_pages = ['skill'];
 
     <aside id="layout-menu" class="layout-menu menu-vertical menu active" style="overflow: hidden !important;">
         <ul class="menu-inner">
-             <li class="menu-item <?php echo in_array($now_page, $dashboard_page) ? 'open active' : '' ?>">
+             <!-- <li class="menu-item <?php echo in_array($now_page, $dashboard_page) ? 'open active' : '' ?>">
                 <a href="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/main"
                     class="menu-link <?php echo in_array($now_page, $dashboard_page) ? 'active' : '' ?>">
                     <i class="ri-dashboard-line menu-icon"></i>
                     <span class="title">แดชบอร์ด</span>
                 </a>
-            </li>
+            </li> -->
             <!-- หมวดหมู่: จัดการข้อมูล -->
             <li class="menu-title small">
                 <span class="menu-title-text">จัดการข้อมูล</span>

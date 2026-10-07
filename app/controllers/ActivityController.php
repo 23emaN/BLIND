@@ -55,6 +55,11 @@ class ActivityController
             'per_page'   => $perPage,
         ];
 
+        $items    = $data['items'];
+        $total    = $data['total'];
+        $page     = $data['page'];
+        $per_page = $data['per_page'];
+
         require_once '../app/views/main/activity.php';
     }
 
@@ -75,6 +80,7 @@ class ActivityController
         $total = $model->countList($keyword, $category, $month);
         $items = $model->getList($keyword, $category, $month, $page, $perPage);
 
+        $per_page = $perPage;
         ob_start();
         include '../app/views/main/table/activity_table.php';
         $html = ob_get_clean();
@@ -110,6 +116,7 @@ class ActivityController
             $this->model()->create($input, (int) ($user['user_id'] ?? 0));
             echo json_encode(['result' => 1, 'msg' => 'สร้างกิจกรรมสำเร็จ']);
         } catch (\Throwable $e) {
+            error_log('[ActivityController::add] ' . $e->getMessage());
             echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล']);
         }
     }
@@ -141,6 +148,7 @@ class ActivityController
             $model->update($id, $input);
             echo json_encode(['result' => 1, 'msg' => 'แก้ไขกิจกรรมสำเร็จ']);
         } catch (\Throwable $e) {
+            error_log('[ActivityController::edit] ' . $e->getMessage());
             echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล']);
         }
     }
@@ -171,7 +179,17 @@ class ActivityController
 
     private function sanitizeInput(): array
     {
-        return [
+        $imagePath = null;
+        if (isset($_FILES['image_activity']) && $_FILES['image_activity']['error'] === UPLOAD_ERR_OK) {
+            $ext = pathinfo($_FILES['image_activity']['name'], PATHINFO_EXTENSION);
+            $filename = uniqid('act_') . '.' . $ext;
+            $dest = dirname(__DIR__, 2) . '/upload_image/' . $filename;
+            if (move_uploaded_file($_FILES['image_activity']['tmp_name'], $dest)) {
+                $imagePath = $filename;
+            }
+        }
+
+        $input = [
             'activity_title'  => trim($_POST['activity_title'] ?? ''),
             'category_id'     => (int) ($_POST['category_id'] ?? 0),
             'activity_date'   => trim($_POST['activity_date'] ?? ''),
@@ -185,6 +203,12 @@ class ActivityController
             'hours_per_person'   => trim($_POST['hours_per_person'] ?? ''),
             'hours_count_method' => ($_POST['hours_count_method'] ?? '1') === '2' ? '2' : '1',
         ];
+
+        if ($imagePath !== null) {
+            $input['image_activity'] = $imagePath;
+        }
+
+        return $input;
     }
 
     // ชั่วโมงจิตอาสา: ไม่ให้ชั่วโมง → null, เว้นว่าง → คำนวณจากช่วงเวลา (ปัดลงทีละ 0.5)
@@ -274,7 +298,7 @@ class ActivityController
             'search' => $search
         ];
 
-        require_once '../app/views/main/table/activity_table.php';
+        require_once '../app/views/main/table/activity_setting_table.php';
     }
 
     public function getById()

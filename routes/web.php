@@ -6,7 +6,7 @@ $routes = [
         'main'   => ['MainController', 'index'],
         'user'   => ['UserController', 'index'],
         'user/get' => ['UserController', 'get'],
-        'volunteer' => ['MainController', 'index'],
+        'volunteer' => ['VolunteerController', 'listApproved'],
         'volunteer_approve' => ['VolunteerController', 'index'],
         
         # User routes

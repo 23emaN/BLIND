@@ -101,8 +101,9 @@
                         </div> -->
                     <div class="col-lg-12">
                         <div class="login-form-wrap">
-                            <div class="login-brand flex-column align-items-start">
-                                <div style="height: 180px; width: 100%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: bold; color: #0d6efd; letter-spacing: 2px;">BLIND</div>
+                            <div class="login-brand flex-column align-items-center justify-content-center" style="padding: 20px 0 30px 0; width: 100%;">
+                                <img src="<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/images/logo_blind.jpg" alt="Foundation Logo" style="height: 100px; margin-bottom: 20px; border-radius: 8px;">
+                                <div style="width: 100%; text-align: center; font-size: 1.8rem; font-weight: bold; color: #1e293b; letter-spacing: 1px;">ระบบจัดการข้อมูลอาสาสมัคร</div>
                             </div>
                             <div id="loginAlert" class="login-alert" role="alert" style="display:none;"></div>
                             <form novalidate autocomplete="on">
@@ -130,7 +131,7 @@
                                             role="status" aria-hidden="true"></span> กำลังเข้าสู่ระบบ…</span>
                                 </button>
                             </form>
-                            <p class="login-foot">© BLIND · ระบบจัดการหลังบ้าน</p>
+                            <p class="login-foot">© Foundation for the Blind in Thailand · ระบบจัดการหลังบ้าน</p>
                         </div>
                     </div>
                 </div>
@@ -209,7 +210,7 @@
                 success: function (response) {
                     if (response.result == 1) {
                         sessionStorage.setItem("cpdth_show_preloader", "1");
-                        window.location.replace("<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/main");
+                        window.location.replace("<?php echo defined('BASE_URL') ? BASE_URL : '/cpd_ac/public'; ?>/user");
                     } else {
                         LoginBusy(false);
                         LoginError(response.msg || "เข้าสู่ระบบไม่สำเร็จ");
