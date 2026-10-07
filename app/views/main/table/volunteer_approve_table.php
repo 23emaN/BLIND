@@ -22,7 +22,7 @@
                 <th class="text-start" style="width: 15%;">วันที่สมัคร</th>
                 <th class="text-center" style="width: 10%;">หลักฐาน</th>
                 <th class="text-center" style="width: 10%;">สถานะ</th>
-                <th class="text-center" style="width: 10%;">จัดการ</th>
+                <th class="text-center" style="width: 10%;"></th>
             </tr>
         </thead>
         <tbody>
@@ -69,11 +69,11 @@
                         <td class="text-center">
                             <?php 
                                 if ($volunteer['approve_status'] == '0') {
-                                    echo '<span class="badge bg-warning text-white">รออนุมัติ</span>';
+                                    echo '<span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 px-3 py-2 rounded-pill"><i class="ri-time-line me-1"></i>รออนุมัติ</span>';
                                 } elseif ($volunteer['approve_status'] == '1') {
-                                    echo '<span class="badge bg-danger">ปฏิเสธ</span>';
+                                    echo '<span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-2 rounded-pill"><i class="ri-close-line me-1"></i>ปฏิเสธ</span>';
                                 } elseif ($volunteer['approve_status'] == '2') {
-                                    echo '<span class="badge bg-success">อนุมัติแล้ว</span>';
+                                    echo '<span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill"><i class="ri-check-line me-1"></i>อนุมัติแล้ว</span>';
                                 } else {
                                     echo '<span class="badge bg-secondary">-</span>';
                                 }

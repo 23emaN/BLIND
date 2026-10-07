@@ -8,16 +8,22 @@ $routes = [
         'main'   => ['MainController', 'index'],
         'customer' => ['CustomerController', 'index'],
         'user'   => ['UserController', 'index'],
-        'volunteer' => ['MainController', 'index'],
+        'volunteer' => ['VolunteerController', 'listApproved'],
         'volunteer_approve' => ['VolunteerController', 'index'],
-        'activity' => ['MainController', 'index'],
-        'skill' => ['MainController', 'index'],
+        'activity' => ['ActivityController', 'index'],
+        'skill' => ['SkillController', 'index'],
     ],
     'POST' => [
         'auth/login'  => ['AuthController', 'processLogin'],
         'volunteer_approve_table' => ['VolunteerController', 'getTable'],
+        'volunteer_table' => ['VolunteerController', 'getApprovedTable'],
         'approveVolunteer' => ['VolunteerController', 'approve'],
-        'rejectVolunteer' => ['VolunteerController', 'reject']
+        'rejectVolunteer' => ['VolunteerController', 'reject'],
+        'activity_table' => ['ActivityController', 'getTable'],
+        'addActivity' => ['ActivityController', 'add'],
+        'getActivityById' => ['ActivityController', 'getById'],
+        'updateActivity' => ['ActivityController', 'update'],
+        'skill_table' => ['SkillController', 'getTable']
     ]
 ];
 

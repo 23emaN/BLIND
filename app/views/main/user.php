@@ -15,22 +15,12 @@
                 <div class="main-card-wrapper">
                      <div class="page-header-box">
                         <div>
-                            <h2 class="page-title">ลูกค้า</h2>
-                            <!-- <?php $fy_display = ! empty($data['active_fiscal_year']) ? $data['active_fiscal_year'] : 'ไม่ได้เลือกปี'; ?>
-                            <p class="page-subtitle">ภาพรวมระบบ - ลูกค้า - ปี <?php echo htmlspecialchars($fy_display); ?></p> -->
+                            <h2 class="page-title">ผู้ใช้</h2>
                         </div>
                         <div class="d-flex align-items-center gap-2">
-                            <!-- <button type="button" class="btn-excel-action" data-bs-toggle="modal" data-bs-target="#importExcelModal">
-                                <i class="ri-file-upload-line"></i>
-                                <span>Import Excel</span>
-                            </button>
-                            <button type="button" class="btn-excel-action" onclick="exportCustomerExcel()">
-                                <i class="ri-upload-2-line"></i>
-                                <span>ส่งออก Excel</span>
-                            </button> -->
                             <button type="button" class="btn-add-action" onclick="modal_add_customer()">
                                 <i class="ri-add-line"></i>
-                                <span>เพิ่มลูกค้า</span>
+                                <span>เพิ่มผู้ใช้</span>
                             </button>
                         </div>
                     </div>
@@ -41,32 +31,6 @@
                         <div class="search-box-wrap">
                             <i class="ri-search-line"></i>
                             <input type="text" class="search-input" id="search_input" onkeyup="triggerFilterDebounced()" placeholder="ค้นหาชื่อลูกค้า ผู้ดูแล ทีม">
-                        </div>
-
-                        <div class="filter-group" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; min-width: 500px;">
-                            <select id="customerPerPage" class="filter-select" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
-                                <option value="25">25 รายการ</option>
-                                <option value="50">50 รายการ</option>
-                                <option value="75">75 รายการ</option>
-                                <option value="100">100 รายการ</option>
-                            </select>
-                            
-                            <select class="filter-select" id="filter_status" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
-                                <option value="">ทุกสถานะ</option>
-                                <option value="1">ใช้บริการอยู่</option>
-                                <option value="0">เลิกจ้าง</option>
-                            </select>
-
-                            <select class="filter-select" name="user_id_filter" id="user_id_filter" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
-                                <option value="" data-team-id="" data-team-name="" selected>ทั้งหมด</option>
-                                <?php if (! empty($data['caretakers'])): ?>
-                                    <?php foreach ($data['caretakers'] as $caretaker): ?>
-                                        <option value="<?php echo htmlspecialchars($caretaker['user_id'] ?? ''); ?>">
-                                            <?php echo htmlspecialchars(($caretaker['user_firstname'] ?? '') . ' ' . ($caretaker['user_lastname'] ?? '')); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </select>
                         </div>
                     </div>
 
