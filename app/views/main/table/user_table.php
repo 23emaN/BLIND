@@ -49,16 +49,14 @@ $per_page = max(1, (int) ($per_page ?? 25));
                         </td>
                         <td class="text-center">
                             <?php if ($isEnabled): ?>
-                                <span class="badge-active">ใช้งานอยู่</span>
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill"><i class="ri-check-line me-1"></i>ใช้งานอยู่</span>
                             <?php else: ?>
-                                <span class="badge-inactive">ปิดการใช้งาน</span>
+                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-2 rounded-pill"><i class="ri-close-line me-1"></i>ปิดการใช้งาน</span>
                             <?php endif; ?>
                         </td>
                         <td class="text-center">
                             <div class="action-btn-group">
-                                <button type="button" class="btn-action-edit" title="แก้ไข" onclick="editUser(<?php echo $uid; ?>)">
-                                    <i class="ri-pencil-line"></i>
-                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-warning" title="แก้ไขข้อมูล" aria-label="แก้ไขข้อมูล" onclick="editUser(<?php echo $uid; ?>)"><i class="ri-edit-line"></i></button>
                             </div>
                         </td>
                     </tr>

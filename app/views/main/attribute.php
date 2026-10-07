@@ -106,6 +106,11 @@
                             <input type="text" class="search-input" id="search_input" onkeyup="triggerFilterDebounced()" placeholder="ค้นหาชื่อ<?php echo htmlspecialchars($itemLabel); ?>">
                         </div>
                         <div class="filter-group" style="display: flex; align-items: center; gap: 10px; min-width: 200px;">
+                            <select id="filter_status" class="filter-select" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
+                                <option value="">ทุกสถานะ</option>
+                                <option value="1">ใช้งานอยู่</option>
+                                <option value="0">ปิดการใช้งาน</option>
+                            </select>
                             <select id="itemPerPage" class="filter-select" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
                                 <option value="25">25 รายการ</option>
                                 <option value="50">50 รายการ</option>
@@ -201,7 +206,7 @@
                             <textarea class="form-control" name="attribute_desc" id="f_desc" rows="2" maxlength="255" placeholder="เช่น บันทึกเสียงบทเรียน หนังสือเสียง"></textarea>
                         </div>
                     <?php endif; ?>
-                </form>      
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
@@ -220,6 +225,7 @@
     function GetData(page = 1) {
         const payload = {
             keyword:  ($('#search_input').val() || '').trim(),
+            status:   $('#filter_status').val() || '',
             per_page: $('#itemPerPage').val() || 25,
             page:     page
         };
@@ -391,37 +397,6 @@
         });
     }
 
-    function deleteItem(id, name) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'ยืนยันการลบ',
-            html: 'ต้องการลบ <strong>' + $('<div>').text(name).html() + '</strong> ใช่หรือไม่?',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            confirmButtonText: 'ลบ',
-            cancelButtonText: 'ยกเลิก',
-            reverseButtons: true
-        }).then((result) => {
-            if (!result.isConfirmed) return;
-            $.ajax({
-                url: ITEM_BASE_URL + '/' + ITEM_ROUTE + '/delete',
-                method: 'POST',
-                data: { attribute_id: id },
-                dataType: 'json',
-                success: function (response) {
-                    if (response.result === 1) {
-                        Swal.fire({ icon: 'success', title: response.msg, timer: 1200, showConfirmButton: false });
-                        GetData(1);
-                    } else {
-                        Swal.fire('ผิดพลาด', response.msg || 'ไม่สามารถลบได้', 'error');
-                    }
-                },
-                error: function () {
-                    Swal.fire('ผิดพลาด', 'เกิดข้อผิดพลาดในการเชื่อมต่อ', 'error');
-                }
-            });
-        });
-    }
      /*
      * แทนที่ฟังก์ชัน previewImage() เดิมของคุณด้วยชุดนี้
      * (ถ้ามี previewImage อยู่ในไฟล์ JS อื่น ให้ลบอันเก่าออก ไม่งั้นจะชนกัน)
@@ -495,6 +470,39 @@
             }
         });
     })();
+    // เปิด/ปิดการใช้งาน (แทนการลบ) — ข้อมูลยังอยู่ เปิดกลับได้
+    function toggleItem(btn) {
+        const id = btn.dataset.id, name = btn.dataset.name, to = btn.dataset.to;
+        const off = to === '0';
+        Swal.fire({
+            icon: off ? 'warning' : 'question',
+            title: off ? 'ปิดการใช้งาน' : 'เปิดใช้งาน',
+            html: (off ? 'ต้องการปิดการใช้งาน ' : 'ต้องการเปิดใช้งาน ') + '<strong>' + $('<div>').text(name).html() + '</strong> ใช่หรือไม่?'
+                + (off ? '<br><small class="text-muted">จะไม่แสดงเป็นตัวเลือกในหน้าอื่นและหน้าบ้าน (เปิดกลับได้ทุกเมื่อ)</small>' : ''),
+            showCancelButton: true,
+            confirmButtonColor: off ? '#d33' : '#198754',
+            confirmButtonText: off ? 'ปิดการใช้งาน' : 'เปิดใช้งาน',
+            cancelButtonText: 'ยกเลิก',
+            reverseButtons: true
+        }).then((res) => {
+            if (!res.isConfirmed) return;
+            $.ajax({
+                url: ITEM_BASE_URL + '/' + ITEM_ROUTE + '/toggle',
+                method: 'POST',
+                data: { attribute_id: id, active_status: to },
+                dataType: 'json',
+                success: function (r) {
+                    if (r.result === 1) {
+                        Swal.fire({ icon: 'success', title: r.msg, timer: 1200, showConfirmButton: false });
+                        GetData(1);
+                    } else {
+                        Swal.fire('ผิดพลาด', r.msg || 'ไม่สามารถเปลี่ยนสถานะได้', 'error');
+                    }
+                },
+                error: function () { Swal.fire('ผิดพลาด', 'เกิดข้อผิดพลาดในการเชื่อมต่อ', 'error'); }
+            });
+        });
+    }
 </script>
 
 <?php

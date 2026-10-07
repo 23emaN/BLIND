@@ -40,6 +40,11 @@
                                     <option value="<?php echo (int) $c['category_id']; ?>"><?php echo htmlspecialchars($c['category_name']); ?></option>
                                 <?php endforeach; ?>
                             </select>
+                            <select id="filter_status" class="filter-select" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
+                                <option value="">ทุกสถานะ</option>
+                                <option value="1">ใช้งานอยู่</option>
+                                <option value="0">ปิดการใช้งาน</option>
+                            </select>
                             <select id="itemPerPage" class="filter-select" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
                                 <option value="25">25 รายการ</option>
                                 <option value="50">50 รายการ</option>
@@ -171,6 +176,14 @@
                         <label class="form-label" for="f_detail">รายละเอียดและคำแนะนำ</label>
                         <textarea class="form-control" name="activity_detail" id="f_detail" rows="4" maxlength="1000" placeholder="ไม่บังคับ"></textarea>
                     </div>
+                    <div class="mt-3" id="statusField" style="display: none;">
+                        <label class="form-label" for="f_active">สถานะการใช้งาน</label>
+                        <select class="form-select" name="active_status" id="f_active">
+                            <option value="1">ใช้งานอยู่</option>
+                            <option value="0">ปิดการใช้งาน</option>
+                        </select>
+                        <small class="text-muted">ปิดการใช้งานแล้วกิจกรรมจะไม่แสดงในหน้าบ้าน แต่ข้อมูลและผู้ลงทะเบียนยังอยู่</small>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -224,6 +237,7 @@
         const payload = {
             keyword:     ($('#search_input').val() || '').trim(),
             category_id: $('#filter_category').val() || '',
+            status:      $('#filter_status').val() || '',
             month:       $('#filter_month').val() || '',
             per_page:    $('#itemPerPage').val() || 25,
             page:        page
@@ -275,6 +289,7 @@
     function openAddItem() {
         document.getElementById('itemForm').reset();
         $('#activity_id').val('');
+        $('#statusField').hide();
         $('#f_max').val(20);
         $('#f_reserve').val(5);
         fpActivityDate.clear();
@@ -297,6 +312,8 @@
                 const d = response.data;
                 document.getElementById('itemForm').reset();
                 $('#activity_id').val(d.activity_id);
+                $('#f_active').val(String(d.active_status) === '0' ? '0' : '1');
+                $('#statusField').show();
                 $('#f_title').val(d.activity_title);
                 $('#f_category').val(String(d.category_id));
                 fpActivityDate.set('minDate', null); // แก้ไขกิจกรรมที่ผ่านไปแล้วได้
@@ -360,37 +377,6 @@
         });
     }
 
-    function deleteItem(id, name) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'ยืนยันการลบ',
-            html: 'ต้องการลบกิจกรรม <strong>' + $('<div>').text(name).html() + '</strong> ใช่หรือไม่?',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            confirmButtonText: 'ลบ',
-            cancelButtonText: 'ยกเลิก',
-            reverseButtons: true
-        }).then((result) => {
-            if (!result.isConfirmed) return;
-            $.ajax({
-                url: ACT_BASE_URL + '/activity/delete',
-                method: 'POST',
-                data: { activity_id: id },
-                dataType: 'json',
-                success: function (response) {
-                    if (response.result === 1) {
-                        Swal.fire({ icon: 'success', title: response.msg, timer: 1200, showConfirmButton: false });
-                        GetData(1);
-                    } else {
-                        Swal.fire('ผิดพลาด', response.msg || 'ไม่สามารถลบได้', 'error');
-                    }
-                },
-                error: function () {
-                    Swal.fire('ผิดพลาด', 'เกิดข้อผิดพลาดในการเชื่อมต่อ', 'error');
-                }
-            });
-        });
-    }
 </script>
 
 <?php

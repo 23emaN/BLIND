@@ -69,6 +69,7 @@ class ActivityController
 
         $keyword  = trim($_POST['keyword'] ?? '');
         $category = trim($_POST['category_id'] ?? '');
+        $status   = trim($_POST['status'] ?? '');
         $month    = trim($_POST['month'] ?? '');
         $page     = max(1, (int) ($_POST['page'] ?? 1));
         $perPage  = (int) ($_POST['per_page'] ?? 25);
@@ -77,8 +78,8 @@ class ActivityController
         }
 
         $model = $this->model();
-        $total = $model->countList($keyword, $category, $month);
-        $items = $model->getList($keyword, $category, $month, $page, $perPage);
+        $total = $model->countList($keyword, $category, $month, $status);
+        $items = $model->getList($keyword, $category, $month, $page, $perPage, $status);
 
         $per_page = $perPage;
         ob_start();
@@ -153,38 +154,14 @@ class ActivityController
         }
     }
 
-    public function delete()
-    {
-        $this->checkAuthJson();
-
-        $id = (int) ($_POST['activity_id'] ?? 0);
-        if ($id <= 0) {
-            echo json_encode(['result' => 0, 'msg' => 'ไม่พบรหัสกิจกรรม']);
-            return;
-        }
-
-        $model = $this->model();
-        if (!$model->getById($id)) {
-            echo json_encode(['result' => 0, 'msg' => 'ไม่พบข้อมูลกิจกรรม']);
-            return;
-        }
-
-        try {
-            $model->softDelete($id);
-            echo json_encode(['result' => 1, 'msg' => 'ลบกิจกรรมสำเร็จ']);
-        } catch (\Throwable $e) {
-            echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการลบข้อมูล']);
-        }
-    }
-
     private function sanitizeInput(): array
     {
         $imagePath = null;
-        if (isset($_FILES['image_activity']) && $_FILES['image_activity']['error'] === UPLOAD_ERR_OK) {
-            $ext = pathinfo($_FILES['image_activity']['name'], PATHINFO_EXTENSION);
+        if (isset($_FILES['activity_image']) && $_FILES['activity_image']['error'] === UPLOAD_ERR_OK) {
+            $ext = pathinfo($_FILES['activity_image']['name'], PATHINFO_EXTENSION);
             $filename = uniqid('act_') . '.' . $ext;
             $dest = dirname(__DIR__, 2) . '/upload_image/' . $filename;
-            if (move_uploaded_file($_FILES['image_activity']['tmp_name'], $dest)) {
+            if (move_uploaded_file($_FILES['activity_image']['tmp_name'], $dest)) {
                 $imagePath = $filename;
             }
         }
@@ -202,10 +179,11 @@ class ActivityController
             'grant_hours'        => ($_POST['grant_hours'] ?? '0') === '1' ? '1' : '0',
             'hours_per_person'   => trim($_POST['hours_per_person'] ?? ''),
             'hours_count_method' => ($_POST['hours_count_method'] ?? '1') === '2' ? '2' : '1',
+            'active_status'      => ($_POST['active_status'] ?? '1') === '0' ? '0' : '1',
         ];
 
         if ($imagePath !== null) {
-            $input['image_activity'] = $imagePath;
+            $input['activity_image'] = $imagePath;
         }
 
         return $input;

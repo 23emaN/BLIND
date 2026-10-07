@@ -55,13 +55,14 @@ class TimeslotController
     {
         $this->checkAuthJson();
         $keyword = trim($_POST['keyword'] ?? '');
+        $status  = trim($_POST['status'] ?? '');
         $page    = max(1, (int) ($_POST['page'] ?? 1));
         $perPage = (int) ($_POST['per_page'] ?? 25);
         if (!in_array($perPage, [25, 50, 75, 100], true)) $perPage = 25;
 
         $model = $this->model();
-        $total = $model->countTimeslots($keyword);
-        $items = $model->getTimeslots($keyword, $page, $perPage);
+        $total = $model->countTimeslots($keyword, $status);
+        $items = $model->getTimeslots($keyword, $page, $perPage, $status);
 
         ob_start();
         include '../app/views/main/table/timeslot_table.php';
@@ -110,21 +111,6 @@ class TimeslotController
         }
     }
 
-    public function delete()
-    {
-        $this->checkAuthJson();
-        $id = (int) ($_POST['timeslot_id'] ?? 0);
-        if ($id <= 0) { echo json_encode(['result' => 0, 'msg' => 'ไม่พบรหัสรายการ']); return; }
-        $model = $this->model();
-        if (!$model->getTimeslot($id)) { echo json_encode(['result' => 0, 'msg' => 'ไม่พบข้อมูล']); return; }
-        try {
-            $model->deleteTimeslot($id);
-            echo json_encode(['result' => 1, 'msg' => 'ลบช่วงเวลาสำเร็จ']);
-        } catch (\Throwable $e) {
-            echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการลบข้อมูล']);
-        }
-    }
-
     private function input(): array
     {
         return [
@@ -156,5 +142,21 @@ class TimeslotController
     private function iconOptions(): array
     {
         return require '../app/config/TimeslotIcons.php';
+    }
+
+    // AJAX: เปิด/ปิดการใช้งาน (แทนการลบ)
+    public function toggle()
+    {
+        $this->checkAuthJson();
+        $id     = (int) ($_POST['timeslot_id'] ?? 0);
+        $status = ($_POST['active_status'] ?? '') === '1' ? '1' : '0';
+        $model  = $this->model();
+        if ($id <= 0 || !$model->getTimeslot($id)) { echo json_encode(['result' => 0, 'msg' => 'ไม่พบข้อมูล']); return; }
+        try {
+            $model->setTimeslotStatus($id, $status);
+            echo json_encode(['result' => 1, 'msg' => ($status === '1' ? 'เปิดใช้งาน' : 'ปิดการใช้งาน') . 'ช่วงเวลาแล้ว']);
+        } catch (\Throwable $e) {
+            echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล']);
+        }
     }
 }

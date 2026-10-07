@@ -34,17 +34,16 @@
                         </div>
 
                         <div class="filter-group" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; min-width: 400px;">
+                            <select class="filter-select" id="filter_status" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
+                                <option value="">ทุกสถานะ</option>
+                                <option value="1">ใช้งานอยู่</option>
+                                <option value="0">ปิดการใช้งาน</option>
+                            </select>
                             <select id="userPerPage" class="filter-select" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
                                 <option value="25">25 รายการ</option>
                                 <option value="50">50 รายการ</option>
                                 <option value="75">75 รายการ</option>
                                 <option value="100">100 รายการ</option>
-                            </select>
-
-                            <select class="filter-select" id="filter_status" style="flex: 1; height: 42px;" onchange="triggerFilterDebounced()">
-                                <option value="">ทุกสถานะ</option>
-                                <option value="1">ใช้งานอยู่</option>
-                                <option value="0">ปิดการใช้งาน</option>
                             </select>
                         </div>
                     </div>

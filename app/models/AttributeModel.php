@@ -13,10 +13,16 @@ class AttributeModel
         $this->db = \App\config\Connection::getInstance()->getPdo();
     }
 
-    private function buildFilter(string $type, string $keyword): array
+    // $status: '' = ทุกสถานะ, '1' = ใช้งานอยู่, '0' = ปิดการใช้งาน
+    private function buildFilter(string $type, string $keyword, string $status = ''): array
     {
-        $where  = ["active_status = '1'", "attribute_type = :type"];
+        $where  = ["attribute_type = :type"];
         $params = [':type' => $type];
+
+        if ($status === '0' || $status === '1') {
+            $where[] = "active_status = :status";
+            $params[':status'] = $status;
+        }
 
         if ($keyword !== '') {
             $where[] = "attribute_name LIKE :kw";
@@ -26,12 +32,12 @@ class AttributeModel
         return ['sql' => implode(' AND ', $where), 'params' => $params];
     }
 
-    public function getList(string $type, string $keyword, int $page, int $perPage): array
+    public function getList(string $type, string $keyword, int $page, int $perPage, string $status = ''): array
     {
-        $f      = $this->buildFilter($type, $keyword);
+        $f      = $this->buildFilter($type, $keyword, $status);
         $offset = ($page - 1) * $perPage;
 
-        $sql = "SELECT attribute_id, attribute_name, attribute_icon, attribute_style, attribute_desc, attribute_image, create_at
+        $sql = "SELECT attribute_id, attribute_name, attribute_icon, attribute_style, attribute_desc, attribute_image, active_status, create_at
                 FROM tbl_attribute
                 WHERE {$f['sql']}
                 ORDER BY attribute_id DESC
@@ -46,9 +52,9 @@ class AttributeModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function countList(string $type, string $keyword): int
+    public function countList(string $type, string $keyword, string $status = ''): int
     {
-        $f    = $this->buildFilter($type, $keyword);
+        $f    = $this->buildFilter($type, $keyword, $status);
         $stmt = $this->db->prepare("SELECT COUNT(*) FROM tbl_attribute WHERE {$f['sql']}");
         $stmt->execute($f['params']);
         return (int) $stmt->fetchColumn();
@@ -56,9 +62,9 @@ class AttributeModel
 
     public function getById(int $id, string $type): ?array
     {
-        $sql = "SELECT attribute_id, attribute_name, attribute_icon, attribute_style, attribute_desc, attribute_image, attribute_type
+        $sql = "SELECT attribute_id, attribute_name, attribute_icon, attribute_style, attribute_desc, attribute_image, attribute_type, active_status
                 FROM tbl_attribute
-                WHERE attribute_id = :id AND attribute_type = :type AND active_status = '1'
+                WHERE attribute_id = :id AND attribute_type = :type
                 LIMIT 1";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id, ':type' => $type]);
@@ -79,12 +85,12 @@ class AttributeModel
         return $usage;
     }
 
-    // ชื่อซ้ำภายใน type เดียวกัน (เว้น id ที่กำลังแก้ไข) — เฉพาะ record ที่ยัง active
+    // ชื่อซ้ำภายใน type เดียวกัน (เว้น id ที่กำลังแก้ไข) — รวมรายการที่ปิดการใช้งานด้วย
     public function nameExists(string $type, string $name, int $excludeId = 0): bool
     {
         $sql = "SELECT COUNT(*) FROM tbl_attribute
                 WHERE attribute_type = :type AND attribute_name = :name
-                  AND active_status = '1' AND attribute_id <> :id";
+                  AND attribute_id <> :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':type' => $type, ':name' => $name, ':id' => $excludeId]);
         return (int) $stmt->fetchColumn() > 0;
@@ -125,17 +131,17 @@ class AttributeModel
             $params[':image'] = $image;
         }
 
-        $sql .= " WHERE attribute_id = :id AND attribute_type = :type AND active_status = '1'";
+        $sql .= " WHERE attribute_id = :id AND attribute_type = :type";
 
         $stmt = $this->db->prepare($sql);
         return $stmt->execute($params);
     }
 
-    public function softDelete(int $id, string $type): bool
+    // เปิด/ปิดการใช้งาน (แทนการลบ) — ปิดแล้วไม่แสดงเป็นตัวเลือกในหน้าอื่น/หน้าบ้าน
+    public function setStatus(int $id, string $type, string $status): bool
     {
-        $sql = "UPDATE tbl_attribute SET active_status = '0'
-                WHERE attribute_id = :id AND attribute_type = :type";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([':id' => $id, ':type' => $type]);
+        $stmt = $this->db->prepare("UPDATE tbl_attribute SET active_status = :status
+                                    WHERE attribute_id = :id AND attribute_type = :type");
+        return $stmt->execute([':status' => $status === '0' ? '0' : '1', ':id' => $id, ':type' => $type]);
     }
 }

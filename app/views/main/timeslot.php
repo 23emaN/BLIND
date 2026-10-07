@@ -22,6 +22,11 @@
                             <input type="text" class="search-input" id="search_input" onkeyup="triggerFilterDebounced()" placeholder="ค้นหาชื่อช่วงเวลา">
                         </div>
                         <div class="filter-group" style="display:flex;align-items:center;gap:10px;min-width:200px;">
+                            <select id="filter_status" class="filter-select" style="flex:1;height:42px;" onchange="triggerFilterDebounced()">
+                                <option value="">ทุกสถานะ</option>
+                                <option value="1">ใช้งานอยู่</option>
+                                <option value="0">ปิดการใช้งาน</option>
+                            </select>
                             <select id="itemPerPage" class="filter-select" style="flex:1;height:42px;" onchange="triggerFilterDebounced()">
                                 <option value="25">25 รายการ</option><option value="50">50 รายการ</option>
                                 <option value="75">75 รายการ</option><option value="100">100 รายการ</option>
@@ -96,7 +101,7 @@
     let itemFilterTimer = null, isSubmittingItem = false;
 
     function GetData(page = 1) {
-        const payload = { keyword: ($('#search_input').val()||'').trim(), per_page: $('#itemPerPage').val()||25, page };
+        const payload = { keyword: ($('#search_input').val()||'').trim(), status: $('#filter_status').val()||'', per_page: $('#itemPerPage').val()||25, page };
         $('#itemTableContainer').html('<div class="table-wrap"><table class="table"><tbody><tr><td class="text-center text-muted py-5">กำลังโหลด...</td></tr></tbody></table></div>');
         $.ajax({ url: ITEM_BASE_URL + '/' + ITEM_ROUTE + '/filter', method:'POST', data:payload, dataType:'json',
             success: r => r.result === 1 ? $('#itemTableContainer').html(r.html) : Swal.fire('ผิดพลาด', r.msg||'โหลดข้อมูลไม่สำเร็จ','error'),
@@ -170,14 +175,37 @@
             },
             error: function () { isSubmittingItem = false; btn.prop('disabled', false).text(t); Swal.fire('ผิดพลาด','เกิดข้อผิดพลาดในการเชื่อมต่อ','error'); } });
     }
-    function deleteItem(id, name) {
-        Swal.fire({ icon:'warning', title:'ยืนยันการลบ', html:'ต้องการลบ <strong>' + $('<div>').text(name).html() + '</strong> ใช่หรือไม่?',
-            showCancelButton:true, confirmButtonColor:'#d33', confirmButtonText:'ลบ', cancelButtonText:'ยกเลิก', reverseButtons:true
-        }).then(res => {
+    // เปิด/ปิดการใช้งาน (แทนการลบ) — ข้อมูลยังอยู่ เปิดกลับได้
+    function toggleItem(btn) {
+        const id = btn.dataset.id, name = btn.dataset.name, to = btn.dataset.to;
+        const off = to === '0';
+        Swal.fire({
+            icon: off ? 'warning' : 'question',
+            title: off ? 'ปิดการใช้งาน' : 'เปิดใช้งาน',
+            html: (off ? 'ต้องการปิดการใช้งาน ' : 'ต้องการเปิดใช้งาน ') + '<strong>' + $('<div>').text(name).html() + '</strong> ใช่หรือไม่?'
+                + (off ? '<br><small class="text-muted">จะไม่แสดงเป็นตัวเลือกในหน้าอื่นและหน้าบ้าน (เปิดกลับได้ทุกเมื่อ)</small>' : ''),
+            showCancelButton: true,
+            confirmButtonColor: off ? '#d33' : '#198754',
+            confirmButtonText: off ? 'ปิดการใช้งาน' : 'เปิดใช้งาน',
+            cancelButtonText: 'ยกเลิก',
+            reverseButtons: true
+        }).then((res) => {
             if (!res.isConfirmed) return;
-            $.ajax({ url: ITEM_BASE_URL + '/' + ITEM_ROUTE + '/delete', method:'POST', data:{ timeslot_id:id }, dataType:'json',
-                success: r => r.result === 1 ? (Swal.fire({icon:'success',title:r.msg,timer:1200,showConfirmButton:false}), GetData(1)) : Swal.fire('ผิดพลาด', r.msg||'ไม่สามารถลบได้','error'),
-                error: () => Swal.fire('ผิดพลาด','เกิดข้อผิดพลาดในการเชื่อมต่อ','error') });
+            $.ajax({
+                url: ITEM_BASE_URL + '/' + ITEM_ROUTE + '/toggle',
+                method: 'POST',
+                data: { timeslot_id: id, active_status: to },
+                dataType: 'json',
+                success: function (r) {
+                    if (r.result === 1) {
+                        Swal.fire({ icon: 'success', title: r.msg, timer: 1200, showConfirmButton: false });
+                        GetData(1);
+                    } else {
+                        Swal.fire('ผิดพลาด', r.msg || 'ไม่สามารถเปลี่ยนสถานะได้', 'error');
+                    }
+                },
+                error: function () { Swal.fire('ผิดพลาด', 'เกิดข้อผิดพลาดในการเชื่อมต่อ', 'error'); }
+            });
         });
     }
 </script>

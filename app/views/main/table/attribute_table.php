@@ -21,12 +21,13 @@ $styles     = $styles ?? ($data['styles'] ?? []);
         <thead>
             <tr>
                 <th class="text-center" style="width: 8%;">ลำดับ</th>
-                <th class="text-start" style="width: <?php echo $has_meta ? '26%' : '62%'; ?>;">ชื่อ<?php echo htmlspecialchars($item_label); ?></th>
+                <th class="text-start" style="width: <?php echo $has_meta ? '22%' : '52%'; ?>;">ชื่อ<?php echo htmlspecialchars($item_label); ?></th>
                 <?php if ($has_meta): ?>
                     <th class="text-center" style="width: 14%;">ไอคอน / สี</th>
-                    <th class="text-start" style="width: 32%;">คำอธิบาย</th>
+                    <th class="text-start" style="width: 30%;">คำอธิบาย</th>
                 <?php endif; ?>
-                <th class="text-center" style="width: 20%;">จัดการ</th>
+                <th class="text-center" style="width: <?php echo $has_meta ? '12%' : '20%'; ?>;">สถานะ</th>
+                <th class="text-center" style="width: <?php echo $has_meta ? '14%' : '20%'; ?>;">จัดการ</th>
             </tr>
         </thead>
         <tbody>
@@ -61,12 +62,21 @@ $styles     = $styles ?? ($data['styles'] ?? []);
                             </td>
                         <?php endif; ?>
                         <td class="text-center">
+                            <?php if ((string) ($item['active_status'] ?? '1') === '1'): ?>
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill"><i class="ri-check-line me-1"></i>ใช้งานอยู่</span>
+                            <?php else: ?>
+                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-2 rounded-pill"><i class="ri-close-line me-1"></i>ปิดการใช้งาน</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="text-center">
                             <div class="action-btn-group">
-                                <button type="button" class="btn-action-edit" title="แก้ไข" onclick="editItem(<?php echo $aid; ?>)">
-                                    <i class="ri-pencil-line"></i>
-                                </button>
-                                <button type="button" class="btn-action-delete" title="ลบ" onclick="deleteItem(<?php echo $aid; ?>, '<?php echo htmlspecialchars($item['attribute_name'] ?? '', ENT_QUOTES); ?>')">
-                                    <i class="ri-delete-bin-line"></i>
+                                <button type="button" class="btn btn-sm btn-outline-warning" title="แก้ไขข้อมูล" aria-label="แก้ไขข้อมูล" onclick="editItem(<?php echo $aid; ?>)"><i class="ri-edit-line"></i></button>
+                                <?php $on = (string) ($item['active_status'] ?? '1') === '1'; ?>
+                                <button type="button" class="btn btn-sm <?php echo $on ? 'btn-outline-danger' : 'btn-outline-success'; ?>"
+                                    title="<?php echo $on ? 'ปิดการใช้งาน' : 'เปิดใช้งาน'; ?>" aria-label="<?php echo $on ? 'ปิดการใช้งาน' : 'เปิดใช้งาน'; ?>"
+                                    data-id="<?php echo $aid; ?>" data-name="<?php echo htmlspecialchars($item['attribute_name'] ?? '', ENT_QUOTES); ?>" data-to="<?php echo $on ? '0' : '1'; ?>"
+                                    onclick="toggleItem(this)">
+                                    <i class="<?php echo $on ? 'ri-forbid-line' : 'ri-checkbox-circle-line'; ?>"></i>
                                 </button>
                             </div>
                         </td>
@@ -74,7 +84,7 @@ $styles     = $styles ?? ($data['styles'] ?? []);
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="<?php echo $has_meta ? '5' : '3'; ?>" class="text-center text-muted py-4">ไม่พบข้อมูล</td>
+                    <td colspan="<?php echo $has_meta ? '6' : '4'; ?>" class="text-center text-muted py-4">ไม่พบข้อมูล</td>
                 </tr>
             <?php endif; ?>
         </tbody>

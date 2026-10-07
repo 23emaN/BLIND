@@ -116,6 +116,7 @@ class AttributeController
         $this->checkAuthJson();
 
         $keyword = trim($_POST['keyword'] ?? '');
+        $status  = trim($_POST['status'] ?? '');
         $page    = max(1, (int) ($_POST['page'] ?? 1));
         $perPage = (int) ($_POST['per_page'] ?? 25);
         if (!in_array($perPage, [25, 50, 75, 100], true)) {
@@ -123,8 +124,8 @@ class AttributeController
         }
 
         $model      = $this->model();
-        $total      = $model->countList($this->type, $keyword);
-        $items      = $model->getList($this->type, $keyword, $page, $perPage);
+        $total      = $model->countList($this->type, $keyword, $status);
+        $items      = $model->getList($this->type, $keyword, $page, $perPage, $status);
         $item_label = $this->itemLabel;
         $has_meta   = $this->hasMeta;
         $styles     = $this->hasMeta ? $this->styleOptions() : [];
@@ -166,7 +167,7 @@ class AttributeController
 
         $model = $this->model();
         if ($model->nameExists($this->type, $name)) {
-            echo json_encode(['result' => 0, 'msg' => 'มีรายการนี้อยู่ในระบบแล้ว']);
+            echo json_encode(['result' => 0, 'msg' => 'มีรายการนี้อยู่ในระบบแล้ว (ถ้าไม่เห็นในรายการ อาจถูกปิดการใช้งานอยู่ — เลือกตัวกรอง "ปิดการใช้งาน" แล้วเปิดใช้อีกครั้ง)']);
             return;
         }
 
@@ -214,7 +215,7 @@ class AttributeController
             return;
         }
         if ($model->nameExists($this->type, $name, $id)) {
-            echo json_encode(['result' => 0, 'msg' => 'มีรายการนี้อยู่ในระบบแล้ว']);
+            echo json_encode(['result' => 0, 'msg' => 'มีรายการนี้อยู่ในระบบแล้ว (ถ้าไม่เห็นในรายการ อาจถูกปิดการใช้งานอยู่ — เลือกตัวกรอง "ปิดการใช้งาน" แล้วเปิดใช้อีกครั้ง)']);
             return;
         }
 
@@ -241,27 +242,25 @@ class AttributeController
         }
     }
 
-    public function delete()
+    // AJAX: เปิด/ปิดการใช้งาน (แทนการลบ)
+    public function toggle()
     {
         $this->checkAuthJson();
 
-        $id = (int) ($_POST['attribute_id'] ?? 0);
-        if ($id <= 0) {
-            echo json_encode(['result' => 0, 'msg' => 'ไม่พบรหัสรายการ']);
-            return;
-        }
+        $id     = (int) ($_POST['attribute_id'] ?? 0);
+        $status = ($_POST['active_status'] ?? '') === '1' ? '1' : '0';
 
         $model = $this->model();
-        if (!$model->getById($id, $this->type)) {
+        if ($id <= 0 || !$model->getById($id, $this->type)) {
             echo json_encode(['result' => 0, 'msg' => 'ไม่พบข้อมูล']);
             return;
         }
 
         try {
-            $model->softDelete($id, $this->type);
-            echo json_encode(['result' => 1, 'msg' => 'ลบ' . $this->itemLabel . 'สำเร็จ']);
+            $model->setStatus($id, $this->type, $status);
+            echo json_encode(['result' => 1, 'msg' => ($status === '1' ? 'เปิดใช้งาน' : 'ปิดการใช้งาน') . $this->itemLabel . 'แล้ว']);
         } catch (\Throwable $e) {
-            echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการลบข้อมูล']);
+            echo json_encode(['result' => 0, 'msg' => 'เกิดข้อผิดพลาดในการบันทึกข้อมูล']);
         }
     }
 }

@@ -53,10 +53,16 @@ class ActivityModel
         return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    private function buildFilter(string $keyword, string $categoryId, string $month): array
+    // $status: '' = ทุกสถานะ, '1' = ใช้งานอยู่, '0' = ปิดการใช้งาน
+    private function buildFilter(string $keyword, string $categoryId, string $month, string $status = ''): array
     {
-        $where  = ["a.active_status = '1'"];
+        $where  = ['1=1'];
         $params = [];
+
+        if ($status === '0' || $status === '1') {
+            $where[] = "a.active_status = :status";
+            $params[':status'] = $status;
+        }
 
         if ($keyword !== '') {
             $where[] = "(a.activity_title LIKE :kw1 OR a.location LIKE :kw2)";
@@ -76,13 +82,13 @@ class ActivityModel
         return ['sql' => implode(' AND ', $where), 'params' => $params];
     }
 
-    public function getList(string $keyword, string $categoryId, string $month, int $page, int $perPage): array
+    public function getList(string $keyword, string $categoryId, string $month, int $page, int $perPage, string $status = ''): array
     {
-        $f      = $this->buildFilter($keyword, $categoryId, $month);
+        $f      = $this->buildFilter($keyword, $categoryId, $month, $status);
         $offset = ($page - 1) * $perPage;
 
         $sql = "SELECT a.activity_id, a.activity_title, a.activity_date, a.start_time, a.end_time,
-                       a.location, a.max_volunteers, a.reserve_count, a.activity_status,
+                       a.location, a.max_volunteers, a.reserve_count, a.activity_status, a.active_status,
                        at.attribute_name AS category_name, at.attribute_icon AS category_icon,
                        (SELECT COUNT(*) FROM tbl_activity_volunteer av
                          WHERE av.activity_id = a.activity_id AND av.reg_status = '1') AS joined_count
@@ -101,9 +107,9 @@ class ActivityModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function countList(string $keyword, string $categoryId, string $month): int
+    public function countList(string $keyword, string $categoryId, string $month, string $status = ''): int
     {
-        $f    = $this->buildFilter($keyword, $categoryId, $month);
+        $f    = $this->buildFilter($keyword, $categoryId, $month, $status);
         $stmt = $this->db->prepare("SELECT COUNT(*) FROM tbl_activity a WHERE {$f['sql']}");
         $stmt->execute($f['params']);
         return (int) $stmt->fetchColumn();
@@ -116,7 +122,7 @@ class ActivityModel
                          WHERE av.activity_id = a.activity_id AND av.reg_status = '1') AS joined_count
                 FROM tbl_activity a
                 LEFT JOIN tbl_attribute at ON at.attribute_id = a.attribute_id
-                WHERE a.activity_id = :id AND a.active_status = '1'
+                WHERE a.activity_id = :id
                 LIMIT 1";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
@@ -129,7 +135,7 @@ class ActivityModel
         $sql = "INSERT INTO tbl_activity
                     (activity_title, attribute_id, activity_date, start_time, end_time, location,
                      max_volunteers, reserve_count, grant_hours, hours_per_person, hours_count_method,
-                     activity_detail, image_activity, activity_status, active_status, create_user_id, create_at)
+                     activity_detail, activity_image, activity_status, active_status, create_user_id, create_at)
                 VALUES
                     (:title, :cat, :date, :start, :end, :loc,
                      :max, :reserve, :grant, :hours, :method,
@@ -148,7 +154,7 @@ class ActivityModel
             ':hours'   => $d['hours_per_person'],
             ':method'  => $d['hours_count_method'],
             ':detail'  => $d['activity_detail'],
-            ':image'   => $d['image_activity'] ?? null,
+            ':image'   => $d['activity_image'] ?? null,
             ':uid'     => $createUserId,
         ]);
         return (int) $this->db->lastInsertId();
@@ -157,16 +163,16 @@ class ActivityModel
     public function update(int $id, array $d): bool
     {
         $imageSql = "";
-        if (array_key_exists('image_activity', $d) && $d['image_activity'] !== null) {
-            $imageSql = ", image_activity = :image";
+        if (array_key_exists('activity_image', $d) && $d['activity_image'] !== null) {
+            $imageSql = ", activity_image = :image";
         }
         $sql = "UPDATE tbl_activity SET
                     activity_title = :title, attribute_id = :cat, activity_date = :date,
                     start_time = :start, end_time = :end, location = :loc,
                     max_volunteers = :max, reserve_count = :reserve,
                     grant_hours = :grant, hours_per_person = :hours, hours_count_method = :method,
-                    activity_detail = :detail {$imageSql}
-                WHERE activity_id = :id AND active_status = '1'";
+                    activity_detail = :detail, active_status = :status {$imageSql}
+                WHERE activity_id = :id";
         $stmt = $this->db->prepare($sql);
         
         $params = [
@@ -182,18 +188,13 @@ class ActivityModel
             ':hours'   => $d['hours_per_person'],
             ':method'  => $d['hours_count_method'],
             ':detail'  => $d['activity_detail'],
+            ':status'  => ($d['active_status'] ?? '1') === '0' ? '0' : '1',
             ':id'      => $id,
         ];
-        if (array_key_exists('image_activity', $d) && $d['image_activity'] !== null) {
-            $params[':image'] = $d['image_activity'];
+        if (array_key_exists('activity_image', $d) && $d['activity_image'] !== null) {
+            $params[':image'] = $d['activity_image'];
         }
         return $stmt->execute($params);
-    }
-
-    public function softDelete(int $id): bool
-    {
-        $stmt = $this->db->prepare("UPDATE tbl_activity SET active_status = '0' WHERE activity_id = :id");
-        return $stmt->execute([':id' => $id]);
     }
 
     public function getActivities($page = 1, $per_page = 10, $search = '')
