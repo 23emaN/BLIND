@@ -2349,7 +2349,12 @@
                             <?php echo htmlspecialchars(trim(($data['firstname'] ?? $_SESSION['user_firstname'] ?? '') . ' ' . ($data['lastname'] ?? $_SESSION['user_lastname'] ?? 'ผู้ใช้งาน'))) ?>
                         </span>
                         <span class="acc-user-role">
-                            <?php echo (!empty($data['is_super_admin'] ?? $_SESSION['is_super_admin'] ?? null) && ($data['is_super_admin'] ?? $_SESSION['is_super_admin']) === '1') ? 'ผู้ดูแลระบบ' : 'ผู้ใช้ทั่วไป' ?>
+                            <?php
+                                // ส่วนใหญ่ controller ไม่ได้ส่ง is_super_admin มาใน $data แต่มี $user (จาก checkAuth) อยู่ใน scope
+                                // DB คืนค่าเป็นตัวเลข → cast เป็น string ก่อนเทียบ (เดิมเทียบ === '1' กับเลข 1 เลยไม่เคยจริง)
+                                $headerIsSuper = (string) ($data['is_super_admin'] ?? $user['is_super_admin'] ?? $_SESSION['is_super_admin'] ?? '0') === '1';
+                                echo $headerIsSuper ? 'ผู้ดูแลระบบ' : 'ผู้ใช้ทั่วไป';
+                            ?>
                         </span>
                     </div>
                 </div>
