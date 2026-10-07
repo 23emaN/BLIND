@@ -41,7 +41,7 @@ $has_meta   = $has_meta ?? !empty($data['has_meta']);
                         <?php if ($has_meta): ?>
                             <td class="text-center">
                                 <?php if (!empty($item['attribute_icon'])): ?>
-                                    <code><?php echo htmlspecialchars($item['attribute_icon']); ?></code>
+                                    <span class="material-symbols-outlined" title="<?php echo htmlspecialchars($item['attribute_icon'], ENT_QUOTES); ?>" aria-hidden="true"><?php echo htmlspecialchars($item['attribute_icon']); ?></span>
                                 <?php else: ?>
                                     <span class="text-muted">-</span>
                                 <?php endif; ?>

@@ -70,9 +70,26 @@
                     </div>
                     <?php if ($hasMeta): ?>
                         <div class="mb-3">
-                            <label class="form-label" for="f_icon">ไอคอน (Material Symbol ของหน้าบ้าน)</label>
-                            <input type="text" class="form-control" name="attribute_icon" id="f_icon" maxlength="50" placeholder="เช่น mic, directions_walk, description, school" autocomplete="off">
-                            <small class="text-muted">ชื่อไอคอนที่หน้าบ้านใช้แสดงบนการ์ดหมวดหมู่ (ปล่อยว่างได้)</small>
+                            <label class="form-label" id="iconPickerLabel">ไอคอน</label>
+                            <input type="hidden" name="attribute_icon" id="f_icon" value="">
+                            <div class="icon-picker-selected">
+                                <span class="material-symbols-outlined" id="iconPreview" aria-hidden="true">block</span>
+                                <span id="iconPreviewText" class="text-muted">ไม่ใช้ไอคอน</span>
+                            </div>
+                            <div class="icon-picker-grid" role="group" aria-labelledby="iconPickerLabel">
+                                <button type="button" class="icon-picker-item" data-icon="" title="ไม่ใช้ไอคอน" aria-label="ไม่ใช้ไอคอน" onclick="selectIcon(this.dataset.icon)">
+                                    <span class="material-symbols-outlined" aria-hidden="true">block</span>
+                                </button>
+                                <?php foreach ($data['icons'] ?? [] as $iconName => $iconLabel): ?>
+                                    <button type="button" class="icon-picker-item" data-icon="<?php echo htmlspecialchars($iconName, ENT_QUOTES); ?>"
+                                        data-label="<?php echo htmlspecialchars($iconLabel, ENT_QUOTES); ?>"
+                                        title="<?php echo htmlspecialchars($iconLabel, ENT_QUOTES); ?>" aria-label="<?php echo htmlspecialchars($iconLabel, ENT_QUOTES); ?>"
+                                        onclick="selectIcon(this.dataset.icon)">
+                                        <span class="material-symbols-outlined" aria-hidden="true"><?php echo htmlspecialchars($iconName); ?></span>
+                                    </button>
+                                <?php endforeach; ?>
+                            </div>
+                            <small class="text-muted">ไอคอนที่หน้าบ้านแสดงบนการ์ดหมวดหมู่ — ชี้เมาส์ค้างเพื่อดูความหมาย</small>
                         </div>
                         <div class="mb-2">
                             <label class="form-label" for="f_desc">คำอธิบายสั้น</label>
@@ -129,8 +146,27 @@
         itemFilterTimer = setTimeout(() => GetData(1), 350);
     }
 
+    // ตัวเลือกไอคอน: เก็บชื่อลง hidden input + ไฮไลต์ปุ่ม + แสดงตัวอย่าง
+    function selectIcon(name) {
+        if (!$('#f_icon').length) return;
+        name = name || '';
+        const btn = $('.icon-picker-item').filter(function () { return this.dataset.icon === name; });
+        $('.icon-picker-item').removeClass('active').attr('aria-pressed', 'false');
+        $('#f_icon').val(name);
+        if (name !== '' && !btn.length) {
+            // ไอคอนเดิมที่ไม่อยู่ในรายการ (ข้อมูลเก่า) — บันทึกไม่ผ่านจนกว่าจะเลือกใหม่
+            $('#iconPreview').text(name);
+            $('#iconPreviewText').text('ไอคอนเดิม "' + name + '" ไม่อยู่ในรายการ กรุณาเลือกใหม่').attr('class', 'text-danger');
+            return;
+        }
+        btn.addClass('active').attr('aria-pressed', 'true');
+        $('#iconPreview').text(name || 'block');
+        $('#iconPreviewText').text(name ? btn.data('label') : 'ไม่ใช้ไอคอน').attr('class', name ? '' : 'text-muted');
+    }
+
     function openAddItem() {
         document.getElementById('itemForm').reset();
+        selectIcon('');
         $('#attribute_id').val('');
         $('#itemModalLabel').text('เพิ่ม<?php echo htmlspecialchars($itemLabel, ENT_QUOTES); ?>');
         new bootstrap.Modal(document.getElementById('itemModal')).show();
@@ -151,7 +187,7 @@
                 $('#attribute_id').val(response.data.attribute_id);
                 $('#f_name').val(response.data.attribute_name);
                 <?php if ($hasMeta): ?>
-                $('#f_icon').val(response.data.attribute_icon || '');
+                selectIcon(response.data.attribute_icon || '');
                 $('#f_desc').val(response.data.attribute_desc || '');
                 <?php endif; ?>
                 $('#itemModalLabel').text('แก้ไข<?php echo htmlspecialchars($itemLabel, ENT_QUOTES); ?>');

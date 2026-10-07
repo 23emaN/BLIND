@@ -42,6 +42,18 @@ class AttributeController
         return new AttributeModel();
     }
 
+    // ไอคอนที่ให้เลือก (หมวดหมู่กิจกรรม) — ดู app/config/CategoryIcons.php
+    protected function iconOptions(): array
+    {
+        return require '../app/config/CategoryIcons.php';
+    }
+
+    // ว่าง = ไม่ใช้ไอคอน, ไม่งั้นต้องอยู่ในรายการ (กันพิมพ์ชื่อผิดแล้วหน้าบ้านแสดงเป็นตัวหนังสือ)
+    private function iconAllowed(?string $icon): bool
+    {
+        return $icon === null || $icon === '' || array_key_exists($icon, $this->iconOptions());
+    }
+
     public function index()
     {
         $user    = $this->checkAuth();
@@ -54,6 +66,7 @@ class AttributeController
             'route'      => $this->routeBase,
             'item_label' => $this->itemLabel,
             'has_meta'   => $this->hasMeta,
+            'icons'      => $this->hasMeta ? $this->iconOptions() : [],
             'firstname'  => $user['user_firstname'] ?? 'ผู้ใช้งาน',
             'lastname'   => $user['user_lastname'] ?? '',
             'items'      => $model->getList($this->type, '', 1, $perPage),
@@ -121,6 +134,10 @@ class AttributeController
 
         $icon = $this->hasMeta ? trim($_POST['attribute_icon'] ?? '') : null;
         $desc = $this->hasMeta ? trim($_POST['attribute_desc'] ?? '') : null;
+        if (!$this->iconAllowed($icon)) {
+            echo json_encode(['result' => 0, 'msg' => 'กรุณาเลือกไอคอนจากรายการ']);
+            return;
+        }
 
         try {
             $model->create($this->type, $name, (int) ($user['user_id'] ?? 0), $icon, $desc);
@@ -157,6 +174,10 @@ class AttributeController
 
         $icon = $this->hasMeta ? trim($_POST['attribute_icon'] ?? '') : null;
         $desc = $this->hasMeta ? trim($_POST['attribute_desc'] ?? '') : null;
+        if (!$this->iconAllowed($icon)) {
+            echo json_encode(['result' => 0, 'msg' => 'กรุณาเลือกไอคอนจากรายการ']);
+            return;
+        }
 
         try {
             $model->update($id, $this->type, $name, $icon, $desc);
